@@ -1,0 +1,84 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Modern Office Desk",
+      "description": "Sleek and minimalist design perfect for your home office. Features durable construction and ample workspace.",
+      "price": 359.0,
+      "originalPrice": 449.0,
+      "discount": 20,
+      "image": "/images/ban-ikea-luzo-12.jpg",
+      "category": "Desktop"
+    },
+    {
+      "id": 2,
+      "name": "L-Shaped Corner Desk",
+      "description": "Maximize your corner space with this L-shaped desk. Perfect for multi-monitor setups and large workspaces.",
+      "price": 459.0,
+      "originalPrice": 599.0,
+      "discount": 20,
+      "image": "/images/ban-ikea-luzo-12.jpg",
+      "category": "L-Shaped"
+    },
+    {
+      "id": 3,
+      "name": "Standing Desk Frame",
+      "description": "Electric height-adjustable frame for creating your perfect standing desk setup. Compatible with most desktop surfaces.",
+      "price": 499.0,
+      "originalPrice": 649.0,
+      "discount": 15,
+      "image": "/images/ban-ikea-luzo-12.jpg",
+      "category": "Deskframe"
+    },
+    {
+      "id": 4,
+      "name": "Kids Study Desk",
+      "description": "Ergonomic desk designed specifically for children. Features rounded edges and adjustable height.",
+      "price": 259.0,
+      "originalPrice": 329.0,
+      "discount": 20,
+      "image": "/images/ban-ikea-luzo-12.jpg",
+      "category": "Desk for kids"
+    },
+    {
+      "id": 5,
+      "name": "Executive Office Desk",
+      "description": "Premium executive desk with built-in storage solutions. Perfect for professional office environments.",
+      "price": 759.0,
+      "originalPrice": 899.0,
+      "discount": 15,
+      "image": "/images/ban-ikea-luzo-12.jpg",
+      "category": "Desktop"
+    },
+    {
+      "id": 6,
+      "name": "Compact Writing Desk",
+      "description": "Space-saving design perfect for small apartments. Features built-in cable management.",
+      "price": 259.0,
+      "originalPrice": 329.0,
+      "discount": 20,
+      "image": "/images/ban-ikea-luzo-12.jpg",
+      "category": "Desktop"
+    }
+  ],
+  "featured_products": [
+    {
+      "id": 1,
+      "name": "Modern Dining Table",
+      "price": 299.99,
+      "image": "/images/ban-ikea-luzo-12.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Ergonomic Office Chair",
+      "price": 199.99,
+      "image": "/images/office-chair.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Luxury Sofa Set",
+      "price": 999.99,
+      "image": "/images/sofa-set.jpg"
+    }
+  ]
+}
