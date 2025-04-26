@@ -167,6 +167,8 @@ const Cart = () => {
                   bgcolor: "black",
                 },
               }}
+              component={Link}
+              to="/checkout"
             >
               Proceed to checkout
             </Button>
