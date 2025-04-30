@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -5,37 +7,38 @@ import {
   IconButton,
   Badge,
   Box,
-  InputBase,
-} from "@mui/material";
-import { ShoppingCart, Favorite, Person, Search } from "@mui/icons-material";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+  Button,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from '@mui/material';
+import { ShoppingCart, Person } from '@mui/icons-material';
+import { useSelector } from 'react-redux';
+import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const cartItems = useSelector((state) => state.cart.items);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    handleClose();
+    navigate('/');
+  };
 
   return (
-    <AppBar
-      position="fixed"
-      color="default"
-      elevation={1}
-      sx={{
-        width: "100vw",
-        left: 0,
-        right: 0,
-        margin: 0,
-        padding: 0,
-      }}
-    >
-      <Toolbar
-        sx={{
-          justifyContent: "space-between",
-          width: "100%",
-          padding: "0 2rem",
-          margin: 0,
-          minHeight: "64px",
-        }}
-      >
+    <AppBar position="fixed" color="default" elevation={1}>
+      <Toolbar>
         <Typography
           variant="h6"
           component={Link}
@@ -46,34 +49,55 @@ const Navbar = () => {
             fontWeight: "bold",
           }}
         >
-          Minga
+          SONY STORE
         </Typography>
 
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            bgcolor: "#f5f5f5",
-            borderRadius: 1,
-            px: 2,
-            flex: 1,
-            mx: 4,
-            maxWidth: "600px",
-          }}
-        >
-          <InputBase placeholder="Search..." sx={{ flex: 1 }} />
-          <IconButton size="small">
-            <Search />
-          </IconButton>
+        <Box sx={{ flexGrow: 1, ml: 4 }}>
+          <Button color="inherit" component={Link} to="/products">
+            Products
+          </Button>
         </Box>
 
-        <Box sx={{ display: "flex", gap: 1 }}>
-          <IconButton color="inherit" component={Link} to="/account">
-            <Person />
-          </IconButton>
-          <IconButton color="inherit">
-            <Favorite />
-          </IconButton>
+        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+          {user ? (
+            <>
+              <Typography variant="body2" sx={{ color: "text.primary" }}>
+                Welcome, {user.name}
+              </Typography>
+              <Tooltip title="Account settings">
+                <IconButton 
+                  color="inherit" 
+                  onClick={handleMenu}
+                >
+                  <Person />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <Button 
+              color="inherit" 
+              component={Link} 
+              to="/login"
+              sx={{ textTransform: "none" }}
+            >
+              Login
+            </Button>
+          )}
           <IconButton color="inherit" component={Link} to="/cart">
             <Badge badgeContent={cartItems.length} color="error">
               <ShoppingCart />
