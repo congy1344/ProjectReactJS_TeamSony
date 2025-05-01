@@ -13,6 +13,9 @@ import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Admin from "./pages/Admin";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import { AuthProvider } from './contexts/AuthContext';
 import "./index.css";
 
 const theme = createTheme({
@@ -54,34 +57,42 @@ const theme = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Box
-          sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
-        >
-          <Navbar />
-          <Container
-            component="main"
-            sx={{
-              flexGrow: 1,
-              width: "100%",
-              maxWidth: "100% !important",
-              px: 0,
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <Box
+            sx={{ 
+              display: "flex", 
+              flexDirection: "column", 
+              minHeight: "100vh" 
             }}
           >
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/products/:id" element={<ProductDetail />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/admin" element={<Admin />} />
-            </Routes>
-          </Container>
-        </Box>
-      </Router>
-    </ThemeProvider>
+            <Navbar />
+            <Container
+              component="main"
+              sx={{
+                flexGrow: 1,
+                width: "100%",
+                maxWidth: "100% !important",
+                px: 0,
+              }}
+            >
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/products/:id" element={<ProductDetail />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+              </Routes>
+            </Container>
+          </Box>
+        </Router>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
