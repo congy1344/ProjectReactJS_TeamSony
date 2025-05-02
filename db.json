@@ -31,7 +31,7 @@
       "price": 459,
       "originalPrice": 599,
       "discount": 20,
-      "image": "/images/ban-ikea-luzo-12.jpg",
+      "image": "/images/l1.jpg",
       "category": "L-Shaped"
     },
     {
@@ -41,7 +41,7 @@
       "price": 499,
       "originalPrice": 649,
       "discount": 15,
-      "image": "/images/ban-ikea-luzo-12.jpg",
+      "image": "/images/deskframe1.webp",
       "category": "Deskframe"
     },
     {
@@ -51,7 +51,7 @@
       "price": 259,
       "originalPrice": 329,
       "discount": 20,
-      "image": "/images/ban-ikea-luzo-12.jpg",
+      "image": "/images/kid1.jpg",
       "category": "Desk for kids"
     },
     {
@@ -61,7 +61,7 @@
       "price": 759,
       "originalPrice": 899,
       "discount": 15,
-      "image": "/images/ban-ikea-luzo-12.jpg",
+      "image": "/images/desktop1.jpg",
       "category": "Desktop"
     },
     {
@@ -71,8 +71,48 @@
       "price": 259,
       "originalPrice": 329,
       "discount": 20,
-      "image": "/images/ban-ikea-luzo-12.jpg",
+      "image": "/images/desktop2.webp",
       "category": "Desktop"
+    },
+    {
+      "id": 7,
+      "name": "Premium L-Shaped Desk",
+      "description": "High-end L-shaped desk with premium materials and built-in power outlets. Perfect for gaming and professional setups.",
+      "price": 599,
+      "originalPrice": 749,
+      "discount": 20,
+      "image": "/images/l2.avif",
+      "category": "L-Shaped"
+    },
+    {
+      "id": 8,
+      "name": "Gaming L-Shaped Desk",
+      "description": "Designed specifically for gamers with RGB lighting and cable management system. Spacious surface for multiple monitors.",
+      "price": 699,
+      "originalPrice": 899,
+      "discount": 22,
+      "image": "/images/l3.webp",
+      "category": "L-Shaped"
+    },
+    {
+      "id": 9,
+      "name": "Kids Study Desk with Storage",
+      "description": "Complete study solution for kids with built-in storage compartments and adjustable height. Made with child-safe materials.",
+      "price": 299,
+      "originalPrice": 399,
+      "discount": 25,
+      "image": "/images/kid2.avif",
+      "category": "Desk for kids"
+    },
+    {
+      "id": 10,
+      "name": "Kids Creative Desk",
+      "description": "Colorful and fun desk designed to inspire creativity in children. Features a built-in art supply organizer.",
+      "price": 279,
+      "originalPrice": 349,
+      "discount": 20,
+      "image": "/images/kid3.jpg",
+      "category": "Desk for kids"
     }
   ],
   "featured_products": [

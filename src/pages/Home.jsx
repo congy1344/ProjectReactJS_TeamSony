@@ -18,6 +18,7 @@ import { Favorite, ShoppingCart } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../store/cartSlice";
 import { api } from "../api/api";
+import { addToWishlist, removeFromWishlist } from "../store/wishlistSlice";
 
 const categories = ["Deskframe", "Desktop", "L-Shaped", "Desk for kids"];
 const colors = ["Black", "White", "Grey"];
@@ -30,6 +31,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
+  const [wishlistItems, setWishlistItems] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -48,6 +50,34 @@ const Home = () => {
 
     fetchProducts();
   }, [selectedCategory]);
+
+  useEffect(() => {
+    const fetchWishlist = async () => {
+      try {
+        const data = await api.getWishlist();
+        setWishlistItems(data);
+      } catch (err) {
+        console.error("Error fetching wishlist:", err);
+      }
+    };
+
+    fetchWishlist();
+  }, []);
+
+  const handleAddToCart = (e, product) => {
+    e.stopPropagation();
+    dispatch(addToCart({ ...product, quantity: 1 }));
+  };
+
+  const handleToggleWishlist = (e, product) => {
+    e.stopPropagation();
+    const isInWishlist = wishlistItems.some((item) => item.id === product.id);
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(product.id));
+    } else {
+      dispatch(addToWishlist(product));
+    }
+  };
 
   if (loading) {
     return (
@@ -84,8 +114,9 @@ const Home = () => {
       sx={{
         display: "flex",
         minHeight: "100vh",
-        width: "100vw",
         mt: "64px",
+        position: "relative",
+        maxWidth: "100%",
         overflow: "hidden",
       }}
     >
@@ -190,8 +221,9 @@ const Home = () => {
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          width: "calc(100vw - 240px)",
+          maxWidth: "calc(100% - 240px)",
           marginLeft: "240px",
+          overflowX: "hidden",
         }}
       >
         {/* Categories header */}
@@ -238,22 +270,47 @@ const Home = () => {
                     height: "100%",
                     display: "flex",
                     flexDirection: "column",
+                    cursor: "pointer",
                     "&:hover": {
                       boxShadow: 6,
                     },
                   }}
+                  onClick={() => navigate(`/products/${product.id}`)}
                 >
-                  <CardMedia
-                    component="img"
-                    height="300"
-                    image={product.image}
-                    alt={product.name}
+                  {product.discount && (
+                    <Chip
+                      label={`-${product.discount}%`}
+                      color="error"
+                      size="small"
+                      sx={{
+                        position: "absolute",
+                        top: 10,
+                        left: 10,
+                        zIndex: 1,
+                      }}
+                    />
+                  )}
+                  <Box
                     sx={{
-                      cursor: "pointer",
-                      objectFit: "cover",
+                      position: "relative",
+                      paddingTop: "75%",
+                      width: "100%",
                     }}
-                    onClick={() => navigate(`/products/${product.id}`)}
-                  />
+                  >
+                    <CardMedia
+                      component="img"
+                      image={product.image}
+                      alt={product.name}
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Box>
                   <CardContent
                     sx={{
                       flexGrow: 1,
@@ -295,12 +352,24 @@ const Home = () => {
                         </Typography>
                       </Box>
                       <Box>
-                        <IconButton size="small" sx={{ mr: 1 }}>
-                          <Favorite />
+                        <IconButton
+                          size="small"
+                          sx={{ mr: 1 }}
+                          onClick={(e) => handleToggleWishlist(e, product)}
+                        >
+                          <Favorite
+                            color={
+                              wishlistItems.some(
+                                (item) => item.id === product.id
+                              )
+                                ? "error"
+                                : "inherit"
+                            }
+                          />
                         </IconButton>
                         <IconButton
                           size="small"
-                          onClick={() => dispatch(addToCart(product))}
+                          onClick={(e) => handleAddToCart(e, product)}
                         >
                           <ShoppingCart />
                         </IconButton>

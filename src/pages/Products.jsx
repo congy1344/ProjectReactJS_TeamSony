@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Grid,
@@ -29,6 +30,7 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -84,8 +86,9 @@ const Products = () => {
         display: "flex",
         bgcolor: "#f5f5f5",
         minHeight: "100vh",
-        width: "100vw",
         mt: "64px", // Add margin top for fixed navbar
+        position: "relative",
+        maxWidth: "100%",
         overflow: "hidden",
       }}
     >
@@ -100,6 +103,7 @@ const Products = () => {
           left: 0,
           height: "calc(100vh - 64px)",
           overflowY: "auto",
+          zIndex: 1,
         }}
       >
         <Typography variant="h6" gutterBottom>
@@ -186,7 +190,8 @@ const Products = () => {
           flex: 1,
           p: 3,
           marginLeft: "240px",
-          width: "calc(100vw - 240px)",
+          maxWidth: "calc(100% - 240px)",
+          overflowX: "hidden",
         }}
       >
         <Box sx={{ mb: 3, display: "flex", gap: 2 }}>
@@ -207,10 +212,15 @@ const Products = () => {
               <Card
                 sx={{
                   position: "relative",
+                  cursor: "pointer",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
                   "&:hover": {
                     boxShadow: 6,
                   },
                 }}
+                onClick={() => navigate(`/products/${product.id}`)}
               >
                 {product.discount && (
                   <Chip
@@ -225,13 +235,30 @@ const Products = () => {
                     }}
                   />
                 )}
-                <CardMedia
-                  component="img"
-                  height="300"
-                  image={product.image}
-                  alt={product.name}
-                />
-                <CardContent>
+                <Box
+                  sx={{
+                    position: "relative",
+                    paddingTop: "75%",
+                    width: "100%",
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    image={product.image}
+                    alt={product.name}
+                    sx={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </Box>
+                <CardContent
+                  sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}
+                >
                   <Typography gutterBottom variant="h6" component="div">
                     {product.name}
                   </Typography>
