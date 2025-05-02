@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -11,15 +11,56 @@ import {
   Menu,
   MenuItem,
   Tooltip,
-} from '@mui/material';
-import { ShoppingCart, Person } from '@mui/icons-material';
-import { useSelector } from 'react-redux';
-import { useAuth } from '../contexts/AuthContext';
+  InputBase,
+} from "@mui/material";
+import { ShoppingCart, Person, Favorite, Search } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import { useAuth } from "../contexts/AuthContext";
+import { styled, alpha } from "@mui/material/styles";
+
+const SearchBox = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.black, 0.05),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.black, 0.1),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: theme.spacing(3),
+  width: "100%",
+  maxWidth: "400px",
+  [theme.breakpoints.down("sm")]: {
+    marginLeft: theme.spacing(1),
+    width: "auto",
+  },
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: alpha(theme.palette.common.black, 0.54),
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  width: "100%",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    width: "100%",
+  },
+}));
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const cartItems = useSelector((state) => state.cart.items);
+  const wishlistItems = useSelector((state) => state.wishlist.items);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenu = (event) => {
@@ -33,12 +74,19 @@ const Navbar = () => {
   const handleLogout = () => {
     logout();
     handleClose();
-    navigate('/');
+    navigate("/");
   };
 
   return (
-    <AppBar position="fixed" color="default" elevation={1}>
-      <Toolbar>
+    <AppBar
+      position="fixed"
+      sx={{
+        boxShadow: 1,
+        bgcolor: "white",
+        color: "black",
+      }}
+    >
+      <Toolbar sx={{ justifyContent: "space-between" }}>
         <Typography
           variant="h6"
           component={Link}
@@ -52,57 +100,64 @@ const Navbar = () => {
           SONY STORE
         </Typography>
 
-        <Box sx={{ flexGrow: 1, ml: 4 }}>
-          <Button color="inherit" component={Link} to="/products">
-            Products
+        <Box sx={{ display: "flex", alignItems: "center", flex: 1 }}>
+          <Button
+            component={Link}
+            to="/products"
+            sx={{
+              color: "inherit",
+              ml: 4,
+              "&:hover": { bgcolor: "transparent", color: "primary.main" },
+            }}
+          >
+            PRODUCTS
           </Button>
+
+          <SearchBox>
+            <SearchIconWrapper>
+              <Search />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search products..."
+              inputProps={{ "aria-label": "search" }}
+            />
+          </SearchBox>
         </Box>
 
-        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-          {user ? (
-            <>
-              <Typography variant="body2" sx={{ color: "text.primary" }}>
-                Welcome, {user.name}
-              </Typography>
-              <Tooltip title="Account settings">
-                <IconButton 
-                  color="inherit" 
-                  onClick={handleMenu}
-                >
-                  <Person />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-              >
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <Button 
-              color="inherit" 
-              component={Link} 
-              to="/login"
-              sx={{ textTransform: "none" }}
-            >
-              Login
-            </Button>
-          )}
-          <IconButton color="inherit" component={Link} to="/cart">
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton
+            component={Link}
+            to="/wishlist"
+            color="inherit"
+            sx={{ ml: 2 }}
+          >
+            <Badge badgeContent={wishlistItems.length} color="error">
+              <Favorite />
+            </Badge>
+          </IconButton>
+
+          <IconButton
+            component={Link}
+            to="/cart"
+            color="inherit"
+            sx={{ ml: 2 }}
+          >
             <Badge badgeContent={cartItems.length} color="error">
               <ShoppingCart />
             </Badge>
           </IconButton>
+
+          <Button
+            component={Link}
+            to="/login"
+            sx={{
+              color: "inherit",
+              ml: 2,
+              "&:hover": { bgcolor: "transparent", color: "primary.main" },
+            }}
+          >
+            Login
+          </Button>
         </Box>
       </Toolbar>
     </AppBar>

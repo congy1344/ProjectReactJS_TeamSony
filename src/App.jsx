@@ -15,7 +15,7 @@ import Checkout from "./pages/Checkout";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider } from "./contexts/AuthContext";
 import "./index.css";
 
 const theme = createTheme({
@@ -62,20 +62,23 @@ function App() {
         <CssBaseline />
         <Router>
           <Box
-            sx={{ 
-              display: "flex", 
-              flexDirection: "column", 
-              minHeight: "100vh" 
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              minHeight: "100vh",
+              maxWidth: "100vw",
+              overflowX: "hidden",
             }}
           >
             <Navbar />
-            <Container
+            <Box
               component="main"
               sx={{
                 flexGrow: 1,
                 width: "100%",
-                maxWidth: "100% !important",
-                px: 0,
+                maxWidth: "100%",
+                overflowX: "hidden",
+                position: "relative",
               }}
             >
               <Routes>
@@ -88,7 +91,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
               </Routes>
-            </Container>
+            </Box>
           </Box>
         </Router>
       </ThemeProvider>
