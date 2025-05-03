@@ -15,10 +15,14 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { Favorite, ShoppingCart } from "@mui/icons-material";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../store/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCartWithNotification } from "../store/cartSlice";
+import {
+  addToWishlistWithNotification,
+  removeFromWishlist,
+} from "../store/wishlistSlice";
 import { api } from "../api/api";
-import { addToWishlist, removeFromWishlist } from "../store/wishlistSlice";
+import { useAuth } from "../contexts/AuthContext";
 
 const categories = ["Deskframe", "Desktop", "L-Shaped", "Desk for kids"];
 const colors = ["Black", "White", "Grey"];
@@ -31,7 +35,9 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
-  const [wishlistItems, setWishlistItems] = useState([]);
+  const wishlistItems = useSelector((state) => state.wishlist.items);
+  const cartItems = useSelector((state) => state.cart.items);
+  const { user, updateUserCart, updateUserWishlist } = useAuth();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -51,22 +57,15 @@ const Home = () => {
     fetchProducts();
   }, [selectedCategory]);
 
-  useEffect(() => {
-    const fetchWishlist = async () => {
-      try {
-        const data = await api.getWishlist();
-        setWishlistItems(data);
-      } catch (err) {
-        console.error("Error fetching wishlist:", err);
-      }
-    };
-
-    fetchWishlist();
-  }, []);
-
   const handleAddToCart = (e, product) => {
     e.stopPropagation();
-    dispatch(addToCart({ ...product, quantity: 1 }));
+    dispatch(addToCartWithNotification({ ...product, quantity: 1 }));
+    if (user) {
+      updateUserCart({
+        items: [...cartItems, { ...product, quantity: 1 }],
+        total: 0,
+      });
+    }
   };
 
   const handleToggleWishlist = (e, product) => {
@@ -74,8 +73,16 @@ const Home = () => {
     const isInWishlist = wishlistItems.some((item) => item.id === product.id);
     if (isInWishlist) {
       dispatch(removeFromWishlist(product.id));
+      if (user) {
+        updateUserWishlist({
+          items: wishlistItems.filter((item) => item.id !== product.id),
+        });
+      }
     } else {
-      dispatch(addToWishlist(product));
+      dispatch(addToWishlistWithNotification(product));
+      if (user) {
+        updateUserWishlist({ items: [...wishlistItems, product] });
+      }
     }
   };
 
