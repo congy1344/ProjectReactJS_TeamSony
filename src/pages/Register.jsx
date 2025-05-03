@@ -20,6 +20,7 @@ const Register = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    username: ""
   });
   const [error, setError] = useState("");
 
@@ -32,26 +33,35 @@ const Register = () => {
     }
 
     try {
-      // Check if email already exists
-      const checkEmail = await axios.get(
-        `http://localhost:3001/users?email=${formData.email}`
-      );
+      // Kiểm tra email và username đã tồn tại chưa
+      const [emailCheck, usernameCheck] = await Promise.all([
+        axios.get(`http://localhost:3001/users?email=${formData.email}`),
+        axios.get(`http://localhost:3001/users?username=${formData.username}`)
+      ]);
       
-      if (checkEmail.data.length > 0) {
-        setError("Email already exists");
+      if (emailCheck.data.length > 0) {
+        setError("Email đã được sử dụng");
         return;
       }
 
-      // Create new user
+      if (usernameCheck.data.length > 0) {
+        setError("Username đã được sử dụng");
+        return;
+      }
+
+      // Tạo tài khoản mới
       await axios.post("http://localhost:3001/users", {
         name: formData.name,
         email: formData.email,
+        username: formData.username,
         password: formData.password,
+        hasChangedUsername: false
       });
 
       navigate('/login', { state: { from } });
     } catch (error) {
-      setError("Registration failed");
+      setError("Đăng ký thất bại, vui lòng thử lại");
+      console.error("Registration error:", error);
     }
   };
 
@@ -102,6 +112,17 @@ const Register = () => {
               margin="normal"
               required
               fullWidth
+              label="Username"
+              name="username"
+              value={formData.username}
+              onChange={(e) =>
+                setFormData({ ...formData, username: e.target.value })
+              }
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
               label="Full Name"
               name="name"
               autoFocus
@@ -129,6 +150,7 @@ const Register = () => {
               name="password"
               label="Password"
               type="password"
+              autoComplete="new-password"
               value={formData.password}
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
@@ -141,6 +163,7 @@ const Register = () => {
               name="confirmPassword"
               label="Confirm Password"
               type="password"
+              autoComplete="new-password"
               value={formData.confirmPassword}
               onChange={(e) =>
                 setFormData({ ...formData, confirmPassword: e.target.value })

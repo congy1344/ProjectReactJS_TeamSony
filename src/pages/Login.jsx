@@ -20,26 +20,34 @@ const Login = () => {
 
     const [error, setError] = useState("");
     const [formData, setFormData] = useState({
-        email: "",
+          emailOrUsername: "",
         password: ""
     });
   
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        const response = await axios.get(
-          `http://localhost:3001/users?email=${formData.email}`
-        );
-        const user = response.data[0];
+        // Tìm kiếm user bằng email hoặc username
+        const [emailResponse, usernameResponse] = await Promise.all([
+          axios.get(`http://localhost:3001/users?email=${formData.emailOrUsername}`),
+          axios.get(`http://localhost:3001/users?username=${formData.emailOrUsername}`)
+        ]);
+
+        // Kết hợp kết quả từ cả hai truy vấn
+        const user = emailResponse.data[0] || usernameResponse.data[0];
         
         if (user && user.password === formData.password) {
-          login(user);
+          login({
+            ...user,
+            hasChangedUsername: user.hasChangedUsername || false
+          });
           navigate(from, { replace: true });
         } else {
-          setError("Invalid email or password");
+          setError("Email/Username hoặc mật khẩu không chính xác");
         }
       } catch (error) {
-        setError("Something went wrong");
+        setError("Đã có lỗi xảy ra, vui lòng thử lại");
+        console.error("Login error:", error);
       }
     };
 
@@ -90,13 +98,13 @@ const Login = () => {
                   margin="normal"
                   required
                   fullWidth
-                  label="Email Address"
-                  name="email"
+                  label="Email hoặc Username"
+                  name="emailOrUsername"
                   autoComplete="email"
                   autoFocus
-                  value={formData.email}
+                  value={formData.emailOrUsername}
                   onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
+                    setFormData({ ...formData, emailOrUsername: e.target.value })
                   }
                 />
                 <TextField
@@ -106,7 +114,7 @@ const Login = () => {
                   name="password"
                   label="Password"
                   type="password"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   value={formData.password}
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })

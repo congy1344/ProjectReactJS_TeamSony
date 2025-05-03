@@ -15,6 +15,7 @@ import Checkout from "./pages/Checkout";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import AccountSetting from "./pages/AccountSetting";
 import { AuthProvider } from "./contexts/AuthContext";
 import "./index.css";
 
@@ -90,6 +91,7 @@ function App() {
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/account-setting" element={<AccountSetting />} />
               </Routes>
             </Box>
           </Box>

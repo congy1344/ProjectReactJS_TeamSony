@@ -4,13 +4,50 @@
       "id": 1,
       "email": "admin@example.com",
       "password": "admin123",
-      "name": "Admin User"
+      "name": "Admin User",
+      "username": "admin",
+      "hasChangedUsername": false,
+      "addresses": []
     },
     {
       "id": "21cb",
       "name": "Nguyễn Hoàng Sơn",
       "email": "sonjiny2004@gmail.com",
-      "password": "Kkkkkkk@6"
+      "password": "Kkkkkkk@1",
+      "username": "sonjiny",
+      "hasChangedUsername": false,
+      "addresses": [
+        {
+          "id": "1746238095043",
+          "userId": "21cb",
+          "fullName": "Nguyễn Hoàng Sơn",
+          "phone": "0385412905",
+          "province": "79",
+          "district": "764",
+          "ward": "26872",
+          "detail": "616/61/11D Lê Đức thọ",
+          "type": "home",
+          "isDefault": true,
+          "provinceName": "Hồ Chí Minh",
+          "districtName": "Gò Vấp",
+          "wardName": "15"
+        },
+        {
+          "id": "1746240469151",
+          "userId": "21cb",
+          "fullName": "Nguyễn Hoàng Sơn",
+          "phone": "0385412905",
+          "province": "87",
+          "district": "874",
+          "ward": "30151",
+          "detail": "670 ấp Tân An",
+          "type": "home",
+          "isDefault": false,
+          "provinceName": "Đồng Tháp",
+          "districtName": "Thanh Bình",
+          "wardName": "Tân Huề"
+        }
+      ]
     }
   ],
   "products": [

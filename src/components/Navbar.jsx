@@ -8,7 +8,11 @@ import {
   Badge,
   Box,
   Button,
-  Menu,
+  Popper,
+  Paper,
+  Grow,
+  ClickAwayListener,
+  MenuList,
   MenuItem,
   Tooltip,
   InputBase,
@@ -61,13 +65,16 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const cartItems = useSelector((state) => state.cart.items);
   const wishlistItems = useSelector((state) => state.wishlist.items);
+  const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
+    setOpen(true);
   };
 
   const handleClose = () => {
+    setOpen(false);
     setAnchorEl(null);
   };
 
@@ -75,6 +82,21 @@ const Navbar = () => {
     logout();
     handleClose();
     navigate("/");
+  };
+
+  const handleMouseEnter = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    setOpen(false);
+    setAnchorEl(null);
+  };
+
+  const handleAccountSettings = () => {
+    navigate("/account-setting");
+    setOpen(false);
   };
 
   return (
@@ -125,6 +147,76 @@ const Navbar = () => {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center" }}>
+          {user ? (
+            <>
+              <Typography variant="body2" sx={{ mr: 1 }}>
+                Welcome, {user.name}
+              </Typography>
+              <Box 
+                sx={{ position: "relative" }}
+                onMouseLeave={handleMouseLeave}
+              >
+                <IconButton
+                  color="inherit"
+                  onMouseEnter={handleMouseEnter}
+                  sx={{
+                    "&:hover": {
+                      color: "primary.main",
+                    },
+                  }}
+                >
+                  <Person />
+                </IconButton>
+                <Popper
+                  open={open}
+                  anchorEl={anchorEl}
+                  placement="bottom-end"
+                  transition
+                  style={{ zIndex: 1301 }}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  {({ TransitionProps }) => (
+                    <Grow {...TransitionProps}>
+                      <Paper 
+                        elevation={0}
+                        sx={{
+                          borderRadius: 1,
+                          mt: 1,
+                          boxShadow: '0px 2px 8px rgba(0,0,0,0.16)',
+                          minWidth: 180
+                        }}
+                        onMouseEnter={() => setOpen(true)}
+                      >
+                        <MenuList>
+                          <MenuItem 
+                            component={Link} 
+                            to="/account-setting"
+                            onClick={handleClose}
+                          >
+                            Account Settings
+                          </MenuItem>
+                          <MenuItem onClick={handleLogout}>
+                            Log out
+                          </MenuItem>
+                        </MenuList>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
+              </Box>
+            </>
+          ) : (
+            <Button
+              component={Link}
+              to="/login"
+              sx={{
+                color: "inherit",
+                "&:hover": { bgcolor: "transparent", color: "primary.main" },
+              }}
+            >
+              Login
+            </Button>
+          )}
           <IconButton
             component={Link}
             to="/wishlist"
@@ -140,24 +232,16 @@ const Navbar = () => {
             component={Link}
             to="/cart"
             color="inherit"
-            sx={{ ml: 2 }}
+            sx={{
+              "&:hover": {
+                color: "primary.main",
+              },
+            }}
           >
             <Badge badgeContent={cartItems.length} color="error">
               <ShoppingCart />
             </Badge>
           </IconButton>
-
-          <Button
-            component={Link}
-            to="/login"
-            sx={{
-              color: "inherit",
-              ml: 2,
-              "&:hover": { bgcolor: "transparent", color: "primary.main" },
-            }}
-          >
-            Login
-          </Button>
         </Box>
       </Toolbar>
     </AppBar>
