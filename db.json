@@ -55,8 +55,8 @@
       "id": 1,
       "name": "Modern Office Desk",
       "description": "Sleek and minimalist design perfect for your home office. Features durable construction and ample workspace.",
-      "price": 359,
-      "originalPrice": 449,
+      "price": 5200000,
+      "originalPrice": 6500000,
       "discount": 20,
       "image": "/images/ban-ikea-luzo-12.jpg",
       "category": "Desktop"
@@ -65,8 +65,8 @@
       "id": 2,
       "name": "L-Shaped Corner Desk",
       "description": "Maximize your corner space with this L-shaped desk. Perfect for multi-monitor setups and large workspaces.",
-      "price": 459,
-      "originalPrice": 599,
+      "price": 8500000,
+      "originalPrice": 10500000,
       "discount": 20,
       "image": "/images/l1.jpg",
       "category": "L-Shaped"
@@ -75,8 +75,8 @@
       "id": 3,
       "name": "Standing Desk Frame",
       "description": "Electric height-adjustable frame for creating your perfect standing desk setup. Compatible with most desktop surfaces.",
-      "price": 499,
-      "originalPrice": 649,
+      "price": 13500000,
+      "originalPrice": 15500000,
       "discount": 15,
       "image": "/images/deskframe1.webp",
       "category": "Deskframe"
@@ -85,8 +85,8 @@
       "id": 4,
       "name": "Kids Study Desk",
       "description": "Ergonomic desk designed specifically for children. Features rounded edges and adjustable height.",
-      "price": 259,
-      "originalPrice": 329,
+      "price": 2500000,
+      "originalPrice": 3200000,
       "discount": 20,
       "image": "/images/kid1.jpg",
       "category": "Desk for kids"
@@ -95,8 +95,8 @@
       "id": 5,
       "name": "Executive Office Desk",
       "description": "Premium executive desk with built-in storage solutions. Perfect for professional office environments.",
-      "price": 759,
-      "originalPrice": 899,
+      "price": 6900000,
+      "originalPrice": 8500000,
       "discount": 15,
       "image": "/images/desktop1.jpg",
       "category": "Desktop"
@@ -105,8 +105,8 @@
       "id": 6,
       "name": "Compact Writing Desk",
       "description": "Space-saving design perfect for small apartments. Features built-in cable management.",
-      "price": 259,
-      "originalPrice": 329,
+      "price": 4300000,
+      "originalPrice": 5400000,
       "discount": 20,
       "image": "/images/desktop2.webp",
       "category": "Desktop"
@@ -115,8 +115,8 @@
       "id": 7,
       "name": "Premium L-Shaped Desk",
       "description": "High-end L-shaped desk with premium materials and built-in power outlets. Perfect for gaming and professional setups.",
-      "price": 599,
-      "originalPrice": 749,
+      "price": 9900000,
+      "originalPrice": 12000000,
       "discount": 20,
       "image": "/images/l2.avif",
       "category": "L-Shaped"
@@ -125,8 +125,8 @@
       "id": 8,
       "name": "Gaming L-Shaped Desk",
       "description": "Designed specifically for gamers with RGB lighting and cable management system. Spacious surface for multiple monitors.",
-      "price": 699,
-      "originalPrice": 899,
+      "price": 14900000,
+      "originalPrice": 17500000,
       "discount": 22,
       "image": "/images/l3.webp",
       "category": "L-Shaped"
@@ -135,8 +135,8 @@
       "id": 9,
       "name": "Kids Study Desk with Storage",
       "description": "Complete study solution for kids with built-in storage compartments and adjustable height. Made with child-safe materials.",
-      "price": 299,
-      "originalPrice": 399,
+      "price": 3200000,
+      "originalPrice": 4000000,
       "discount": 25,
       "image": "/images/kid2.avif",
       "category": "Desk for kids"
@@ -145,10 +145,110 @@
       "id": 10,
       "name": "Kids Creative Desk",
       "description": "Colorful and fun desk designed to inspire creativity in children. Features a built-in art supply organizer.",
-      "price": 279,
-      "originalPrice": 349,
+      "price": 2800000,
+      "originalPrice": 3500000,
       "discount": 20,
       "image": "/images/kid3.jpg",
+      "category": "Desk for kids"
+    },
+    {
+      "id": 11,
+      "name": "Professional L-Shaped Desk",
+      "description": "Premium L-shaped desk with built-in power outlets and cable management. Perfect for home office or gaming setup.",
+      "price": 10900000,
+      "originalPrice": 13500000,
+      "discount": 23,
+      "image": "/images/l1.jpg",
+      "category": "L-Shaped"
+    },
+    {
+      "id": 12,
+      "name": "Modern Kids Study Desk",
+      "description": "Contemporary design with adjustable height and built-in storage. Perfect for growing children.",
+      "price": 2790000,
+      "originalPrice": 3490000,
+      "discount": 20,
+      "image": "/images/kid2.avif",
+      "category": "Desk for kids"
+    },
+    {
+      "id": 13,
+      "name": "Executive Standing Desk",
+      "description": "Electric height-adjustable desk with premium finish. Perfect for ergonomic workspace.",
+      "price": 15800000,
+      "originalPrice": 18500000,
+      "discount": 20,
+      "image": "/images/deskframe1.webp",
+      "category": "Deskframe"
+    },
+    {
+      "id": 14,
+      "name": "Minimalist Writing Desk",
+      "description": "Clean and simple design with ample workspace. Perfect for small apartments.",
+      "price": 4700000,
+      "originalPrice": 5900000,
+      "discount": 25,
+      "image": "/images/desktop2.webp",
+      "category": "Desktop"
+    },
+    {
+      "id": 15,
+      "name": "Corner L-Shaped Desk",
+      "description": "Space-saving corner desk with modern design. Perfect for maximizing workspace.",
+      "price": 7800000,
+      "originalPrice": 9500000,
+      "discount": 23,
+      "image": "/images/l2.avif",
+      "category": "L-Shaped"
+    },
+    {
+      "id": 16,
+      "name": "Kids Creative Corner",
+      "description": "Fun and functional desk with built-in art supply storage. Perfect for young artists.",
+      "price": 3290000,
+      "originalPrice": 4290000,
+      "discount": 23,
+      "image": "/images/kid3.jpg",
+      "category": "Desk for kids"
+    },
+    {
+      "id": 17,
+      "name": "Premium Standing Desk",
+      "description": "High-end electric standing desk with memory presets. Perfect for ergonomic workspace.",
+      "price": 16800000,
+      "originalPrice": 19500000,
+      "discount": 22,
+      "image": "/images/deskframe1.webp",
+      "category": "Deskframe"
+    },
+    {
+      "id": 18,
+      "name": "Classic Office Desk",
+      "description": "Timeless design with spacious work surface. Perfect for traditional office settings.",
+      "price": 6100000,
+      "originalPrice": 7600000,
+      "discount": 20,
+      "image": "/images/desktop1.jpg",
+      "category": "Desktop"
+    },
+    {
+      "id": 19,
+      "name": "Gaming L-Shaped Desk",
+      "description": "Designed for gamers with RGB lighting and cable management. Perfect for multi-monitor setups.",
+      "price": 11900000,
+      "originalPrice": 14500000,
+      "discount": 25,
+      "image": "/images/l3.webp",
+      "category": "L-Shaped"
+    },
+    {
+      "id": 20,
+      "name": "Kids Study Station",
+      "description": "Complete study solution with built-in storage and adjustable height. Perfect for homework.",
+      "price": 1900000,
+      "originalPrice": 2000000,
+      "discount": 22,
+      "image": "/images/kid1.jpg",
       "category": "Desk for kids"
     }
   ],
@@ -156,19 +256,19 @@
     {
       "id": 1,
       "name": "Modern Dining Table",
-      "price": 299.99,
+      "price": 2000000,
       "image": "/images/ban-ikea-luzo-12.jpg"
     },
     {
       "id": 2,
       "name": "Ergonomic Office Chair",
-      "price": 199.99,
+      "price": 1000000,
       "image": "/images/office-chair.jpg"
     },
     {
       "id": 3,
       "name": "Luxury Sofa Set",
-      "price": 999.99,
+      "price": 1900000,
       "image": "/images/sofa-set.jpg"
     }
   ]
