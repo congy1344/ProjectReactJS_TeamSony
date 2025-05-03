@@ -348,7 +348,7 @@ const Home = () => {
                           color="primary"
                           component="span"
                         >
-                          €{product.price}
+                          {product.price.toLocaleString("vi-VN")}₫
                         </Typography>
                       </Box>
                       <Box>

@@ -278,7 +278,7 @@ const Products = () => {
                   >
                     <Box>
                       <Typography variant="h6" color="primary" component="span">
-                        €{product.price}
+                        {product.price.toLocaleString("vi-VN")}₫
                       </Typography>
                       {product.originalPrice && (
                         <Typography
@@ -287,7 +287,7 @@ const Products = () => {
                           component="span"
                           sx={{ textDecoration: "line-through", ml: 1 }}
                         >
-                          €{product.originalPrice}
+                          {product.originalPrice.toLocaleString("vi-VN")}₫
                         </Typography>
                       )}
                     </Box>
