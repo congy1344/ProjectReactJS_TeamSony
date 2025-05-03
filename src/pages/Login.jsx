@@ -1,149 +1,111 @@
 import { useState } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Box,
+  Typography,
   TextField,
   Button,
-  Typography,
-  Paper,
+  Link,
   Alert,
 } from "@mui/material";
+import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 
 const Login = () => {
-    const navigate = useNavigate();
-    const { login } = useAuth();
-    const location = useLocation();
-    const from = location.state?.from || '/';
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-    const [error, setError] = useState("");
-    const [formData, setFormData] = useState({
-          emailOrUsername: "",
-        password: ""
-    });
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        // Tìm kiếm user bằng email hoặc username
-        const [emailResponse, usernameResponse] = await Promise.all([
-          axios.get(`http://localhost:3001/users?email=${formData.emailOrUsername}`),
-          axios.get(`http://localhost:3001/users?username=${formData.emailOrUsername}`)
-        ]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-        // Kết hợp kết quả từ cả hai truy vấn
-        const user = emailResponse.data[0] || usernameResponse.data[0];
-        
-        if (user && user.password === formData.password) {
-          login({
-            ...user,
-            hasChangedUsername: user.hasChangedUsername || false
-          });
-          navigate(from, { replace: true });
-        } else {
-          setError("Email/Username hoặc mật khẩu không chính xác");
-        }
-      } catch (error) {
-        setError("Đã có lỗi xảy ra, vui lòng thử lại");
-        console.error("Login error:", error);
+    try {
+      // Tìm kiếm user bằng email
+      const response = await axios.get(
+        `http://localhost:3001/users?email=${email}`
+      );
+      const user = response.data[0];
+
+      if (user && user.password === password) {
+        login({
+          ...user,
+          cart: user.cart || { items: [], total: 0 },
+          wishlist: user.wishlist || { items: [] },
+        });
+        navigate("/");
+      } else {
+        setError("Email hoặc mật khẩu không đúng");
       }
-    };
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("Đã có lỗi xảy ra, vui lòng thử lại");
+    }
+  };
 
-    return (
-        <Box
-          sx={{
-            width: '100vw',
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#f5f5f5',
-            mt: '-64px'
-          }}
-        >
-          <Container 
-            maxWidth="xs" 
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
+  return (
+    <Container maxWidth="sm">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Đăng nhập
+        </Typography>
+        {error && (
+          <Alert severity="error" sx={{ mt: 2, width: "100%" }}>
+            {error}
+          </Alert>
+        )}
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Mật khẩu"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
           >
-            <Paper
-              elevation={3}
-              sx={{
-                width: '100%',
-                maxWidth: '400px',
-                p: 4,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                backgroundColor: 'white',
-                borderRadius: 2,
-                boxShadow: '0px 3px 15px rgba(0,0,0,0.2)'
-              }}
-            >
-              <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-                Sign in
-              </Typography>
-              <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%" }}>
-                {error && (
-                  <Alert severity="error" sx={{ mb: 2 }}>
-                    {error}
-                  </Alert>
-                )}
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  label="Email hoặc Username"
-                  name="emailOrUsername"
-                  autoComplete="email"
-                  autoFocus
-                  value={formData.emailOrUsername}
-                  onChange={(e) =>
-                    setFormData({ ...formData, emailOrUsername: e.target.value })
-                  }
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  autoComplete="new-password"
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  Sign In
-                </Button>
-                <Box sx={{ textAlign: "center" }}>
-                  <Typography variant="body2">
-                    Don't have an account?{" "}
-                    <Link
-                      to="/register"
-                      style={{ textDecoration: "none", color: "primary.main" }}
-                    >
-                      Sign Up
-                    </Link>
-                  </Typography>
-                </Box>
-              </Box>
-            </Paper>
-          </Container>
+            Đăng nhập
+          </Button>
+          <Box sx={{ textAlign: "center" }}>
+            <Link href="/register" variant="body2">
+              Chưa có tài khoản? Đăng ký
+            </Link>
+          </Box>
         </Box>
-    );
+      </Box>
+    </Container>
+  );
 };
 
 export default Login;

@@ -6,6 +6,8 @@ import {
   Box,
   Container,
 } from "@mui/material";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
@@ -16,10 +18,11 @@ import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AccountSetting from "./pages/AccountSetting";
+import Notification from "./components/Notification";
 import { AuthProvider } from "./contexts/AuthContext";
 import "./index.css";
 
-const theme = createTheme({
+const customTheme = createTheme({
   palette: {
     primary: {
       main: "#1a1a1a",
@@ -58,46 +61,49 @@ const theme = createTheme({
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Router>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              minHeight: "100vh",
-              maxWidth: "100vw",
-              overflowX: "hidden",
-            }}
-          >
-            <Navbar />
+    <Provider store={store}>
+      <AuthProvider>
+        <ThemeProvider theme={customTheme}>
+          <CssBaseline />
+          <Router>
             <Box
-              component="main"
               sx={{
-                flexGrow: 1,
-                width: "100%",
-                maxWidth: "100%",
+                display: "flex",
+                flexDirection: "column",
+                minHeight: "100vh",
+                maxWidth: "100vw",
                 overflowX: "hidden",
-                position: "relative",
               }}
             >
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/products/:id" element={<ProductDetail />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/account-setting" element={<AccountSetting />} />
-              </Routes>
+              <Navbar />
+              <Notification />
+              <Box
+                component="main"
+                sx={{
+                  flexGrow: 1,
+                  width: "100%",
+                  maxWidth: "100%",
+                  overflowX: "hidden",
+                  position: "relative",
+                }}
+              >
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/products/:id" element={<ProductDetail />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/admin" element={<Admin />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/account-setting" element={<AccountSetting />} />
+                </Routes>
+              </Box>
             </Box>
-          </Box>
-        </Router>
-      </ThemeProvider>
-    </AuthProvider>
+          </Router>
+        </ThemeProvider>
+      </AuthProvider>
+    </Provider>
   );
 }
 

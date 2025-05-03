@@ -152,7 +152,7 @@ const Navbar = () => {
               <Typography variant="body2" sx={{ mr: 1 }}>
                 Welcome, {user.name}
               </Typography>
-              <Box 
+              <Box
                 sx={{ position: "relative" }}
                 onMouseLeave={handleMouseLeave}
               >
@@ -177,27 +177,25 @@ const Navbar = () => {
                 >
                   {({ TransitionProps }) => (
                     <Grow {...TransitionProps}>
-                      <Paper 
+                      <Paper
                         elevation={0}
                         sx={{
                           borderRadius: 1,
                           mt: 1,
-                          boxShadow: '0px 2px 8px rgba(0,0,0,0.16)',
-                          minWidth: 180
+                          boxShadow: "0px 2px 8px rgba(0,0,0,0.16)",
+                          minWidth: 180,
                         }}
                         onMouseEnter={() => setOpen(true)}
                       >
                         <MenuList>
-                          <MenuItem 
-                            component={Link} 
+                          <MenuItem
+                            component={Link}
                             to="/account-setting"
                             onClick={handleClose}
                           >
                             Account Settings
                           </MenuItem>
-                          <MenuItem onClick={handleLogout}>
-                            Log out
-                          </MenuItem>
+                          <MenuItem onClick={handleLogout}>Log out</MenuItem>
                         </MenuList>
                       </Paper>
                     </Grow>

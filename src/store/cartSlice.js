@@ -1,11 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { showNotification } from "./notificationSlice";
+
+const initialState = {
+  items: [],
+  total: 0,
+};
 
 const cartSlice = createSlice({
   name: "cart",
-  initialState: {
-    items: [],
-    total: 0,
-  },
+  initialState,
   reducers: {
     addToCart: (state, action) => {
       const existingItem = state.items.find(
@@ -20,6 +23,7 @@ const cartSlice = createSlice({
         (total, item) => total + item.price * item.quantity,
         0
       );
+      return state;
     },
     removeFromCart: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
@@ -27,6 +31,7 @@ const cartSlice = createSlice({
         (total, item) => total + item.price * item.quantity,
         0
       );
+      return state;
     },
     updateQuantity: (state, action) => {
       const { id, quantity } = action.payload;
@@ -38,9 +43,28 @@ const cartSlice = createSlice({
         (total, item) => total + item.price * item.quantity,
         0
       );
+      return state;
+    },
+    setCart: (state, action) => {
+      state.items = action.payload.items || [];
+      state.total = action.payload.total || 0;
+      return state;
     },
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity, setCart } =
+  cartSlice.actions;
+
+// Thunk action để thêm vào giỏ hàng và hiển thị thông báo
+export const addToCartWithNotification = (product) => (dispatch, getState) => {
+  dispatch(addToCart(product));
+  dispatch(
+    showNotification({
+      message: "Đã thêm sản phẩm vào giỏ hàng",
+      type: "success",
+    })
+  );
+};
+
 export default cartSlice.reducer;
