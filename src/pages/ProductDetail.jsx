@@ -13,14 +13,20 @@ import {
   Chip,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../store/cartSlice";
+import { addToCartWithNotification } from "../store/cartSlice";
+import {
+  addToWishlistWithNotification,
+  removeFromWishlist,
+} from "../store/wishlistSlice";
 import { Favorite, ShoppingCart, ArrowBack } from "@mui/icons-material";
 import { api } from "../api/api";
+import { useAuth } from "../contexts/AuthContext";
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { user } = useAuth();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -42,6 +48,29 @@ const ProductDetail = () => {
 
     fetchProduct();
   }, [id]);
+
+  const handleAddToCart = () => {
+    dispatch(addToCartWithNotification({ ...product, quantity: 1 }));
+  };
+
+  const handleBuyNow = () => {
+    // Thay vì thêm vào giỏ hàng, chuyển hướng đến trang checkout với thông tin sản phẩm
+    navigate("/checkout", {
+      state: { buyNowProduct: { ...product, quantity: 1 } },
+    });
+  };
+
+  const handleToggleWishlist = () => {
+    if (user) {
+      if (user.wishlist?.items?.some((item) => item.id === product.id)) {
+        dispatch(removeFromWishlist(product.id));
+      } else {
+        dispatch(addToWishlistWithNotification(product));
+      }
+    } else {
+      navigate("/login");
+    }
+  };
 
   if (loading) {
     return (
@@ -153,19 +182,48 @@ const ProductDetail = () => {
             </Typography>
           </Box>
 
-          <Box sx={{ display: "flex", gap: 2 }}>
+          <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
             <Button
               variant="contained"
               size="large"
               startIcon={<ShoppingCart />}
-              onClick={() => dispatch(addToCart(product))}
+              onClick={handleAddToCart}
+              sx={{ flex: 1 }}
             >
               Add to Cart
             </Button>
-            <IconButton size="large" sx={{ border: 1, borderColor: "divider" }}>
+            <IconButton
+              size="large"
+              sx={{
+                border: 1,
+                borderColor: "divider",
+                color: user?.wishlist?.items?.some(
+                  (item) => item.id === product.id
+                )
+                  ? "error"
+                  : "inherit",
+              }}
+              onClick={handleToggleWishlist}
+            >
               <Favorite />
             </IconButton>
           </Box>
+
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            fullWidth
+            onClick={handleBuyNow}
+            sx={{
+              bgcolor: "success.main",
+              "&:hover": {
+                bgcolor: "success.dark",
+              },
+            }}
+          >
+            Buy Now
+          </Button>
         </Grid>
       </Grid>
     </Container>

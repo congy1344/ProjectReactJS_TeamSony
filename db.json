@@ -7,7 +7,26 @@
       "name": "Admin User",
       "username": "admin",
       "hasChangedUsername": false,
-      "addresses": []
+      "addresses": [],
+      "cart": {
+        "items": [
+          {
+            "id": "6",
+            "name": "Compact Writing Desk",
+            "description": "Space-saving design perfect for small apartments. Features built-in cable management.",
+            "price": 4300000,
+            "originalPrice": 5400000,
+            "discount": 20,
+            "image": "/images/desktop2.webp",
+            "category": "Desktop",
+            "quantity": 1
+          }
+        ],
+        "total": 0
+      },
+      "wishlist": {
+        "items": []
+      }
     },
     {
       "id": "21cb",
@@ -51,13 +70,13 @@
       "cart": {
         "items": [
           {
-            "id": "5",
-            "name": "Executive Office Desk",
-            "description": "Premium executive desk with built-in storage solutions. Perfect for professional office environments.",
-            "price": 6900000,
-            "originalPrice": 8500000,
-            "discount": 15,
-            "image": "/images/desktop1.jpg",
+            "id": "6",
+            "name": "Compact Writing Desk",
+            "description": "Space-saving design perfect for small apartments. Features built-in cable management.",
+            "price": 4300000,
+            "originalPrice": 5400000,
+            "discount": 20,
+            "image": "/images/desktop2.webp",
             "category": "Desktop",
             "quantity": 1
           }
@@ -85,26 +104,27 @@
       "email": "huynhcongy2004@gmail.com",
       "username": "huynhcongy",
       "password": "123",
-      "hasChangedUsername": false,
+      "hasChangedUsername": true,
       "cart": {
         "items": [
           {
-            "id": "1",
-            "name": "Modern Office Desk",
-            "description": "Sleek and minimalist design perfect for your home office. Features durable construction and ample workspace.",
-            "price": 5200000,
-            "originalPrice": 6500000,
-            "discount": 20,
-            "image": "/images/ban-ikea-luzo-12.jpg",
+            "id": "5",
+            "name": "Executive Office Desk",
+            "description": "Premium executive desk with built-in storage solutions. Perfect for professional office environments.",
+            "price": 6900000,
+            "originalPrice": 8500000,
+            "discount": 15,
+            "image": "/images/desktop1.jpg",
             "category": "Desktop",
             "quantity": 1
           }
         ],
-        "total": 0
+        "total": 6900000
       },
       "wishlist": {
         "items": []
-      }
+      },
+      "phone": "0766923478"
     }
   ],
   "products": [

@@ -11,14 +11,50 @@ import { Add, Remove, Close } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart, updateQuantity } from "../store/cartSlice";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const Cart = () => {
   const { items, total } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  const { user, updateUserCart } = useAuth();
+
+  const handleRemoveFromCart = (id) => {
+    dispatch(removeFromCart(id));
+
+    // Cập nhật giỏ hàng trong database nếu user đã đăng nhập
+    if (user) {
+      const updatedItems = items.filter((item) => item.id !== id);
+      const updatedTotal = updatedItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+
+      updateUserCart({
+        items: updatedItems,
+        total: updatedTotal,
+      });
+    }
+  };
 
   const handleQuantityChange = (id, newQuantity) => {
     if (newQuantity > 0) {
       dispatch(updateQuantity({ id, quantity: newQuantity }));
+
+      // Cập nhật giỏ hàng trong database nếu user đã đăng nhập
+      if (user) {
+        const updatedItems = items.map((item) =>
+          item.id === id ? { ...item, quantity: newQuantity } : item
+        );
+        const updatedTotal = updatedItems.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+
+        updateUserCart({
+          items: updatedItems,
+          total: updatedTotal,
+        });
+      }
     }
   };
 
@@ -134,7 +170,7 @@ const Cart = () => {
                     <IconButton
                       onClick={(e) => {
                         e.stopPropagation();
-                        dispatch(removeFromCart(item.id));
+                        handleRemoveFromCart(item.id);
                       }}
                       sx={{ position: "absolute", top: -8, right: -8 }}
                     >

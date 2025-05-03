@@ -4,19 +4,63 @@ import {
   Box,
   Button,
   TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Divider,
   Card,
   CardContent,
 } from "@mui/material";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const Checkout = () => {
   const { items, total } = useSelector((state) => state.cart);
+  const location = useLocation();
+  const { user } = useAuth();
+  const buyNowProduct = location.state?.buyNowProduct;
+
+  // Xác định sản phẩm và tổng tiền hiển thị
+  const displayItems = buyNowProduct ? [buyNowProduct] : items;
+  const displayTotal = buyNowProduct
+    ? buyNowProduct.price * buyNowProduct.quantity
+    : total;
+
+  // Cập nhật state cho form thông tin
+  const [formData, setFormData] = useState({
+    firstName: user?.name?.split(" ")[0] || "",
+    lastName: user?.name?.split(" ").slice(1).join(" ") || "",
+    email: user?.email || "",
+    phone: "",
+    address: "",
+    city: "",
+  });
+
+  // Cập nhật form khi user thay đổi
+  useEffect(() => {
+    if (user) {
+      // Tìm địa chỉ mặc định
+      const defaultAddress =
+        user.addresses?.find((addr) => addr.isDefault) || user.addresses?.[0];
+
+      setFormData({
+        firstName: user.name?.split(" ")[0] || "",
+        lastName: user.name?.split(" ").slice(1).join(" ") || "",
+        email: user.email || "",
+        phone: defaultAddress?.phone || user.phone || "",
+        address: defaultAddress?.detail || "",
+        city: defaultAddress
+          ? `${defaultAddress.districtName}, ${defaultAddress.provinceName}`
+          : "",
+      });
+    }
+  }, [user]);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   return (
     <Container
@@ -41,56 +85,63 @@ const Checkout = () => {
           <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
             <TextField
               fullWidth
+              name="firstName"
               label="First Name"
               variant="outlined"
+              value={formData.firstName}
+              onChange={handleChange}
               sx={{ bgcolor: "white" }}
             />
             <TextField
               fullWidth
+              name="lastName"
               label="Last Name"
               variant="outlined"
+              value={formData.lastName}
+              onChange={handleChange}
               sx={{ bgcolor: "white" }}
             />
           </Box>
 
           <TextField
             fullWidth
+            name="email"
             label="Email"
             variant="outlined"
+            value={formData.email}
+            onChange={handleChange}
             sx={{ mb: 2, bgcolor: "white" }}
           />
 
           <TextField
             fullWidth
-            label="Address"
+            name="phone"
+            label="Phone Number"
             variant="outlined"
+            value={formData.phone}
+            onChange={handleChange}
             sx={{ mb: 2, bgcolor: "white" }}
           />
 
-          <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-            <TextField
-              fullWidth
-              label="City"
-              variant="outlined"
-              sx={{ bgcolor: "white" }}
-            />
-            <TextField
-              fullWidth
-              label="Postal Code"
-              variant="outlined"
-              sx={{ bgcolor: "white" }}
-            />
-          </Box>
+          <TextField
+            fullWidth
+            name="address"
+            label="Address"
+            variant="outlined"
+            value={formData.address}
+            onChange={handleChange}
+            sx={{ mb: 2, bgcolor: "white" }}
+          />
 
-          <FormControl fullWidth sx={{ mb: 2, bgcolor: "white" }}>
-            <InputLabel>Country</InputLabel>
-            <Select label="Country">
-              <MenuItem value="us">United States</MenuItem>
-              <MenuItem value="uk">United Kingdom</MenuItem>
-              <MenuItem value="fr">France</MenuItem>
-              <MenuItem value="de">Germany</MenuItem>
-            </Select>
-          </FormControl>
+          <TextField
+            fullWidth
+            name="city"
+            label="City"
+            variant="outlined"
+            value={formData.city}
+            onChange={handleChange}
+            sx={{ mb: 2, bgcolor: "white" }}
+          />
 
           <Typography variant="h5" sx={{ mt: 4, mb: 3, fontWeight: 500 }}>
             Payment Method
@@ -129,14 +180,14 @@ const Checkout = () => {
                 Order Summary
               </Typography>
 
-              {items.map((item) => (
+              {displayItems.map((item) => (
                 <Box key={item.id} sx={{ mb: 2 }}>
                   <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Typography variant="body1">{item.name}</Typography>
                     <Typography variant="body1">
-                      {item.price.toFixed(2)}€
+                      {item.price.toLocaleString("vi-VN")}₫
                     </Typography>
                   </Box>
                   <Typography variant="body2" color="text.secondary">
@@ -148,31 +199,12 @@ const Checkout = () => {
               <Divider sx={{ my: 2 }} />
 
               <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
-              >
-                <Typography>Subtotal</Typography>
-                <Typography>{total.toFixed(2)}€</Typography>
-              </Box>
-              <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
-              >
-                <Typography>Shipping</Typography>
-                <Typography>0.00€</Typography>
-              </Box>
-              <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
-              >
-                <Typography>Tax</Typography>
-                <Typography>0.00€</Typography>
-              </Box>
-
-              <Divider sx={{ my: 2 }} />
-
-              <Box
                 sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}
               >
                 <Typography variant="h6">Total</Typography>
-                <Typography variant="h6">{total.toFixed(2)}€</Typography>
+                <Typography variant="h6">
+                  {displayTotal.toLocaleString("vi-VN")}₫
+                </Typography>
               </Box>
 
               <Button
