@@ -11,10 +11,23 @@ import {
   Divider,
   Alert,
   Snackbar,
+  Card,
+  CardContent,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  MenuItem,
 } from "@mui/material";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import AddressSection from "../components/AddressSection";
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 const AccountSetting = () => {
   const { user, login } = useAuth();
@@ -23,7 +36,23 @@ const AccountSetting = () => {
     name: user?.name || "",
     email: user?.email || "",
     phone: user?.phone || "",
+    gender: user?.gender || "Nam",
+    birthDate: user?.birthDate || {
+      day: "",
+      month: "",
+      year: ""
+    },
     hasChangedUsername: user?.hasChangedUsername || false,
+  });
+
+  const [bankCards, setBankCards] = useState(user?.bankCards || []);
+  const [openBankDialog, setOpenBankDialog] = useState(false);
+  const [newBankCard, setNewBankCard] = useState({
+    cardNumber: "",
+    cardHolder: "",
+    expiryDate: "",
+    bankName: "",
+    isDefault: false
   });
 
   const [passwordForm, setPasswordForm] = useState({
@@ -45,7 +74,6 @@ const AccountSetting = () => {
 
   const handleSectionChange = (sectionId) => {
     setActiveSection(sectionId);
-    // Reset password form when switching away from password section
     if (sectionId !== 'password') {
       setPasswordForm({
         currentPassword: "",
@@ -55,10 +83,27 @@ const AccountSetting = () => {
     }
   };
 
+  useEffect(() => {
+    if (user?.birthDate) {
+      setFormData(prev => ({
+        ...prev,
+        birthDate: user.birthDate
+      }));
+    }
+    if (user?.gender) {
+      setFormData(prev => ({
+        ...prev,
+        gender: user.gender
+      }));
+    }
+    if (user?.bankCards) {
+      setBankCards(user.bankCards);
+    }
+  }, [user]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Kiểm tra email có tồn tại chưa
       if (formData.email !== user.email) {
         const emailCheck = await axios.get(`http://localhost:3001/users?email=${formData.email}`);
         if (emailCheck.data.length > 0) {
@@ -71,21 +116,19 @@ const AccountSetting = () => {
         }
       }
 
-      // Cập nhật thông tin user
       const updatedUser = {
         ...user,
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
         username: formData.username,
+        gender: formData.gender,
+        birthDate: formData.birthDate,
         hasChangedUsername: true
       };
 
       await axios.put(`http://localhost:3001/users/${user.id}`, updatedUser);
-      
-      // Cập nhật context
       login(updatedUser);
-      
       setSnackbar({
         open: true,
         message: "Cập nhật thông tin thành công",
@@ -103,9 +146,7 @@ const AccountSetting = () => {
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
-    
     try {
-      // Verify current password first
       const userResponse = await axios.get(`http://localhost:3001/users/${user.id}`);
       const currentUser = userResponse.data;
 
@@ -118,7 +159,6 @@ const AccountSetting = () => {
         return;
       }
 
-      // Validate new password
       if (passwordForm.newPassword !== passwordForm.confirmNewPassword) {
         setSnackbar({
           open: true,
@@ -137,7 +177,6 @@ const AccountSetting = () => {
         return;
       }
 
-      // Check if new password is same as current password
       if (passwordForm.newPassword === passwordForm.currentPassword) {
         setSnackbar({
           open: true,
@@ -147,12 +186,10 @@ const AccountSetting = () => {
         return;
       }
 
-      // Update password
       await axios.patch(`http://localhost:3001/users/${user.id}`, {
         password: passwordForm.newPassword
       });
 
-      // Reset form and show success message
       setPasswordForm({
         currentPassword: "",
         newPassword: "",
@@ -173,6 +210,230 @@ const AccountSetting = () => {
       console.error("Error changing password:", error);
     }
   };
+
+  const handleAddBankCard = async () => {
+    try {
+      const updatedUser = {
+        ...user,
+        bankCards: [...(user.bankCards || []), {
+          ...newBankCard,
+          id: Date.now().toString(),
+          isDefault: bankCards.length === 0 ? true : newBankCard.isDefault
+        }]
+      };
+
+      await axios.put(`http://localhost:3001/users/${user.id}`, updatedUser);
+      login(updatedUser);
+      setOpenBankDialog(false);
+      setNewBankCard({
+        cardNumber: "",
+        cardHolder: "",
+        expiryDate: "",
+        bankName: "",
+        isDefault: false
+      });
+      setSnackbar({
+        open: true,
+        message: "Thêm thẻ ngân hàng thành công",
+        severity: "success"
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: "Có lỗi xảy ra khi thêm thẻ ngân hàng",
+        severity: "error"
+      });
+    }
+  };
+
+  const handleDeleteBankCard = async (cardId) => {
+    try {
+      const updatedCards = bankCards.filter(card => card.id !== cardId);
+      const updatedUser = {
+        ...user,
+        bankCards: updatedCards
+      };
+
+      await axios.put(`http://localhost:3001/users/${user.id}`, updatedUser);
+      login(updatedUser);
+      setSnackbar({
+        open: true,
+        message: "Xóa thẻ ngân hàng thành công",
+        severity: "success"
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: "Có lỗi xảy ra khi xóa thẻ ngân hàng",
+        severity: "error"
+      });
+    }
+  };
+
+  const handleSetDefaultCard = async (cardId) => {
+    try {
+      const updatedCards = bankCards.map(card => ({
+        ...card,
+        isDefault: card.id === cardId
+      }));
+      const updatedUser = {
+        ...user,
+        bankCards: updatedCards
+      };
+
+      await axios.put(`http://localhost:3001/users/${user.id}`, updatedUser);
+      login(updatedUser);
+      setSnackbar({
+        open: true,
+        message: "Đặt thẻ mặc định thành công",
+        severity: "success"
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: "Có lỗi xảy ra khi đặt thẻ mặc định",
+        severity: "error"
+      });
+    }
+  };
+
+  const renderBankContent = () => (
+    <Box sx={{ width: '100%' }}>
+      <Typography variant="h6" sx={{ mb: 1 }}>
+        Tài khoản ngân hàng của tôi
+      </Typography>
+      <Typography variant="body2" sx={{ mb: 3, color: "text.secondary" }}>
+        Quản lý thông tin tài khoản ngân hàng
+      </Typography>
+      <Divider sx={{ mb: 3 }} />
+
+      <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={() => setOpenBankDialog(true)}
+        sx={{ mb: 3 }}
+      >
+        Thêm thẻ ngân hàng
+      </Button>
+
+      <Grid container spacing={2}>
+        {bankCards.map((card) => (
+          <Grid item xs={12} key={card.id}>
+            <Card>
+              <CardContent>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography variant="h6">{card.bankName}</Typography>
+                    <Typography>**** **** **** {card.cardNumber.slice(-4)}</Typography>
+                    <Typography>{card.cardHolder}</Typography>
+                    <Typography>Hết hạn: {card.expiryDate}</Typography>
+                    {card.isDefault && (
+                      <Typography
+                        component="span"
+                        sx={{
+                          fontSize: '12px',
+                          color: '#4CAF50',
+                          backgroundColor: '#E8F5E9',
+                          padding: '2px 8px',
+                          borderRadius: '12px',
+                          display: 'inline-block',
+                          mt: 1
+                        }}
+                      >
+                        Mặc định
+                      </Typography>
+                    )}
+                  </Box>
+                  <Box>
+                    {!card.isDefault && (
+                      <Button
+                        size="small"
+                        onClick={() => handleSetDefaultCard(card.id)}
+                        sx={{ mr: 1 }}
+                      >
+                        Đặt mặc định
+                      </Button>
+                    )}
+                    <IconButton
+                      color="error"
+                      onClick={() => handleDeleteBankCard(card.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Dialog open={openBankDialog} onClose={() => setOpenBankDialog(false)}>
+        <DialogTitle>Thêm thẻ ngân hàng mới</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item xs={12}>
+              <TextField
+                label="Tên ngân hàng"
+                fullWidth
+                value={newBankCard.bankName}
+                onChange={(e) => setNewBankCard({ ...newBankCard, bankName: e.target.value })}
+                select
+              >
+                <MenuItem value="Vietcombank">Vietcombank</MenuItem>
+                <MenuItem value="Techcombank">Techcombank</MenuItem>
+                <MenuItem value="BIDV">BIDV</MenuItem>
+                <MenuItem value="Agribank">Agribank</MenuItem>
+                <MenuItem value="MB Bank">MB Bank</MenuItem>
+                <MenuItem value="TPBank">TPBank</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Số thẻ"
+                fullWidth
+                value={newBankCard.cardNumber}
+                onChange={(e) => setNewBankCard({ ...newBankCard, cardNumber: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Tên chủ thẻ"
+                fullWidth
+                value={newBankCard.cardHolder}
+                onChange={(e) => setNewBankCard({ ...newBankCard, cardHolder: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Ngày hết hạn (MM/YY)"
+                fullWidth
+                value={newBankCard.expiryDate}
+                onChange={(e) => setNewBankCard({ ...newBankCard, expiryDate: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Radio
+                    checked={newBankCard.isDefault}
+                    onChange={(e) => setNewBankCard({ ...newBankCard, isDefault: e.target.checked })}
+                  />
+                }
+                label="Đặt làm thẻ mặc định"
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenBankDialog(false)}>Hủy</Button>
+          <Button onClick={handleAddBankCard} variant="contained">
+            Thêm
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
 
   const renderContent = () => {
     switch (activeSection) {
@@ -261,25 +522,20 @@ const AccountSetting = () => {
                 <Grid item xs={12}>
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Typography sx={{ width: 200 }}>Giới tính</Typography>
-                    <Box sx={{ display: "flex", gap: 2 }}>
+                    <RadioGroup
+                      row
+                      value={formData.gender}
+                      onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                    >
                       {["Nam", "Nữ", "Khác"].map((gender) => (
-                        <Box
+                        <FormControlLabel
                           key={gender}
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 0.5,
-                          }}
-                        >
-                          <input
-                            type="radio"
-                            name="gender"
-                            value={gender}
-                          />
-                          <Typography>{gender}</Typography>
-                        </Box>
+                          value={gender}
+                          control={<Radio />}
+                          label={gender}
+                        />
                       ))}
-                    </Box>
+                    </RadioGroup>
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
@@ -289,11 +545,16 @@ const AccountSetting = () => {
                       <TextField
                         select
                         fullWidth
-                        SelectProps={{
-                          native: true,
-                        }}
+                        value={formData.birthDate.day}
+                        onChange={(e) => 
+                          setFormData({
+                            ...formData,
+                            birthDate: { ...formData.birthDate, day: e.target.value }
+                          })
+                        }
+                        SelectProps={{ native: true }}
                       >
-                        <option>Ngày</option>
+                        <option value="">Ngày</option>
                         {[...Array(31)].map((_, i) => (
                           <option key={i + 1} value={i + 1}>
                             {i + 1}
@@ -303,11 +564,16 @@ const AccountSetting = () => {
                       <TextField
                         select
                         fullWidth
-                        SelectProps={{
-                          native: true,
-                        }}
+                        value={formData.birthDate.month}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            birthDate: { ...formData.birthDate, month: e.target.value }
+                          })
+                        }
+                        SelectProps={{ native: true }}
                       >
-                        <option>Tháng</option>
+                        <option value="">Tháng</option>
                         {[...Array(12)].map((_, i) => (
                           <option key={i + 1} value={i + 1}>
                             {i + 1}
@@ -317,11 +583,16 @@ const AccountSetting = () => {
                       <TextField
                         select
                         fullWidth
-                        SelectProps={{
-                          native: true,
-                        }}
+                        value={formData.birthDate.year}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            birthDate: { ...formData.birthDate, year: e.target.value }
+                          })
+                        }
+                        SelectProps={{ native: true }}
                       >
-                        <option>Năm</option>
+                        <option value="">Năm</option>
                         {[...Array(100)].map((_, i) => (
                           <option key={i} value={2024 - i}>
                             {2024 - i}
@@ -355,17 +626,7 @@ const AccountSetting = () => {
       case 'address':
         return <AddressSection />;
       case 'bank':
-        return (
-          <Box sx={{ width: '100%' }}>
-            <Typography variant="h6" sx={{ mb: 1 }}>
-              Tài khoản ngân hàng của tôi
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 3, color: "text.secondary" }}>
-              Quản lý thông tin tài khoản ngân hàng
-            </Typography>
-            <Divider sx={{ mb: 3 }} />
-          </Box>
-        );
+        return renderBankContent();
       case 'password':
         return (
           <Box sx={{ width: '100%' }}>
@@ -470,7 +731,6 @@ const AccountSetting = () => {
           gap: 3
         }}
       >
-        {/* Left Sidebar */}
         <Box 
           sx={{ 
             width: { xs: '100%', md: '280px' },
@@ -544,11 +804,10 @@ const AccountSetting = () => {
           </Box>
         </Box>
 
-        {/* Main Content */}
         <Box 
           sx={{ 
             flex: 1,
-            minWidth: 0 // Prevent flex item from overflowing
+            minWidth: 0
           }}
         >
           <Paper 

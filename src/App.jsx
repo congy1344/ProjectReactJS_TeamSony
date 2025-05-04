@@ -20,6 +20,7 @@ import Register from "./pages/Register";
 import AccountSetting from "./pages/AccountSetting";
 import Notification from "./components/Notification";
 import { AuthProvider } from "./contexts/AuthContext";
+import OrderPage from "./pages/OrderPage";
 import "./index.css";
 
 const customTheme = createTheme({
@@ -97,6 +98,7 @@ function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/account-setting" element={<AccountSetting />} />
+                  <Route path="/orders" element={<OrderPage />} />
                 </Routes>
               </Box>
             </Box>

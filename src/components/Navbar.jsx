@@ -17,7 +17,7 @@ import {
   Tooltip,
   InputBase,
 } from "@mui/material";
-import { ShoppingCart, Person, Favorite, Search } from "@mui/icons-material";
+import { ShoppingCart, Person, Favorite, Search, LocalShipping } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { useAuth } from "../contexts/AuthContext";
 import { styled, alpha } from "@mui/material/styles";
@@ -195,6 +195,13 @@ const Navbar = () => {
                           >
                             Account Settings
                           </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/orders"
+                            onClick={handleClose}
+                          >
+                            My Orders
+                          </MenuItem>
                           <MenuItem onClick={handleLogout}>Log out</MenuItem>
                         </MenuList>
                       </Paper>
@@ -215,6 +222,23 @@ const Navbar = () => {
               Login
             </Button>
           )}
+
+          <Tooltip title="My Orders">
+            <IconButton
+              component={Link}
+              to="/orders"
+              color="inherit"
+              sx={{
+                ml: 2,
+                "&:hover": {
+                  color: "primary.main",
+                },
+              }}
+            >
+              <LocalShipping />
+            </IconButton>
+          </Tooltip>
+
           <IconButton
             component={Link}
             to="/wishlist"
@@ -231,6 +255,7 @@ const Navbar = () => {
             to="/cart"
             color="inherit"
             sx={{
+              ml: 2,
               "&:hover": {
                 color: "primary.main",
               },
