@@ -7,6 +7,13 @@
       "name": "Admin User",
       "username": "admin",
       "hasChangedUsername": false,
+      "gender": "Nam",
+      "birthDate": {
+        "day": "1",
+        "month": "1",
+        "year": "1990"
+      },
+      "bankCards": [],
       "addresses": [],
       "cart": {
         "items": [
@@ -84,19 +91,18 @@
         "total": 0
       },
       "wishlist": {
-        "items": [
-          {
-            "id": "5",
-            "name": "Executive Office Desk",
-            "description": "Premium executive desk with built-in storage solutions. Perfect for professional office environments.",
-            "price": 6900000,
-            "originalPrice": 8500000,
-            "discount": 15,
-            "image": "/images/desktop1.jpg",
-            "category": "Desktop"
-          }
-        ]
-      }
+        "items": []
+      },
+      "bankCards": [
+        {
+          "cardNumber": "0385412905",
+          "cardHolder": "NGUYEN HOANG SON",
+          "expiryDate": "23/06",
+          "bankName": "BIDV",
+          "isDefault": true,
+          "id": "1746368975045"
+        }
+      ]
     },
     {
       "id": "063f",
@@ -105,6 +111,9 @@
       "username": "huynhcongy",
       "password": "123",
       "hasChangedUsername": true,
+      "gender": null,
+      "birthDate": null,
+      "bankCards": [],
       "cart": {
         "items": [
           {
