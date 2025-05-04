@@ -355,7 +355,10 @@ const Home = () => {
                           color="primary"
                           component="span"
                         >
-                          {product.price.toLocaleString("vi-VN")}₫
+                          {(product.price || product.basePrice).toLocaleString(
+                            "vi-VN"
+                          )}
+                          ₫
                         </Typography>
                       </Box>
                       <Box>

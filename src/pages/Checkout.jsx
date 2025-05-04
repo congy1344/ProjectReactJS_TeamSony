@@ -22,7 +22,7 @@ const Checkout = () => {
   // Xác định sản phẩm và tổng tiền hiển thị
   const displayItems = buyNowProduct ? [buyNowProduct] : items;
   const displayTotal = buyNowProduct
-    ? buyNowProduct.price * buyNowProduct.quantity
+    ? (buyNowProduct.price || buyNowProduct.basePrice) * buyNowProduct.quantity
     : total;
 
   // Cập nhật state cho form thông tin
@@ -181,28 +181,67 @@ const Checkout = () => {
               </Typography>
 
               {displayItems.map((item) => (
-                <Box key={item.id} sx={{ mb: 2 }}>
+                <Box key={item.id} sx={{ mb: 3 }}>
                   <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <Typography variant="body1">{item.name}</Typography>
-                    <Typography variant="body1">
-                      {item.price.toLocaleString("vi-VN")}₫
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                      {item.name}
+                    </Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                      {(item.price || item.basePrice).toLocaleString("vi-VN")}₫
                     </Typography>
                   </Box>
                   <Typography variant="body2" color="text.secondary">
                     Quantity: {item.quantity}
                   </Typography>
+                  {item.color && (
+                    <Typography variant="body2" color="text.secondary">
+                      Color: {item.color}
+                    </Typography>
+                  )}
+                  {item.dimension && (
+                    <Typography variant="body2" color="text.secondary">
+                      Dimension: {item.dimension}
+                    </Typography>
+                  )}
+                  <Box sx={{ mt: 1 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Subtotal:{" "}
+                      {(
+                        (item.price || item.basePrice) * item.quantity
+                      ).toLocaleString("vi-VN")}
+                      ₫
+                    </Typography>
+                  </Box>
                 </Box>
               ))}
 
               <Divider sx={{ my: 2 }} />
 
               <Box
+                sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
+              >
+                <Typography variant="body1">Subtotal</Typography>
+                <Typography variant="body1">
+                  {displayTotal.toLocaleString("vi-VN")}₫
+                </Typography>
+              </Box>
+
+              <Box
+                sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
+              >
+                <Typography variant="body1">Shipping</Typography>
+                <Typography variant="body1">Free</Typography>
+              </Box>
+
+              <Box
                 sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}
               >
-                <Typography variant="h6">Total</Typography>
-                <Typography variant="h6">
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  Total
+                </Typography>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   {displayTotal.toLocaleString("vi-VN")}₫
                 </Typography>
               </Box>

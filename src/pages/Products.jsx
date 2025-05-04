@@ -278,7 +278,10 @@ const Products = () => {
                   >
                     <Box>
                       <Typography variant="h6" color="primary" component="span">
-                        {product.price.toLocaleString("vi-VN")}₫
+                        {(product.price || product.basePrice).toLocaleString(
+                          "vi-VN"
+                        )}
+                        ₫
                       </Typography>
                       {product.originalPrice && (
                         <Typography
