@@ -11,6 +11,10 @@ import {
   CircularProgress,
   IconButton,
   Chip,
+  Rating,
+  ToggleButton,
+  ToggleButtonGroup,
+  Divider,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { addToCartWithNotification } from "../store/cartSlice";
@@ -18,18 +22,53 @@ import {
   addToWishlistWithNotification,
   removeFromWishlist,
 } from "../store/wishlistSlice";
-import { Favorite, ShoppingCart, ArrowBack } from "@mui/icons-material";
+import {
+  Favorite,
+  ShoppingCart,
+  ArrowBack,
+  Add,
+  Remove,
+} from "@mui/icons-material";
 import { api } from "../api/api";
 import { useAuth } from "../contexts/AuthContext";
+
+// Hàm chuyển đổi tên màu thành mã màu CSS
+const getColorCode = (colorName) => {
+  const colorMap = {
+    Black: "#000000",
+    White: "#FFFFFF",
+    Grey: "#808080",
+    Red: "#FF0000",
+    Blue: "#0000FF",
+    Green: "#008000",
+    Yellow: "#FFFF00",
+    Pink: "#FFC0CB",
+    Purple: "#800080",
+    Brown: "#A52A2A",
+    Orange: "#FFA500",
+    Silver: "#C0C0C0",
+    Natural: "#E8D8C0",
+    Rainbow:
+      "linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)",
+  };
+
+  return colorMap[colorName] || "#CCCCCC"; // Màu mặc định nếu không tìm thấy
+};
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useAuth();
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedDimension, setSelectedDimension] = useState("");
+  const [quantity, setQuantity] = useState(1);
+
+  // Thêm state cho giá
+  const [currentPrice, setCurrentPrice] = useState(0);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -37,6 +76,19 @@ const ProductDetail = () => {
         setLoading(true);
         const data = await api.getProductById(id);
         setProduct(data);
+
+        // Set giá trị mặc định cho color và dimension
+        if (data.colors && data.colors.length > 0) {
+          setSelectedColor(data.colors[0]);
+        }
+
+        if (data.dimensions && data.dimensions.length > 0) {
+          setSelectedDimension(data.dimensions[0]);
+        }
+
+        // Thiết lập giá ban đầu
+        setCurrentPrice(data.price || data.basePrice || 0);
+
         setError(null);
       } catch (err) {
         setError("Failed to fetch product details. Please try again later.");
@@ -49,14 +101,51 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
+  const handleColorChange = (event, newColor) => {
+    if (newColor !== null) {
+      setSelectedColor(newColor);
+    }
+  };
+
+  const handleDimensionChange = (event, newDimension) => {
+    if (newDimension !== null) {
+      setSelectedDimension(newDimension);
+    }
+  };
+
+  const handleQuantityChange = (amount) => {
+    const newQuantity = quantity + amount;
+    if (newQuantity > 0) {
+      setQuantity(newQuantity);
+    }
+  };
+
   const handleAddToCart = () => {
-    dispatch(addToCartWithNotification({ ...product, quantity: 1 }));
+    dispatch(
+      addToCartWithNotification({
+        ...product,
+        quantity,
+        color: selectedColor,
+        dimension: selectedDimension,
+      })
+    );
   };
 
   const handleBuyNow = () => {
-    // Thay vì thêm vào giỏ hàng, chuyển hướng đến trang checkout với thông tin sản phẩm
+    // Đảm bảo sản phẩm có giá trước khi chuyển đến trang checkout
+    const productToCheckout = {
+      ...product,
+      quantity,
+      color: selectedColor,
+      dimension: selectedDimension,
+      // Đảm bảo sản phẩm có giá
+      price: product.price || product.basePrice || 0,
+    };
+
     navigate("/checkout", {
-      state: { buyNowProduct: { ...product, quantity: 1 } },
+      state: {
+        buyNowProduct: productToCheckout,
+      },
     });
   };
 
@@ -156,13 +245,33 @@ const ProductDetail = () => {
             {product.name}
           </Typography>
 
+          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+            <Rating
+              value={product.ratings?.average || 0}
+              precision={0.5}
+              readOnly
+            />
+            <Typography variant="body2" sx={{ ml: 1 }}>
+              ({product.ratings?.count || 0} đánh giá)
+            </Typography>
+            <Chip
+              label={product.inStock ? "Còn hàng" : "Hết hàng"}
+              color={product.inStock ? "success" : "error"}
+              size="small"
+              sx={{ ml: 2 }}
+            />
+          </Box>
+
           <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            {product.description}
+            {product.detailedDescription || product.description}
           </Typography>
 
           <Box sx={{ mb: 3 }}>
             <Typography variant="h4" color="primary" component="span">
-              {product.price.toLocaleString("vi-VN")}₫
+              {product.price
+                ? product.price.toLocaleString("vi-VN")
+                : product.basePrice.toLocaleString("vi-VN")}
+              ₫
             </Typography>
             {product.originalPrice && (
               <Typography
@@ -176,11 +285,127 @@ const ProductDetail = () => {
             )}
           </Box>
 
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle1" gutterBottom>
-              Category: {product.category}
+          {product.colors && product.colors.length > 0 && (
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                Color
+              </Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                {product.colors.map((color) => {
+                  // Chuyển đổi tên màu thành mã màu CSS
+                  const colorCode = getColorCode(color);
+
+                  return (
+                    <Box
+                      key={color}
+                      onClick={() => handleColorChange(null, color)}
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        backgroundColor: colorCode,
+                        cursor: "pointer",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        border:
+                          selectedColor === color
+                            ? "2px solid #000"
+                            : "1px solid #ddd",
+                        boxShadow:
+                          selectedColor === color
+                            ? "0 0 5px rgba(0,0,0,0.3)"
+                            : "none",
+                        position: "relative",
+                        "&:hover": {
+                          boxShadow: "0 0 8px rgba(0,0,0,0.4)",
+                        },
+                        "&::after":
+                          selectedColor === color
+                            ? {
+                                content: '""',
+                                position: "absolute",
+                                width: 30,
+                                height: 30,
+                                borderRadius: "50%",
+                                border: "2px solid white",
+                              }
+                            : {},
+                      }}
+                    />
+                  );
+                })}
+              </Box>
+              <Typography
+                variant="body2"
+                sx={{ mt: 1, color: "text.secondary" }}
+              >
+                Selected: {selectedColor || "None"}
+              </Typography>
+            </Box>
+          )}
+
+          {product.dimensions && product.dimensions.length > 0 && (
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                Dimensions
+              </Typography>
+              <ToggleButtonGroup
+                value={selectedDimension}
+                exclusive
+                onChange={handleDimensionChange}
+                aria-label="dimension selection"
+              >
+                {product.dimensions.map((dimension) => (
+                  <ToggleButton
+                    key={
+                      typeof dimension === "object" ? dimension.size : dimension
+                    }
+                    value={
+                      typeof dimension === "object" ? dimension.size : dimension
+                    }
+                    aria-label={
+                      typeof dimension === "object" ? dimension.size : dimension
+                    }
+                    sx={{
+                      mx: 0.5,
+                      textTransform: "none",
+                      "&.Mui-selected": {
+                        bgcolor: "rgba(0, 0, 0, 0.08)",
+                        fontWeight: "bold",
+                      },
+                    }}
+                  >
+                    {typeof dimension === "object" ? dimension.size : dimension}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
+            </Box>
+          )}
+
+          <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+            <Typography variant="subtitle1" sx={{ mr: 2 }}>
+              Quantity:
             </Typography>
+            <IconButton
+              size="small"
+              onClick={() => handleQuantityChange(-1)}
+              disabled={quantity <= 1}
+              sx={{ border: "1px solid", borderColor: "divider" }}
+            >
+              <Remove fontSize="small" />
+            </IconButton>
+            <Typography sx={{ mx: 2 }}>{quantity}</Typography>
+            <IconButton
+              size="small"
+              onClick={() => handleQuantityChange(1)}
+              sx={{ border: "1px solid", borderColor: "divider" }}
+            >
+              <Add fontSize="small" />
+            </IconButton>
           </Box>
+
+          <Divider sx={{ mb: 3 }} />
 
           <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
             <Button
