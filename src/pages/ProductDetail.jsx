@@ -16,7 +16,7 @@ import {
   ToggleButtonGroup,
   Divider,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCartWithNotification } from "../store/cartSlice";
 import {
   addToWishlistWithNotification,
@@ -151,10 +151,13 @@ const ProductDetail = () => {
 
   const handleToggleWishlist = () => {
     if (user) {
-      if (user.wishlist?.items?.some((item) => item.id === product.id)) {
+      const isInWishlist = wishlistItems.some((item) => item.id === product.id);
+      if (isInWishlist) {
         dispatch(removeFromWishlist(product.id));
+        // Cập nhật wishlist trong database nếu cần
       } else {
         dispatch(addToWishlistWithNotification(product));
+        // Cập nhật wishlist trong database nếu cần
       }
     } else {
       navigate("/login");

@@ -173,6 +173,32 @@
               "average": 4.8,
               "count": 14
             }
+          },
+          {
+            "id": "5",
+            "name": "Executive Office Desk",
+            "description": "Premium executive desk with built-in storage solutions. Perfect for professional office environments.",
+            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "price": 6900000,
+            "originalPrice": 8500000,
+            "discount": 15,
+            "image": "/images/desktop1.jpg",
+            "category": "Desktop",
+            "colors": [
+              "Black",
+              "Brown",
+              "Walnut"
+            ],
+            "dimensions": [
+              "160x80",
+              "180x90",
+              "200x100"
+            ],
+            "inStock": true,
+            "ratings": {
+              "average": 4.8,
+              "count": 14
+            }
           }
         ]
       },

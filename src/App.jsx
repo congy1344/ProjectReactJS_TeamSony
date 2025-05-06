@@ -21,6 +21,7 @@ import AccountSetting from "./pages/AccountSetting";
 import Notification from "./components/Notification";
 import { AuthProvider } from "./contexts/AuthContext";
 import OrderPage from "./pages/OrderPage";
+import Wishlist from "./pages/Wishlist"; // Import trang Wishlist
 import "./index.css";
 
 const customTheme = createTheme({
@@ -66,7 +67,12 @@ function App() {
       <AuthProvider>
         <ThemeProvider theme={customTheme}>
           <CssBaseline />
-          <Router>
+          <Router
+            future={{
+              v7_startTransition: true,
+              v7_relativeSplatPath: true,
+            }}
+          >
             <Box
               sx={{
                 display: "flex",
@@ -99,6 +105,8 @@ function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/account-setting" element={<AccountSetting />} />
                   <Route path="/orders" element={<OrderPage />} />
+                  <Route path="/wishlist" element={<Wishlist />} />{" "}
+                  {/* Thêm route cho trang Wishlist */}
                 </Routes>
               </Box>
             </Box>

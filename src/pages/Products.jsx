@@ -1,4 +1,12 @@
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCartWithNotification } from "../store/cartSlice";
+import {
+  addToWishlistWithNotification,
+  removeFromWishlist,
+} from "../store/wishlistSlice";
+import { api } from "../api/api";
+import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -15,10 +23,7 @@ import {
   IconButton,
   CircularProgress,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../store/cartSlice";
 import { Favorite, ShoppingCart } from "@mui/icons-material";
-import { api } from "../api/api";
 
 const categories = ["Deskframe", "Desktop", "L-Shaped", "Desk for kids"];
 const colors = ["Black", "White", "Grey"];
@@ -31,6 +36,17 @@ const Products = () => {
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { wishlistItems } = useSelector((state) => state.wishlist);
+
+  const handleToggleWishlist = (e, product) => {
+    e.stopPropagation();
+    const isInWishlist = wishlistItems.some((item) => item.id === product.id);
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(product.id));
+    } else {
+      dispatch(addToWishlistWithNotification(product));
+    }
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -295,8 +311,18 @@ const Products = () => {
                       )}
                     </Box>
                     <Box>
-                      <IconButton size="small" sx={{ mr: 1 }}>
-                        <Favorite />
+                      <IconButton
+                        size="small"
+                        sx={{ mr: 1 }}
+                        onClick={(e) => handleToggleWishlist(e, product)}
+                      >
+                        <Favorite
+                          color={
+                            wishlistItems.some((item) => item.id === product.id)
+                              ? "error"
+                              : "inherit"
+                          }
+                        />
                       </IconButton>
                       <IconButton
                         size="small"
