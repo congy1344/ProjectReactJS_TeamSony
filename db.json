@@ -176,7 +176,97 @@
           }
         ]
       },
-      "phone": "0766923478"
+      "phone": "0766923478",
+      "orders": [
+        {
+          "id": "ORD1746539829013",
+          "userId": "063f",
+          "items": [
+            {
+              "id": "5",
+              "name": "Executive Office Desk",
+              "description": "Premium executive desk with built-in storage solutions. Perfect for professional office environments.",
+              "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+              "price": 6900000,
+              "originalPrice": 8500000,
+              "discount": 15,
+              "image": "/images/desktop1.jpg",
+              "category": "Desktop",
+              "colors": [
+                "Black",
+                "Brown",
+                "Walnut"
+              ],
+              "dimensions": [
+                "160x80",
+                "180x90",
+                "200x100"
+              ],
+              "inStock": true,
+              "ratings": {
+                "average": 4.8,
+                "count": 14
+              },
+              "quantity": 1
+            }
+          ],
+          "total": 6900000,
+          "status": "In Transit",
+          "orderDate": "2025-05-06T13:57:09.013Z",
+          "deliveryDate": null,
+          "shippingAddress": {
+            "fullName": "Huynh Cong Y",
+            "phone": "0766923478",
+            "address": "",
+            "city": ""
+          },
+          "paymentMethod": "COD"
+        },
+        {
+          "id": "ORD1746541997859",
+          "userId": "063f",
+          "items": [
+            {
+              "id": "5",
+              "name": "Executive Office Desk",
+              "description": "Premium executive desk with built-in storage solutions. Perfect for professional office environments.",
+              "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+              "price": 6900000,
+              "originalPrice": 8500000,
+              "discount": 15,
+              "image": "/images/desktop1.jpg",
+              "category": "Desktop",
+              "colors": [
+                "Black",
+                "Brown",
+                "Walnut"
+              ],
+              "dimensions": [
+                "160x80",
+                "180x90",
+                "200x100"
+              ],
+              "inStock": true,
+              "ratings": {
+                "average": 4.8,
+                "count": 14
+              },
+              "quantity": 1
+            }
+          ],
+          "total": 6900000,
+          "status": "In Transit",
+          "orderDate": "2025-05-06T14:33:17.859Z",
+          "deliveryDate": null,
+          "shippingAddress": {
+            "fullName": "Huynh Cong Y",
+            "phone": "0766923478",
+            "address": "40/7 Nguyễn Văn Đậu phường 6 Bình Thạnh",
+            "city": "Thành phố Hồ Chí Minh"
+          },
+          "paymentMethod": "COD"
+        }
+      ]
     }
   ],
   "products": [

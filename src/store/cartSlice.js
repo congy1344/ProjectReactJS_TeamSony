@@ -50,10 +50,15 @@ const cartSlice = createSlice({
       state.total = action.payload.total || 0;
       return state;
     },
+    clearCart: (state) => {
+      state.items = [];
+      state.total = 0;
+      return state;
+    },
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity, setCart } =
+export const { addToCart, removeFromCart, updateQuantity, setCart, clearCart } =
   cartSlice.actions;
 
 // Thunk action để thêm vào giỏ hàng và hiển thị thông báo
