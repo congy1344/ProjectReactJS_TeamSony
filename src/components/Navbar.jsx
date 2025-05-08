@@ -4,20 +4,29 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  IconButton,
-  Badge,
   Box,
   Button,
-  Popper,
-  Paper,
-  Grow,
-  ClickAwayListener,
-  MenuList,
+  IconButton,
+  Menu,
   MenuItem,
-  Tooltip,
+  Avatar,
+  Badge,
   InputBase,
+  Divider,
+  Tooltip,
+  Paper,
+  Popper,
+  Grow,
+  MenuList,
 } from "@mui/material";
-import { ShoppingCart, Person, Favorite, Search, LocalShipping } from "@mui/icons-material";
+import {
+  Search,
+  ShoppingCart,
+  Person,
+  Favorite,
+  Clear,
+  LocalShipping,
+} from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { useAuth } from "../contexts/AuthContext";
 import { styled, alpha } from "@mui/material/styles";
@@ -32,35 +41,34 @@ const SearchBox = styled("div")(({ theme }) => ({
   marginRight: theme.spacing(2),
   marginLeft: theme.spacing(3),
   width: "100%",
-  maxWidth: "400px",
+  maxWidth: "500px",
   [theme.breakpoints.down("sm")]: {
     marginLeft: theme.spacing(1),
     width: "auto",
   },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
+  border: "1px solid rgba(0, 0, 0, 0.1)",
+  transition: "all 0.3s ease",
+  "&:focus-within": {
+    boxShadow: "0 0 0 2px rgba(0, 0, 0, 0.1)",
+    border: "1px solid rgba(0, 0, 0, 0.2)",
+  },
   display: "flex",
   alignItems: "center",
-  justifyContent: "center",
-  color: alpha(theme.palette.common.black, 0.54),
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   width: "100%",
   "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    padding: theme.spacing(1.2, 1, 1.2, 2), // Thay đổi padding để không cần SearchIconWrapper
     width: "100%",
+    fontSize: "0.95rem",
+    transition: theme.transitions.create("width"),
   },
 }));
 
 const Navbar = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const cartItems = useSelector((state) => state.cart.items);
@@ -99,6 +107,24 @@ const Navbar = () => {
     setOpen(false);
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    // Ngăn chặn hành vi mặc định của form
+    if (e) e.preventDefault();
+
+    // Chỉ tìm kiếm khi có từ khóa
+    if (searchQuery && searchQuery.trim()) {
+      const trimmedQuery = searchQuery.trim();
+      console.log("Submitting search for:", trimmedQuery);
+
+      // Chuyển hướng đến trang products với tham số tìm kiếm
+      navigate(`/products?search=${encodeURIComponent(trimmedQuery)}`);
+    }
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -122,27 +148,39 @@ const Navbar = () => {
           SONY STORE
         </Typography>
 
-        <Box sx={{ display: "flex", alignItems: "center", flex: 1 }}>
-          <Button
-            component={Link}
-            to="/products"
-            sx={{
-              color: "inherit",
-              ml: 4,
-              "&:hover": { bgcolor: "transparent", color: "primary.main" },
-            }}
-          >
-            PRODUCTS
-          </Button>
-
-          <SearchBox>
-            <SearchIconWrapper>
-              <Search />
-            </SearchIconWrapper>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flex: 1,
+            justifyContent: "center",
+          }}
+        >
+          <SearchBox component="form" onSubmit={handleSearchSubmit}>
             <StyledInputBase
               placeholder="Search products..."
               inputProps={{ "aria-label": "search" }}
+              value={searchQuery}
+              onChange={handleSearchChange}
+              sx={{ paddingLeft: 2 }}
             />
+            {searchQuery && (
+              <IconButton
+                size="small"
+                sx={{ mr: 1 }}
+                onClick={() => setSearchQuery("")}
+              >
+                <Clear fontSize="small" />
+              </IconButton>
+            )}
+            <IconButton
+              type="submit"
+              sx={{ p: "10px" }}
+              aria-label="search"
+              onClick={handleSearchSubmit}
+            >
+              <Search />
+            </IconButton>
           </SearchBox>
         </Box>
 

@@ -16,23 +16,43 @@
       "bankCards": [],
       "addresses": [],
       "cart": {
-        "items": [
-          {
-            "id": "6",
-            "name": "Compact Writing Desk",
-            "description": "Space-saving design perfect for small apartments. Features built-in cable management.",
-            "price": 4300000,
-            "originalPrice": 5400000,
-            "discount": 20,
-            "image": "/images/desktop2.webp",
-            "category": "Desktop",
-            "quantity": 1
-          }
-        ],
+        "items": [],
         "total": 0
       },
       "wishlist": {
-        "items": []
+        "items": [
+          {
+            "id": "2",
+            "name": "L-Shaped Corner Desk",
+            "description": "Maximize your corner space with this L-shaped desk. Perfect for multi-monitor setups and large workspaces.",
+            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "basePrice": 8500000,
+            "originalPrice": 10500000,
+            "discount": 20,
+            "image": "/images/l1.jpg",
+            "category": "L-Shaped",
+            "colors": [
+              "Black",
+              "White",
+              "Grey"
+            ],
+            "dimensions": [
+              {
+                "size": "160x80",
+                "priceAdjustment": 0
+              },
+              {
+                "size": "180x80",
+                "priceAdjustment": 800000
+              }
+            ],
+            "inStock": true,
+            "ratings": {
+              "average": 4.2,
+              "count": 8
+            }
+          }
+        ]
       }
     },
     {
@@ -291,6 +311,51 @@
             "city": "Thành phố Hồ Chí Minh"
           },
           "paymentMethod": "COD"
+        },
+        {
+          "id": "ORD1746706260535",
+          "userId": "063f",
+          "items": [
+            {
+              "id": "15",
+              "name": "Corner L-Shaped Desk",
+              "description": "Space-saving corner desk with modern design. Perfect for maximizing workspace.",
+              "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+              "price": 7800000,
+              "originalPrice": 9500000,
+              "discount": 23,
+              "image": "/images/l2.avif",
+              "category": "L-Shaped",
+              "colors": [
+                "Black",
+                "White",
+                "Grey"
+              ],
+              "dimensions": [
+                "140x140",
+                "160x160"
+              ],
+              "inStock": true,
+              "ratings": {
+                "average": 4.5,
+                "count": 12
+              },
+              "quantity": 1,
+              "color": "Black",
+              "dimension": "140x140"
+            }
+          ],
+          "total": 7800000,
+          "status": "In Transit",
+          "orderDate": "2025-05-08T12:11:00.535Z",
+          "deliveryDate": null,
+          "shippingAddress": {
+            "fullName": "Huynh Cong Y",
+            "phone": "0766923478",
+            "address": "40/7 Nguyễn Văn Đậu phường 6 Bình Thạnh",
+            "city": "Thành phố Hồ Chí Minh"
+          },
+          "paymentMethod": "COD"
         }
       ]
     }
@@ -306,6 +371,10 @@
       "discount": 20,
       "image": "/images/ban-ikea-luzo-12.jpg",
       "category": "Desktop",
+      "categories": [
+        "Desktop",
+        "Bestsellers"
+      ],
       "colors": [
         "Black",
         "White",
@@ -373,6 +442,10 @@
       "discount": 15,
       "image": "/images/deskframe1.webp",
       "category": "Deskframe",
+      "categories": [
+        "Deskframe",
+        "Bestsellers"
+      ],
       "colors": [
         "Black",
         "White",
@@ -425,6 +498,10 @@
       "discount": 15,
       "image": "/images/desktop1.jpg",
       "category": "Desktop",
+      "categories": [
+        "Desktop",
+        "Bestsellers"
+      ],
       "colors": [
         "Black",
         "Brown",
@@ -501,6 +578,10 @@
       "discount": 22,
       "image": "/images/l3.webp",
       "category": "L-Shaped",
+      "categories": [
+        "L-Shaped",
+        "Bestsellers"
+      ],
       "colors": [
         "Black",
         "Red",

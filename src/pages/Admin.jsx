@@ -17,6 +17,12 @@ import {
   DialogActions,
   TextField,
   Box,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
 } from "@mui/material";
 import { Delete, Edit, Add } from "@mui/icons-material";
 
@@ -50,9 +56,13 @@ const Admin = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
+    description: "",
     price: "",
-    category: "",
     image: "",
+    category: "",
+    color: "",
+    dimension: "",
+    isBestseller: false,
   });
 
   const handleOpen = (product = null) => {
@@ -77,10 +87,19 @@ const Admin = () => {
   };
 
   const handleSubmit = () => {
+    const newProduct = {
+      ...formData,
+      price: parseFloat(formData.price),
+      // Nếu là bestseller, thêm vào danh mục Bestsellers
+      categories: formData.isBestseller
+        ? [formData.category, "Bestsellers"]
+        : [formData.category],
+    };
+
     if (editingProduct) {
       setProducts(
         products.map((p) =>
-          p.id === editingProduct.id ? { ...p, ...formData } : p
+          p.id === editingProduct.id ? { ...p, ...newProduct } : p
         )
       );
     } else {
@@ -88,8 +107,7 @@ const Admin = () => {
         ...products,
         {
           id: products.length + 1,
-          ...formData,
-          price: parseFloat(formData.price),
+          ...newProduct,
         },
       ]);
     }
@@ -98,6 +116,14 @@ const Admin = () => {
 
   const handleDelete = (id) => {
     setProducts(products.filter((p) => p.id !== id));
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   return (
@@ -187,14 +213,19 @@ const Admin = () => {
               }
               fullWidth
             />
-            <TextField
-              label="Category"
-              value={formData.category}
-              onChange={(e) =>
-                setFormData({ ...formData, category: e.target.value })
-              }
-              fullWidth
-            />
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel>Category</InputLabel>
+              <Select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+              >
+                <MenuItem value="Deskframe">Deskframe</MenuItem>
+                <MenuItem value="Desktop">Desktop</MenuItem>
+                <MenuItem value="L-Shaped">L-Shaped</MenuItem>
+                <MenuItem value="Desk for kids">Desk for kids</MenuItem>
+              </Select>
+            </FormControl>
             <TextField
               label="Image URL"
               value={formData.image}
@@ -202,6 +233,17 @@ const Admin = () => {
                 setFormData({ ...formData, image: e.target.value })
               }
               fullWidth
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.isBestseller}
+                  onChange={handleChange}
+                  name="isBestseller"
+                />
+              }
+              label="Add to Bestsellers"
+              sx={{ mb: 2 }}
             />
           </Box>
         </DialogContent>
