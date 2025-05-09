@@ -288,69 +288,8 @@
       "birthDate": null,
       "bankCards": [],
       "cart": {
-        "items": [
-          {
-            "id": "5",
-            "name": "Executive Office Desk",
-            "description": "Premium executive desk with built-in storage solutions. Perfect for professional office environments.",
-            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-            "price": 6900000,
-            "originalPrice": 8500000,
-            "discount": 15,
-            "image": "/images/desktop1.jpg",
-            "category": "Desktop",
-            "colors": [
-              "Black",
-              "Brown",
-              "Walnut"
-            ],
-            "dimensions": [
-              "160x80",
-              "180x90",
-              "200x100"
-            ],
-            "inStock": true,
-            "ratings": {
-              "average": 4.8,
-              "count": 14
-            },
-            "quantity": 1
-          },
-          {
-            "id": "2",
-            "name": "L-Shaped Corner Desk",
-            "description": "Maximize your corner space with this L-shaped desk. Perfect for multi-monitor setups and large workspaces.",
-            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-            "basePrice": 8500000,
-            "price": 8500000,
-            "originalPrice": 10500000,
-            "discount": 20,
-            "image": "/images/l1.jpg",
-            "category": "L-Shaped",
-            "colors": [
-              "Black",
-              "White",
-              "Grey"
-            ],
-            "dimensions": [
-              {
-                "size": "160x80",
-                "priceAdjustment": 0
-              },
-              {
-                "size": "180x80",
-                "priceAdjustment": 800000
-              }
-            ],
-            "inStock": true,
-            "ratings": {
-              "average": 4.2,
-              "count": 8
-            },
-            "quantity": 1
-          }
-        ],
-        "total": 15400000
+        "items": [],
+        "total": 0
       },
       "wishlist": {
         "items": [

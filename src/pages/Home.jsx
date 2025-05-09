@@ -329,10 +329,17 @@ const Home = () => {
               fontWeight: selectedCategory === null ? 600 : 400,
               color:
                 selectedCategory === null ? "primary.main" : "text.primary",
-              "&:hover": { color: "primary.main" },
               display: "flex",
               alignItems: "center",
               pl: 1,
+              position: "relative",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                color: "primary.main",
+                pl: 2,
+                backgroundColor: "rgba(0,0,0,0.04)",
+                borderRadius: "4px",
+              },
             }}
             onClick={handleAllProducts}
           >
@@ -356,14 +363,23 @@ const Home = () => {
                 fontWeight: selectedCategory === text ? 600 : 400,
                 color:
                   selectedCategory === text ? "primary.main" : "text.primary",
-                "&:hover": { color: "primary.main" },
+                position: "relative",
+                transition: "all 0.3s ease",
                 borderLeft:
                   selectedCategory === text
                     ? "3px solid"
                     : "3px solid transparent",
                 borderColor:
                   selectedCategory === text ? "primary.main" : "transparent",
-                transition: "all 0.2s ease",
+                "&:hover": {
+                  color: "primary.main",
+                  pl: 2,
+                  backgroundColor: "rgba(0,0,0,0.04)",
+                  borderRadius: "4px",
+                  borderLeft: "3px solid",
+                  borderColor: "primary.main",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+                },
               }}
               onClick={() => handleCategorySelect(text)}
             >
@@ -391,6 +407,7 @@ const Home = () => {
             <Box
               key={color}
               onClick={() => handleColorFilter(color)}
+              className="color-option"
               sx={{
                 width: 36,
                 height: 36,
@@ -404,9 +421,10 @@ const Home = () => {
                 boxShadow:
                   selectedColor === color ? "0 0 0 2px #1a1a1a" : "none",
                 position: "relative",
-                transition: "all 0.2s ease",
+                transition: "all 0.3s ease",
                 "&:hover": {
-                  transform: "scale(1.1)",
+                  transform: "scale(1.15)",
+                  boxShadow: "0 0 10px rgba(0,0,0,0.2)",
                 },
                 "&::after":
                   selectedColor === color

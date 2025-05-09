@@ -299,12 +299,19 @@ const Products = () => {
               fontWeight: selectedCategory === null ? 600 : 400,
               color:
                 selectedCategory === null ? "primary.main" : "text.primary",
-              "&:hover": { color: "primary.main" },
               display: "flex",
               alignItems: "center",
               pl: 1,
+              position: "relative",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                color: "primary.main",
+                pl: 2,
+                backgroundColor: "rgba(0,0,0,0.04)",
+                borderRadius: "4px",
+              },
             }}
-            onClick={handleAllProducts}
+            onClick={() => setSelectedCategory(null)}
           >
             All Products
           </Typography>
@@ -326,14 +333,23 @@ const Products = () => {
                 fontWeight: selectedCategory === text ? 600 : 400,
                 color:
                   selectedCategory === text ? "primary.main" : "text.primary",
-                "&:hover": { color: "primary.main" },
+                position: "relative",
+                transition: "all 0.3s ease",
                 borderLeft:
                   selectedCategory === text
                     ? "3px solid"
                     : "3px solid transparent",
                 borderColor:
                   selectedCategory === text ? "primary.main" : "transparent",
-                transition: "all 0.2s ease",
+                "&:hover": {
+                  color: "primary.main",
+                  pl: 2,
+                  backgroundColor: "rgba(0,0,0,0.04)",
+                  borderRadius: "4px",
+                  borderLeft: "3px solid",
+                  borderColor: "primary.main",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+                },
               }}
               onClick={() => setSelectedCategory(text)}
             >
@@ -407,25 +423,41 @@ const Products = () => {
         >
           Dimensions
         </Typography>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, pl: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 1.5,
+            mb: 4,
+            pl: 1,
+          }}
+        >
           {dimensions.map((dimension) => (
-            <Chip
+            <Button
               key={dimension}
-              label={dimension}
+              variant={
+                selectedDimension === dimension ? "contained" : "outlined"
+              }
               onClick={() => handleDimensionFilter(dimension)}
-              variant={selectedDimension === dimension ? "filled" : "outlined"}
-              color={selectedDimension === dimension ? "primary" : "default"}
+              className={`dimension-button ${
+                selectedDimension === dimension ? "selected" : ""
+              }`}
               sx={{
-                mb: 0.5,
-                borderRadius: "4px",
-                fontWeight: selectedDimension === dimension ? 600 : 400,
-                transition: "all 0.2s ease",
+                justifyContent: "center",
+                textTransform: "none",
+                transition: "all 0.3s ease",
                 "&:hover": {
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
                   backgroundColor:
-                    selectedDimension === dimension ? "" : "rgba(0,0,0,0.04)",
+                    selectedDimension === dimension
+                      ? "primary.main"
+                      : "#f5f5f5",
                 },
               }}
-            />
+            >
+              {dimension}
+            </Button>
           ))}
         </Box>
       </Box>

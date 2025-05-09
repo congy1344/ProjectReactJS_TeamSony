@@ -164,9 +164,35 @@ const Navbar = () => {
           component={Link}
           to="/"
           sx={{
-            textDecoration: "none",
+            mr: 2,
+            display: { xs: "none", md: "flex" },
+            fontFamily: "monospace",
+            fontWeight: 700,
+            letterSpacing: ".2rem",
             color: "inherit",
-            fontWeight: "bold",
+            textDecoration: "none",
+            position: "relative",
+            "&:hover": {
+              color: "primary.main",
+              transform: "scale(1.05)",
+              transition: "all 0.3s ease",
+              "&::after": {
+                width: "100%",
+                opacity: 1,
+              },
+            },
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              bottom: -2,
+              left: 0,
+              width: "0%",
+              height: "2px",
+              backgroundColor: "primary.main",
+              transition: "width 0.3s ease, opacity 0.3s ease",
+              opacity: 0,
+            },
+            transition: "all 0.3s ease",
           }}
         >
           SONY STORE
@@ -305,7 +331,10 @@ const Navbar = () => {
                             </ListItemIcon>
                             <ListItemText primary="Đơn hàng của tôi" />
                           </MenuItem>
-                          <MenuItem onClick={handleLogout} sx={{ py: 1, px: 2 }}>
+                          <MenuItem
+                            onClick={handleLogout}
+                            sx={{ py: 1, px: 2 }}
+                          >
                             <ListItemIcon sx={{ minWidth: 40 }}>
                               <Logout fontSize="small" />
                             </ListItemIcon>
