@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
   Typography,
@@ -6,24 +8,20 @@ import {
   Card,
   CardContent,
   CardMedia,
-  List,
-  ListItem,
-  ListItemText,
+  Button,
   Chip,
   IconButton,
   CircularProgress,
-  Button,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
 import { Favorite, ShoppingCart } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
 import { addToCartWithNotification } from "../store/cartSlice";
 import {
   addToWishlistWithNotification,
   removeFromWishlist,
 } from "../store/wishlistSlice";
-import { api } from "../api/api";
 import { useAuth } from "../contexts/AuthContext";
+import { api } from "../api/api"; // Thay đổi từ import * as api thành import { api }
+import Footer from "../components/Footer";
 
 const categories = ["Deskframe", "Desktop", "L-Shaped", "Desk for kids"];
 const colors = ["Black", "White", "Grey"];
@@ -749,6 +747,7 @@ const Home = () => {
             </Grid>
           </Box>
         )}
+        <Footer />
       </Box>
     </Box>
   );

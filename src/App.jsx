@@ -1,11 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import {
-  ThemeProvider,
-  createTheme,
-  CssBaseline,
-  Box,
-  Container,
-} from "@mui/material";
+import { ThemeProvider, createTheme, CssBaseline, Box } from "@mui/material";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import Navbar from "./components/Navbar";
@@ -21,7 +15,8 @@ import AccountSetting from "./pages/AccountSetting";
 import Notification from "./components/Notification";
 import { AuthProvider } from "./contexts/AuthContext";
 import OrderPage from "./pages/OrderPage";
-import Wishlist from "./pages/Wishlist"; // Import trang Wishlist
+import Wishlist from "./pages/Wishlist";
+// Xóa import Footer nếu có
 import "./index.css";
 
 const customTheme = createTheme({
@@ -78,8 +73,9 @@ function App() {
                 display: "flex",
                 flexDirection: "column",
                 minHeight: "100vh",
-                maxWidth: "100vw",
-                overflowX: "hidden",
+                width: "100%",
+                overflow: "hidden",
+                position: "relative",
               }}
             >
               <Navbar />
@@ -87,10 +83,10 @@ function App() {
               <Box
                 component="main"
                 sx={{
+                  display: "flex",
+                  flexDirection: "column",
                   flexGrow: 1,
                   width: "100%",
-                  maxWidth: "100%",
-                  overflowX: "hidden",
                   position: "relative",
                 }}
               >
@@ -105,9 +101,9 @@ function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/account-setting" element={<AccountSetting />} />
                   <Route path="/orders" element={<OrderPage />} />
-                  <Route path="/wishlist" element={<Wishlist />} />{" "}
-                  {/* Thêm route cho trang Wishlist */}
+                  <Route path="/wishlist" element={<Wishlist />} />
                 </Routes>
+                {/* Không thêm Footer ở đây */}
               </Box>
             </Box>
           </Router>
