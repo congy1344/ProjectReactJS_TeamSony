@@ -1,7 +1,11 @@
+// Sử dụng biến môi trường hoặc cấu hình mặc định
 const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://furniture-api-0bbp.onrender.com" // URL của API khi deploy
-    : "http://localhost:10000"; // Thay đổi port từ 3001 thành 10000
+  import.meta.env.VITE_API_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://furniture-api-0bbp.onrender.com" // URL của API đã deploy
+    : "http://localhost:10000"); // URL local
+
+console.log("Using API URL:", BASE_URL);
 
 export const api = {
   // Thêm phương thức để lấy BASE_URL
@@ -15,7 +19,14 @@ export const api = {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      return data;
+
+      // Đảm bảo mỗi sản phẩm có giá
+      const safeData = data.map((product) => ({
+        ...product,
+        price: product.price || product.basePrice || 0,
+      }));
+
+      return safeData;
     } catch (error) {
       console.error("Error fetching all products:", error);
       throw error;

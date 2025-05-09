@@ -69,15 +69,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUserWishlist = (wishlist) => {
-    if (user) {
-      const updatedUser = {
-        ...user,
+  const updateUserWishlist = async (wishlist) => {
+    if (!user || !user.id) return;
+
+    try {
+      const BASE_URL = api.getBaseUrl();
+      await axios.patch(`${BASE_URL}/users/${user.id}`, {
         wishlist,
-      };
-      setUser(updatedUser);
+      });
+
+      // Cập nhật user trong localStorage
+      const updatedUser = { ...user, wishlist };
       localStorage.setItem("user", JSON.stringify(updatedUser));
-      updateUserInDB(updatedUser);
+      setUser(updatedUser);
+    } catch (error) {
+      console.error("Error updating wishlist:", error);
     }
   };
 
