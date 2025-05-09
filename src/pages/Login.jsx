@@ -21,41 +21,38 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from || "/";
 
-  const [error, setError] = useState("");
-  const [formData, setFormData] = useState({
-    emailOrUsername: "",
-    password: "",
-  });
+    const [error, setError] = useState("");
+    const [formData, setFormData] = useState({
+          emailOrUsername: "",
+        password: ""
+    });
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        // Tìm kiếm user bằng email hoặc username
+        const [emailResponse, usernameResponse] = await Promise.all([
+          axios.get(`http://localhost:3001/users?email=${formData.emailOrUsername}`),
+          axios.get(`http://localhost:3001/users?username=${formData.emailOrUsername}`)
+        ]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // Sử dụng BASE_URL từ api.js thay vì hardcode localhost:3001
-      const BASE_URL = api.getBaseUrl(); // Thêm phương thức này vào api.js
-
-      // Tìm kiếm user bằng email hoặc username
-      const [emailResponse, usernameResponse] = await Promise.all([
-        axios.get(`${BASE_URL}/users?email=${formData.emailOrUsername}`),
-        axios.get(`${BASE_URL}/users?username=${formData.emailOrUsername}`),
-      ]);
-
-      // Kết hợp kết quả từ cả hai truy vấn
-      const user = emailResponse.data[0] || usernameResponse.data[0];
-
-      if (user && user.password === formData.password) {
-        login({
-          ...user,
-          hasChangedUsername: user.hasChangedUsername || false,
-        });
-        navigate(from, { replace: true });
-      } else {
-        setError("Email/Username hoặc mật khẩu không chính xác");
+        // Kết hợp kết quả từ cả hai truy vấn
+        const user = emailResponse.data[0] || usernameResponse.data[0];
+        
+        if (user && user.password === formData.password) {
+          login({
+            ...user,
+            hasChangedUsername: user.hasChangedUsername || false
+          });
+          navigate(from, { replace: true });
+        } else {
+          setError("Email/Username hoặc mật khẩu không chính xác");
+        }
+      } catch (error) {
+        setError("Đã có lỗi xảy ra, vui lòng thử lại");
+        console.error("Login error:", error);
       }
-    } catch (error) {
-      setError("Đã có lỗi xảy ra, vui lòng thử lại");
-      console.error("Login error:", error);
-    }
-  };
+    };
 
   return (
     <Box

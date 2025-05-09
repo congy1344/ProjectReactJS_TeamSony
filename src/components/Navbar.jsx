@@ -18,6 +18,8 @@ import {
   Popper,
   Grow,
   MenuList,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
 import {
   Search,
@@ -26,6 +28,10 @@ import {
   Favorite,
   Clear,
   LocalShipping,
+  Dashboard,
+  People,
+  ShoppingBasket,
+  Logout,
 } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { useAuth } from "../contexts/AuthContext";
@@ -70,7 +76,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const cartItems = useSelector((state) => state.cart.items);
   const wishlistItems = useSelector((state) => state.wishlist.items);
   const [open, setOpen] = useState(false);
@@ -124,6 +130,24 @@ const Navbar = () => {
       navigate(`/products?search=${encodeURIComponent(trimmedQuery)}`);
     }
   };
+
+  const adminMenuItems = [
+    {
+      label: "Quản lý sản phẩm",
+      icon: <ShoppingBasket />,
+      path: "/admin/products",
+    },
+    {
+      label: "Quản lý đơn hàng",
+      icon: <Dashboard />,
+      path: "/admin/orders",
+    },
+    {
+      label: "Quản lý người dùng",
+      icon: <People />,
+      path: "/admin/users",
+    },
+  ];
 
   return (
     <AppBar
@@ -226,21 +250,67 @@ const Navbar = () => {
                         onMouseEnter={() => setOpen(true)}
                       >
                         <MenuList>
+                          {isAdmin() && (
+                            <>
+                              <Box sx={{ px: 2, py: 1 }}>
+                                <Typography
+                                  variant="subtitle2"
+                                  color="text.secondary"
+                                >
+                                  Quản lý hệ thống
+                                </Typography>
+                              </Box>
+                              {adminMenuItems.map((item) => (
+                                <MenuItem
+                                  key={item.path}
+                                  onClick={() => {
+                                    navigate(item.path);
+                                    handleClose();
+                                  }}
+                                  sx={{
+                                    py: 1,
+                                    px: 2,
+                                    "&:hover": { bgcolor: "action.hover" },
+                                  }}
+                                >
+                                  <ListItemIcon sx={{ minWidth: 40 }}>
+                                    {item.icon}
+                                  </ListItemIcon>
+                                  <ListItemText primary={item.label} />
+                                </MenuItem>
+                              ))}
+                              <Divider />
+                            </>
+                          )}
                           <MenuItem
-                            component={Link}
-                            to="/account-setting"
-                            onClick={handleClose}
+                            onClick={() => {
+                              navigate("/account-setting");
+                              handleClose();
+                            }}
+                            sx={{ py: 1, px: 2 }}
                           >
-                            Account Settings
+                            <ListItemIcon sx={{ minWidth: 40 }}>
+                              <Person fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText primary="Tài khoản của tôi" />
                           </MenuItem>
                           <MenuItem
                             component={Link}
                             to="/orders"
                             onClick={handleClose}
+                            sx={{ py: 1, px: 2 }}
                           >
-                            My Orders
+                            <ListItemIcon sx={{ minWidth: 40 }}>
+                              <LocalShipping fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText primary="Đơn hàng của tôi" />
                           </MenuItem>
-                          <MenuItem onClick={handleLogout}>Log out</MenuItem>
+                          <MenuItem onClick={handleLogout} sx={{ py: 1, px: 2 }}>
+                            <ListItemIcon sx={{ minWidth: 40 }}>
+                              <Logout fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText primary="Đăng xuất" />
+                          </MenuItem>
                         </MenuList>
                       </Paper>
                     </Grow>

@@ -61,7 +61,7 @@ const Register = () => {
         email: formData.email,
         username: formData.username,
         password: formData.password,
-        hasChangedUsername: false,
+        hasChangedUsername: false
       });
 
       navigate("/login", { state: { from } });

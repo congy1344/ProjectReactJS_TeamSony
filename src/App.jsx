@@ -3,6 +3,7 @@ import { ThemeProvider, createTheme, CssBaseline, Box } from "@mui/material";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import Navbar from "./components/Navbar";
+import AdminFAB from "./components/AdminFAB";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
@@ -13,7 +14,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AccountSetting from "./pages/AccountSetting";
 import Notification from "./components/Notification";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import OrderPage from "./pages/OrderPage";
 import Wishlist from "./pages/Wishlist";
 // Xóa import Footer nếu có
@@ -55,6 +56,25 @@ const customTheme = createTheme({
     },
   },
 });
+
+const ProtectedAdminRoute = ({ children }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const localUser = JSON.parse(localStorage.getItem("user"));
+    if (!localUser) {
+      navigate("/login");
+      return;
+    }
+    if (localUser.role !== "admin") {
+      navigate("/");
+      return;
+    }
+  }, [navigate]);
+
+  return user?.role === "admin" ? children : null;
+};
 
 function App() {
   return (
