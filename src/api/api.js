@@ -1,5 +1,7 @@
-// Đảm bảo API hoạt động đúng. Nếu bạn đang chạy trên máy tính của mình, hãy thay đổi localhost:3001 thành localhost:3000.
-const BASE_URL = "http://localhost:3001";
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://furniture-api-0bbp.onrender.com" // URL của API khi deploy
+    : "http://localhost:10000"; // Thay đổi port từ 3001 thành 10000
 
 export const api = {
   // Đảm bảo API getAllProducts hoạt động đúng
