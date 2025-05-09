@@ -95,19 +95,7 @@
         }
       ],
       "cart": {
-        "items": [
-          {
-            "id": "6",
-            "name": "Compact Writing Desk",
-            "description": "Space-saving design perfect for small apartments. Features built-in cable management.",
-            "price": 4300000,
-            "originalPrice": 5400000,
-            "discount": 20,
-            "image": "/images/desktop2.webp",
-            "category": "Desktop",
-            "quantity": 1
-          }
-        ],
+        "items": [],
         "total": 0
       },
       "wishlist": {
@@ -121,6 +109,36 @@
           "bankName": "BIDV",
           "isDefault": true,
           "id": "1746368975045"
+        }
+      ],
+      "orders": [
+        {
+          "id": "ORD1746771769683",
+          "userId": "21cb",
+          "items": [
+            {
+              "id": "6",
+              "name": "Compact Writing Desk",
+              "description": "Space-saving design perfect for small apartments. Features built-in cable management.",
+              "price": 4300000,
+              "originalPrice": 5400000,
+              "discount": 20,
+              "image": "/images/desktop2.webp",
+              "category": "Desktop",
+              "quantity": 1
+            }
+          ],
+          "total": 0,
+          "status": "In Transit",
+          "orderDate": "2025-05-09T06:22:49.683Z",
+          "deliveryDate": null,
+          "shippingAddress": {
+            "fullName": "Nguyễn Hoàng Sơn",
+            "phone": "0385412905",
+            "address": "616/61/11D Lê Đức thọ",
+            "city": "Gò Vấp, Hồ Chí Minh"
+          },
+          "paymentMethod": "COD"
         }
       ]
     },

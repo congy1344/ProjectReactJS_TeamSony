@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -17,8 +18,9 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
+  Select,
+  MenuItem,
 } from "@mui/material";
-import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
@@ -39,114 +41,99 @@ const Checkout = () => {
     severity: "success",
   });
 
-  // Xác định sản phẩm và tổng tiền hiển thị
-  const displayItems = buyNowProduct ? [buyNowProduct] : items;
-  const displayTotal = buyNowProduct
-    ? (buyNowProduct.price || buyNowProduct.basePrice) * buyNowProduct.quantity
-    : total;
-
-  // Cập nhật state cho form thông tin
   const [formData, setFormData] = useState({
-    firstName: user?.name?.split(" ")[0] || "",
-    lastName: user?.name?.split(" ").slice(1).join(" ") || "",
+    fullName: user?.name || "",
     email: user?.email || "",
-    phone: "",
+    phone: user?.phone || "",
     address: "",
     city: "",
     paymentMethod: "cod",
     cardNumber: "",
     expiryDate: "",
     cvv: "",
+    selectedAddressId: "",
   });
 
-  // State để theo dõi lỗi validation
   const [errors, setErrors] = useState({});
+  const displayItems = buyNowProduct ? [buyNowProduct] : items;
+  const displayTotal = buyNowProduct ? buyNowProduct.price : total;
 
-  // Kiểm tra xem form đã hợp lệ chưa
+  const isCodEligible = () => {
+    const eligibleCities = ['Ho Chi Minh City', 'Hanoi'];
+    return eligibleCities.includes(formData.city?.trim());
+  };
+
   const isFormValid = () => {
-    const requiredFields = [
-      "firstName",
-      "lastName",
-      "email",
-      "phone",
-      "address",
-      "city",
-      "paymentMethod",
-    ];
+    // Check required fields
+    const requiredFields = ["fullName", "email", "phone", "address", "city"];
+    const hasEmptyField = requiredFields.some((field) => !formData[field]?.trim());
+    if (hasEmptyField) return false;
 
-    // Kiểm tra các trường bắt buộc
-    const basicFieldsValid = requiredFields.every(
-      (field) => formData[field].trim() !== ""
-    );
+    // Validate email format
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(formData.email)) return false;
 
-    // Kiểm tra thêm cho phương thức thanh toán online
+    // Validate phone number (10-11 digits)
+    const phoneRegex = /^\d{10,11}$/;
+    if (!phoneRegex.test(formData.phone.replace(/\s/g, ""))) return false;
+
+    // Validate payment method fields
     if (formData.paymentMethod === "online") {
-      return (
-        basicFieldsValid &&
-        formData.cardNumber.trim() !== "" &&
-        formData.expiryDate.trim() !== "" &&
-        formData.cvv.trim() !== ""
-      );
+      if (
+        !formData.cardNumber?.trim() ||
+        !formData.expiryDate?.trim() ||
+        !formData.cvv?.trim()
+      ) {
+        return false;
+      }
     }
 
-    return basicFieldsValid;
+    // If we get here, form is valid
+    return true;
   };
 
-  // Kiểm tra xem địa chỉ có hợp lệ cho COD không
-  const isCodEligible = () => {
-    const eligibleCities = [
-      "hồ chí minh",
-      "tp hồ chí minh",
-      "hà nội",
-      "ha noi",
-      "ho chi minh",
-      "hanoi",
-    ];
-
-    if (!formData.city) return false;
-
-    const normalizedCity = formData.city.toLowerCase().trim();
-    return eligibleCities.some((city) => normalizedCity.includes(city));
-  };
-
-  // Cập nhật form khi user thay đổi
   useEffect(() => {
-    if (user) {
-      // Tìm địa chỉ mặc định
-      const defaultAddress =
-        user.addresses?.find((addr) => addr.isDefault) || user.addresses?.[0];
-
-      setFormData({
-        firstName: user.name?.split(" ")[0] || "",
-        lastName: user.name?.split(" ").slice(1).join(" ") || "",
-        email: user.email || "",
-        phone: defaultAddress?.phone || user.phone || "",
-        address: defaultAddress?.detail || "",
-        city: defaultAddress
-          ? `${defaultAddress.districtName}, ${defaultAddress.provinceName}`
-          : "",
-        paymentMethod: "cod",
-        cardNumber: "",
-        expiryDate: "",
-        cvv: "",
-      });
+    if (user?.addresses?.length > 0) {
+      const defaultAddress = user.addresses.find((addr) => addr.isDefault);
+      if (defaultAddress) {
+        setFormData((prev) => ({
+          ...prev,
+          fullName: defaultAddress.fullName,
+          phone: defaultAddress.phone,
+          address: `${defaultAddress.detail}, ${defaultAddress.wardName}, ${defaultAddress.districtName}`,
+          city: defaultAddress.provinceName,
+          selectedAddressId: defaultAddress.id,
+        }));
+      }
     }
   }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
 
-    // Xóa lỗi khi người dùng nhập liệu
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: null,
-      });
+    // If changing address selection
+    if (name === "selectedAddressId") {
+      const selectedAddress = user.addresses.find((addr) => addr.id === value);
+      if (selectedAddress) {
+        setFormData((prev) => ({
+          ...prev,
+          selectedAddressId: value,
+          fullName: selectedAddress.fullName,
+          phone: selectedAddress.phone,
+          address: `${selectedAddress.detail}, ${selectedAddress.wardName}, ${selectedAddress.districtName}`,
+          city: selectedAddress.provinceName,
+        }));
+      }
     }
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
   const handleCloseSnackbar = () => {
@@ -341,6 +328,27 @@ const Checkout = () => {
             <Typography variant="h5" sx={{ mb: 3, fontWeight: 500 }}>
               Shipping Information
             </Typography>
+
+            {user && user.addresses && user.addresses.length > 0 && (
+              <FormControl fullWidth sx={{ mb: 3 }}>
+                <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                  Select a saved address:
+                </Typography>
+                <Select
+                  value={formData.selectedAddressId}
+                  onChange={handleChange}
+                  name="selectedAddressId"
+                >
+                  {user.addresses.map((address) => (
+                    <MenuItem key={address.id} value={address.id}>
+                      {address.fullName} - {address.detail}, {address.wardName},{" "}
+                      {address.districtName}, {address.provinceName}
+                      {address.isDefault ? " (Default)" : ""}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
 
             <Grid container spacing={3}>
               {" "}
