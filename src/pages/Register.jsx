@@ -55,6 +55,7 @@ const Register = () => {
         email: formData.email,
         username: formData.username,
         password: formData.password,
+        role: 'user', // Set default role
         hasChangedUsername: false
       });
 

@@ -20,40 +20,9 @@
         "total": 0
       },
       "wishlist": {
-        "items": [
-          {
-            "id": "2",
-            "name": "L-Shaped Corner Desk",
-            "description": "Maximize your corner space with this L-shaped desk. Perfect for multi-monitor setups and large workspaces.",
-            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-            "basePrice": 8500000,
-            "originalPrice": 10500000,
-            "discount": 20,
-            "image": "/images/l1.jpg",
-            "category": "L-Shaped",
-            "colors": [
-              "Black",
-              "White",
-              "Grey"
-            ],
-            "dimensions": [
-              {
-                "size": "160x80",
-                "priceAdjustment": 0
-              },
-              {
-                "size": "180x80",
-                "priceAdjustment": 800000
-              }
-            ],
-            "inStock": true,
-            "ratings": {
-              "average": 4.2,
-              "count": 8
-            }
-          }
-        ]
-      }
+        "items": []
+      },
+      "role": "admin"
     },
     {
       "id": "21cb",
@@ -129,7 +98,7 @@
             }
           ],
           "total": 0,
-          "status": "In Transit",
+          "status": "Delivered",
           "orderDate": "2025-05-09T06:22:49.683Z",
           "deliveryDate": null,
           "shippingAddress": {
@@ -376,6 +345,23 @@
           "paymentMethod": "COD"
         }
       ]
+    },
+    {
+      "id": "admin1",
+      "wishlist": {
+        "items": []
+      },
+      "username": "admin1",
+      "cart": {
+        "items": [],
+        "total": 0
+      },
+      "password": "admin123",
+      "role": "admin",
+      "name": "Admin",
+      "orders": [],
+      "active": true,
+      "email": "admin@example.com"
     }
   ],
   "products": [

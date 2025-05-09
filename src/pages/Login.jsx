@@ -20,35 +20,38 @@ const Login = () => {
 
     const [error, setError] = useState("");
     const [formData, setFormData] = useState({
-          emailOrUsername: "",
+        emailOrUsername: "",
         password: ""
     });
   
     const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        // Tìm kiếm user bằng email hoặc username
-        const [emailResponse, usernameResponse] = await Promise.all([
-          axios.get(`http://localhost:3001/users?email=${formData.emailOrUsername}`),
-          axios.get(`http://localhost:3001/users?username=${formData.emailOrUsername}`)
-        ]);
+        e.preventDefault();
+        try {
+            const [emailResponse, usernameResponse] = await Promise.all([
+                axios.get(`http://localhost:3001/users?email=${formData.emailOrUsername}`),
+                axios.get(`http://localhost:3001/users?username=${formData.emailOrUsername}`)
+            ]);
 
-        // Kết hợp kết quả từ cả hai truy vấn
-        const user = emailResponse.data[0] || usernameResponse.data[0];
-        
-        if (user && user.password === formData.password) {
-          login({
-            ...user,
-            hasChangedUsername: user.hasChangedUsername || false
-          });
-          navigate(from, { replace: true });
-        } else {
-          setError("Email/Username hoặc mật khẩu không chính xác");
+            const user = emailResponse.data[0] || usernameResponse.data[0];
+
+            if (!user) {
+                setError("Invalid email/username or password");
+                return;
+            }
+
+            if (user.password !== formData.password) {
+                setError("Invalid email/username or password");
+                return;
+            }
+
+            login(user);
+            setError("");
+            // Redirect to previous page or home for all users
+            navigate(from);
+        } catch (error) {
+            console.error("Login error:", error);
+            setError("An error occurred during login");
         }
-      } catch (error) {
-        setError("Đã có lỗi xảy ra, vui lòng thử lại");
-        console.error("Login error:", error);
-      }
     };
 
     return (

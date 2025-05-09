@@ -82,6 +82,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const isAdmin = () => {
+    return user?.role === "admin";
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -90,6 +94,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         updateUserCart,
         updateUserWishlist,
+        isAdmin, // Thêm hàm kiểm tra admin
       }}
     >
       {children}
