@@ -10,35 +10,41 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
+// Import BASE_URL từ api.js
+import { api } from "../api/api";
+
 const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || '/login';
-  
+  const from = location.state?.from || "/login";
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    username: ""
+    username: "",
   });
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords don't match");
       return;
     }
 
     try {
+      // Sử dụng BASE_URL từ api.js thay vì hardcode localhost:3001
+      const BASE_URL = api.getBaseUrl(); // Thêm phương thức này vào api.js
+
       // Kiểm tra email và username đã tồn tại chưa
       const [emailCheck, usernameCheck] = await Promise.all([
-        axios.get(`http://localhost:3001/users?email=${formData.email}`),
-        axios.get(`http://localhost:3001/users?username=${formData.username}`)
+        axios.get(`${BASE_URL}/users?email=${formData.email}`),
+        axios.get(`${BASE_URL}/users?username=${formData.username}`),
       ]);
-      
+
       if (emailCheck.data.length > 0) {
         setError("Email đã được sử dụng");
         return;
@@ -50,15 +56,15 @@ const Register = () => {
       }
 
       // Tạo tài khoản mới
-      await axios.post("http://localhost:3001/users", {
+      await axios.post(`${BASE_URL}/users`, {
         name: formData.name,
         email: formData.email,
         username: formData.username,
         password: formData.password,
-        hasChangedUsername: false
+        hasChangedUsername: false,
       });
 
-      navigate('/login', { state: { from } });
+      navigate("/login", { state: { from } });
     } catch (error) {
       setError("Đăng ký thất bại, vui lòng thử lại");
       console.error("Registration error:", error);
@@ -68,35 +74,35 @@ const Register = () => {
   return (
     <Box
       sx={{
-        width: '100vw',
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f5f5f5',
-        mt: '-64px'
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#f5f5f5",
+        mt: "-64px",
       }}
     >
-      <Container 
-        maxWidth="xs" 
+      <Container
+        maxWidth="xs"
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <Paper
           elevation={3}
           sx={{
-            width: '100%',
-            maxWidth: '400px',
+            width: "100%",
+            maxWidth: "400px",
             p: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            backgroundColor: 'white',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            backgroundColor: "white",
             borderRadius: 2,
-            boxShadow: '0px 3px 15px rgba(0,0,0,0.2)'
+            boxShadow: "0px 3px 15px rgba(0,0,0,0.2)",
           }}
         >
           <Typography component="h1" variant="h5" sx={{ mb: 3 }}>

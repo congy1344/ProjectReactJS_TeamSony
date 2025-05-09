@@ -4,6 +4,9 @@ const BASE_URL =
     : "http://localhost:10000"; // Thay đổi port từ 3001 thành 10000
 
 export const api = {
+  // Thêm phương thức để lấy BASE_URL
+  getBaseUrl: () => BASE_URL,
+
   // Đảm bảo API getAllProducts hoạt động đúng
   getAllProducts: async () => {
     try {

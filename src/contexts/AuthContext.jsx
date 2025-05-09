@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { setCart } from "../store/cartSlice";
 import { setWishlist } from "../store/wishlistSlice";
 import axios from "axios";
+import { api } from "../api/api";
 
 const AuthContext = createContext();
 
@@ -26,10 +27,8 @@ export const AuthProvider = ({ children }) => {
 
   const updateUserInDB = async (updatedUser) => {
     try {
-      await axios.put(
-        `http://localhost:3001/users/${updatedUser.id}`,
-        updatedUser
-      );
+      const BASE_URL = api.getBaseUrl();
+      await axios.put(`${BASE_URL}/users/${updatedUser.id}`, updatedUser);
     } catch (error) {
       console.error("Error updating user in DB:", error);
     }
