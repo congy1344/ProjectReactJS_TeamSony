@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { setCart } from "../store/cartSlice";
 import { setWishlist } from "../store/wishlistSlice";
 import axios from "axios";
+import { api } from "../api/api";
 
 const AuthContext = createContext();
 
@@ -26,10 +27,8 @@ export const AuthProvider = ({ children }) => {
 
   const updateUserInDB = async (updatedUser) => {
     try {
-      await axios.put(
-        `http://localhost:3001/users/${updatedUser.id}`,
-        updatedUser
-      );
+      const BASE_URL = api.getBaseUrl();
+      await axios.put(`${BASE_URL}/users/${updatedUser.id}`, updatedUser);
     } catch (error) {
       console.error("Error updating user in DB:", error);
     }
@@ -70,15 +69,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUserWishlist = (wishlist) => {
-    if (user) {
-      const updatedUser = {
-        ...user,
+  const updateUserWishlist = async (wishlist) => {
+    if (!user || !user.id) return;
+
+    try {
+      const BASE_URL = api.getBaseUrl();
+      await axios.patch(`${BASE_URL}/users/${user.id}`, {
         wishlist,
-      };
-      setUser(updatedUser);
+      });
+
+      // Cập nhật user trong localStorage
+      const updatedUser = { ...user, wishlist };
       localStorage.setItem("user", JSON.stringify(updatedUser));
-      updateUserInDB(updatedUser);
+      setUser(updatedUser);
+    } catch (error) {
+      console.error("Error updating wishlist:", error);
     }
   };
 

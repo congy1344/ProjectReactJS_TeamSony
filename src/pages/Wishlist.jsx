@@ -18,6 +18,7 @@ import { addToCartWithNotification } from "../store/cartSlice";
 import { removeFromWishlist, setWishlist } from "../store/wishlistSlice";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { api } from "../api/api"; // Import api
 
 const Wishlist = () => {
   const wishlistItems = useSelector((state) => state.wishlist.items);
@@ -37,10 +38,9 @@ const Wishlist = () => {
 
       try {
         setLoading(true);
-        // Fetch user data including wishlist
-        const response = await axios.get(
-          `http://localhost:3001/users/${user.id}`
-        );
+        // Sử dụng BASE_URL từ api.js
+        const BASE_URL = api.getBaseUrl();
+        const response = await axios.get(`${BASE_URL}/users/${user.id}`);
 
         if (
           response.data &&
@@ -73,8 +73,10 @@ const Wishlist = () => {
           items: wishlistItems.filter((item) => item.id !== id),
         };
 
+        // Sử dụng BASE_URL từ api.js
+        const BASE_URL = api.getBaseUrl();
         // Update user's wishlist in the backend
-        await axios.patch(`http://localhost:3001/users/${user.id}`, {
+        await axios.patch(`${BASE_URL}/users/${user.id}`, {
           wishlist: updatedWishlist,
         });
       }

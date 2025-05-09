@@ -59,14 +59,16 @@ const Checkout = () => {
   const displayTotal = buyNowProduct ? buyNowProduct.price : total;
 
   const isCodEligible = () => {
-    const eligibleCities = ['Ho Chi Minh City', 'Hanoi'];
+    const eligibleCities = ["Ho Chi Minh City", "Hanoi"];
     return eligibleCities.includes(formData.city?.trim());
   };
 
   const isFormValid = () => {
     // Check required fields
     const requiredFields = ["fullName", "email", "phone", "address", "city"];
-    const hasEmptyField = requiredFields.some((field) => !formData[field]?.trim());
+    const hasEmptyField = requiredFields.some(
+      (field) => !formData[field]?.trim()
+    );
     if (hasEmptyField) return false;
 
     // Validate email format
@@ -626,7 +628,10 @@ const Checkout = () => {
                       {item.name}
                     </Typography>
                     <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                      {(item.price || item.basePrice).toLocaleString("vi-VN")}₫
+                      {(item.price || item.basePrice || 0).toLocaleString(
+                        "vi-VN"
+                      )}
+                      ₫
                     </Typography>
                   </Box>
                   <Typography variant="body2" color="text.secondary">

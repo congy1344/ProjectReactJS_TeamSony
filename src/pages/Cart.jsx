@@ -12,11 +12,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart, updateQuantity } from "../store/cartSlice";
 import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useEffect } from "react";
 
 const Cart = () => {
-  const { items, total } = useSelector((state) => state.cart);
+  const { items = [], total = 0 } = useSelector((state) => state.cart || {});
   const dispatch = useDispatch();
   const { user, updateUserCart } = useAuth();
+
+  // Thêm kiểm tra dữ liệu
+  useEffect(() => {
+    console.log("Cart items:", items);
+    // Kiểm tra xem items có đúng cấu trúc không
+    if (items && items.length > 0) {
+      items.forEach((item, index) => {
+        if (!item.price && item.price !== 0) {
+          console.warn(`Item at index ${index} has no price:`, item);
+        }
+      });
+    }
+  }, [items]);
 
   const handleRemoveFromCart = (id) => {
     dispatch(removeFromCart(id));
@@ -183,7 +197,7 @@ const Cart = () => {
                         fontWeight: 500,
                       }}
                     >
-                      {item.price.toFixed(2)}€
+                      {(item.price || 0).toFixed(2)}VND
                     </Typography>
                   </Box>
                 </Box>
