@@ -23,13 +23,19 @@ const cartSlice = createSlice({
       const existingItem = state.items.find(
         (item) => item.id === action.payload.id
       );
+      const itemPrice = action.payload.price || action.payload.basePrice || 0;
+      
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
-        state.items.push({ ...action.payload, quantity: 1 });
+        state.items.push({ 
+          ...action.payload, 
+          price: itemPrice,
+          quantity: 1 
+        });
       }
       state.total = state.items.reduce(
-        (total, item) => total + item.price * item.quantity,
+        (total, item) => total + (item.price || item.basePrice || 0) * item.quantity,
         0
       );
       // Save to localStorage after adding
