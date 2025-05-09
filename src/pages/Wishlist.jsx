@@ -1,230 +1,82 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import { removeFromWishlist } from "../store/wishlistSlice";
-import { addToCartWithNotification } from "../store/cartSlice";
-import { Favorite, ShoppingCart, ArrowBack } from "@mui/icons-material";
 import {
-  Button,
-  IconButton,
-  Chip,
-  CircularProgress,
+  Container,
   Typography,
   Box,
-  Grid,
-  Card,
+  Button,
+  IconButton,
   CardMedia,
-  CardContent,
-  CardActions,
+  Paper,
+  Divider,
 } from "@mui/material";
+import {
+  Add,
+  Remove,
+  Close,
+  ShoppingCart,
+  ArrowBack,
+} from "@mui/icons-material";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromCart, updateQuantity } from "../store/cartSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const Wishlist = () => {
-  const wishlistItems = useSelector((state) => state.wishlist.items || []);
+  const { items, total } = useSelector((state) => state.wishlist || { items: [], total: 0 }); // Assuming wishlist state
   const dispatch = useDispatch();
+  const { user, updateUserWishlist } = useAuth(); // Assuming updateUserWishlist for wishlist
   const navigate = useNavigate();
-  const { user, updateUserWishlist } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  // Debug: Log wishlist items
-  useEffect(() => {
-    console.log("Wishlist items:", wishlistItems);
-    console.log("User:", user);
-  }, [wishlistItems, user]);
+  const handleRemoveFromWishlist = (id) => {
+    dispatch(removeFromCart(id)); // Adjust to wishlist action if different
 
-  const handleRemoveFromWishlist = async (id) => {
-    try {
-      dispatch(removeFromWishlist(id));
-      if (user && user.id) {
-        const updatedWishlist = {
-          items: wishlistItems.filter((item) => item.id !== id),
-        };
-        updateUserWishlist(updatedWishlist);
+    if (user) {
+      const updatedItems = items.filter((item) => item.id !== id);
+      const updatedTotal = updatedItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+
+      updateUserWishlist({
+        items: updatedItems,
+        total: updatedTotal,
+      });
+    }
+  };
+
+  const handleQuantityChange = (id, newQuantity) => {
+    if (newQuantity > 0) {
+      dispatch(updateQuantity({ id, quantity: newQuantity }));
+
+      if (user) {
+        const updatedItems = items.map((item) =>
+          item.id === id ? { ...item, quantity: newQuantity } : item
+        );
+        const updatedTotal = updatedItems.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+
+        updateUserWishlist({
+          items: updatedItems,
+          total: updatedTotal,
+        });
       }
-    } catch (err) {
-      console.error("Error removing from wishlist:", err);
     }
   };
 
-  const handleAddToCart = (product) => {
-    if (!user) {
-      navigate("/login", { state: { from: "/wishlist" } });
-      return;
-    }
-
-    if (!product || !product.id) {
-      console.error("Invalid product data:", product);
-      return;
-    }
-
-    const productToAdd = {
-      ...product,
-      quantity: 1,
-      price: product.price || product.basePrice || 0,
-    };
-
-    dispatch(addToCartWithNotification(productToAdd));
-  };
-
-  const handleProductClick = (productId) => {
-    if (!productId) {
-      console.error("Product ID is undefined");
-      return;
-    }
-    navigate(`/products/${productId}`);
-  };
-
-  // Nếu chưa đăng nhập
-  if (!user) {
-    return (
-      <div
-        style={{
-          marginTop: "64px",
-          minHeight: "calc(100vh - 64px)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "16px",
-          boxSizing: "border-box",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "500px",
-            width: "100%",
-            padding: "24px",
-            textAlign: "center",
-            backgroundColor: "white",
-            borderRadius: "8px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-          }}
-        >
-          <Typography variant="h5" color="text.secondary" gutterBottom>
-            Vui lòng đăng nhập để xem danh sách yêu thích của bạn!
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigate("/login", { state: { from: "/wishlist" } })}
-            sx={{ mt: 2 }}
-          >
-            Đăng nhập
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  // Đang loading
-  if (loading) {
-    return (
-      <div
-        style={{
-          marginTop: "64px",
-          minHeight: "calc(100vh - 64px)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress />
-      </div>
-    );
-  }
-
-  // Có lỗi
-  if (error) {
-    return (
-      <div
-        style={{
-          marginTop: "64px",
-          minHeight: "calc(100vh - 64px)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "16px",
-          boxSizing: "border-box",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "500px",
-            width: "100%",
-            padding: "24px",
-            textAlign: "center",
-            backgroundColor: "white",
-            borderRadius: "8px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-          }}
-        >
-          <Typography variant="h5" color="error" gutterBottom>
-            {error}
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => window.location.reload()}
-            sx={{ mt: 2 }}
-          >
-            Thử lại
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  // Wishlist trống
-  if (!wishlistItems || wishlistItems.length === 0) {
-    return (
-      <div
-        style={{
-          marginTop: "64px",
-          minHeight: "calc(100vh - 64px)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "16px",
-          boxSizing: "border-box",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "500px",
-            width: "100%",
-            padding: "24px",
-            textAlign: "center",
-            backgroundColor: "white",
-            borderRadius: "8px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-          }}
-        >
-          <Typography variant="h5" color="text.secondary" gutterBottom>
-            Chưa có sản phẩm yêu thích nào!
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigate("/")}
-            sx={{ mt: 2 }}
-          >
-            Khám phá sản phẩm
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  // Hiển thị danh sách wishlist
   return (
-    <Box
+    <Container
+      maxWidth={false}
       sx={{
-        mt: "64px", // Margin top for navbar
+        mt: { xs: "56px", sm: "64px" },
         minHeight: "calc(100vh - 64px)",
-        width: "100%",
+        width: "100vw",
         bgcolor: "#f5f5f5",
-        px: { xs: 2, sm: 3, md: 4 },
-        py: 4,
+        p: { xs: 2, sm: 3 },
+        boxSizing: "border-box",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
       <Box
@@ -237,6 +89,8 @@ const Wishlist = () => {
           borderRadius: 2,
           boxShadow: 1,
           mb: 3,
+          width: "100%",
+          maxWidth: "1200px",
         }}
       >
         <Typography
@@ -248,12 +102,12 @@ const Wishlist = () => {
             m: 0,
           }}
         >
-          Danh sách yêu thích ({wishlistItems.length})
+          Danh sách yêu thích ({items.length})
         </Typography>
       </Box>
 
-      {wishlistItems.length === 0 ? (
-        <Box
+      {items.length === 0 ? (
+        <Paper
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -261,22 +115,21 @@ const Wishlist = () => {
             justifyContent: "center",
             py: 6,
             px: 3,
-            bgcolor: "white",
             borderRadius: 2,
             boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
             textAlign: "center",
+            width: "100%",
+            maxWidth: "600px",
           }}
         >
-          <Favorite sx={{ fontSize: 60, color: "text.secondary", mb: 2 }} />
           <Typography variant="h5" gutterBottom>
-            Danh sách yêu thích của bạn đang trống
+            Chưa có sản phẩm yêu thích nào!
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-            Hãy thêm sản phẩm vào danh sách yêu thích để xem sau
+            KHÁM PHÁ SẢN PHẨM
           </Typography>
           <Button
             variant="contained"
-            startIcon={<ArrowBack />}
             onClick={() => navigate("/")}
             sx={{
               bgcolor: "black",
@@ -286,84 +139,71 @@ const Wishlist = () => {
               },
             }}
           >
-            Tiếp tục mua sắm
+            KHÁM PHÁ SẢN PHẨM
           </Button>
-        </Box>
+        </Paper>
       ) : (
         <Box
           sx={{
-            backgroundColor: "#fff",
-            p: 3,
-            borderRadius: 2,
-            boxShadow: 1,
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "1fr" }, // Single column for all cases
+            gap: 3,
+            width: "100%",
+            maxWidth: "1200px",
+            alignItems: "start",
           }}
         >
-          <Grid container spacing={3}>
-            {wishlistItems.map((product) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-                <Card
+          {/* Wishlist Items Section */}
+          <Paper
+            sx={{
+              borderRadius: 1,
+              overflow: "hidden",
+              width: "100%",
+              p: 3,
+            }}
+          >
+            {items.map((item) => (
+              <Box
+                key={item.id}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 3,
+                  p: 2,
+                  borderBottom: "1px solid #eee",
+                  "&:last-child": {
+                    borderBottom: "none",
+                  },
+                }}
+              >
+                <CardMedia
+                  component="img"
                   sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    position: "relative",
+                    width: { xs: 100, sm: 150 },
+                    height: { xs: 100, sm: 150 },
+                    objectFit: "cover",
+                    borderRadius: 1,
                   }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={product.image}
-                    alt={product.name}
+                  image={item.image}
+                  alt={item.name}
+                />
+
+                <Box sx={{ flex: 1 }}>
+                  <Box
                     sx={{
-                      cursor: "pointer",
-                      objectFit: "cover",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mb: 1,
                     }}
-                    onClick={() => navigate(`/products/${product.id}`)}
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography
-                      gutterBottom
-                      variant="h6"
-                      sx={{
-                        fontSize: "1.1rem",
-                        fontWeight: 500,
-                        cursor: "pointer",
-                        "&:hover": { color: "primary.main" },
-                      }}
-                      onClick={() => navigate(`/products/${product.id}`)}
-                    >
-                      {product.name}
+                  >
+                    <Typography variant="h6" sx={{ fontSize: "1.2rem" }}>
+                      {item.name}
                     </Typography>
-                    <Typography variant="h6" color="primary.main" sx={{ mt: 1 }}>
-                      {(product.price || product.basePrice || 0).toLocaleString("vi-VN")}₫
-                    </Typography>
-                  </CardContent>
-                  <CardActions sx={{ p: 2, pt: 0, gap: 1 }}>
-                    <Button
-                      variant="outlined"
-                      fullWidth
-                      startIcon={<ShoppingCart />}
-                      onClick={() => dispatch(addToCartWithNotification(product))}
-                      sx={{
-                        borderColor: "black",
-                        color: "black",
-                        "&:hover": {
-                          borderColor: "black",
-                          bgcolor: "rgba(0, 0, 0, 0.04)",
-                        },
-                      }}
-                    >
-                      Thêm vào giỏ
-                    </Button>
                     <IconButton
-                      onClick={() => {
-                        dispatch(removeFromWishlist(product.id));
-                        if (user) {
-                          const updatedItems = wishlistItems.filter(
-                            (item) => item.id !== product.id
-                          );
-                          updateUserWishlist(updatedItems);
-                        }
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveFromWishlist(item.id);
                       }}
                       sx={{
                         color: "error.main",
@@ -372,16 +212,51 @@ const Wishlist = () => {
                         },
                       }}
                     >
-                      <Favorite />
+                      <Close fontSize="small" />
                     </IconButton>
-                  </CardActions>
-                </Card>
-              </Grid>
+                  </Box>
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mb: 0.5 }}
+                  >
+                    Giá: {(item.price || 0).toLocaleString("vi-VN")}₫
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      mt: 1,
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => {
+                        // Logic to add to cart if needed
+                        navigate("/cart");
+                      }}
+                      sx={{ textTransform: "none" }}
+                    >
+                      THÊM VÀO GIỎ
+                    </Button>
+                    <IconButton
+                      color="error"
+                      onClick={() => handleRemoveFromWishlist(item.id)}
+                    >
+                      <Close />
+                    </IconButton>
+                  </Box>
+                </Box>
+              </Box>
             ))}
-          </Grid>
+          </Paper>
         </Box>
       )}
-    </Box>
+    </Container>
   );
 };
 
