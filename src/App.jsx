@@ -1,12 +1,5 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme, CssBaseline, Box } from "@mui/material";
-import { useEffect } from "react";
-
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import Navbar from "./components/Navbar";
@@ -23,11 +16,8 @@ import AccountSetting from "./pages/AccountSetting";
 import Notification from "./components/Notification";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import OrderPage from "./pages/OrderPage";
-import Wishlist from "./pages/Wishlist"; // Import trang Wishlist
-import ProductManagement from "./pages/admin/ProductManagement";
-import OrderManagement from "./pages/admin/OrderManagement";
-import UserManagement from "./pages/admin/UserManagement";
-
+import Wishlist from "./pages/Wishlist";
+// Xóa import Footer nếu có
 import "./index.css";
 
 const customTheme = createTheme({
@@ -132,34 +122,8 @@ function App() {
                   <Route path="/account-setting" element={<AccountSetting />} />
                   <Route path="/orders" element={<OrderPage />} />
                   <Route path="/wishlist" element={<Wishlist />} />
-
-                  {/* Admin Routes */}
-                  <Route
-                    path="/admin/products"
-                    element={
-                      <ProtectedAdminRoute>
-                        <ProductManagement />
-                      </ProtectedAdminRoute>
-                    }
-                  />
-                  <Route
-                    path="/admin/orders"
-                    element={
-                      <ProtectedAdminRoute>
-                        <OrderManagement />
-                      </ProtectedAdminRoute>
-                    }
-                  />
-                  <Route
-                    path="/admin/users"
-                    element={
-                      <ProtectedAdminRoute>
-                        <UserManagement />
-                      </ProtectedAdminRoute>
-                    }
-                  />
                 </Routes>
-                <AdminFAB />
+                {/* Không thêm Footer ở đây */}
               </Box>
             </Box>
           </Router>
