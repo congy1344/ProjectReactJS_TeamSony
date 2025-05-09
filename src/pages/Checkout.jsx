@@ -291,6 +291,38 @@ const Checkout = () => {
     }
   };
 
+  // Thêm useEffect để kiểm tra đăng nhập
+  useEffect(() => {
+    // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+    if (!user) {
+      navigate("/login", { state: { from: "/checkout" } });
+    }
+  }, [user, navigate]);
+
+  // Thêm điều kiện kiểm tra user
+  if (!user) {
+    return (
+      <Container
+        maxWidth="xl"
+        sx={{ py: 4, mt: "64px", minHeight: "calc(100vh - 64px)" }}
+      >
+        <Box sx={{ textAlign: "center" }}>
+          <Typography variant="h5" color="text.secondary" gutterBottom>
+            Vui lòng đăng nhập để tiếp tục thanh toán!
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate("/login", { state: { from: "/checkout" } })}
+            sx={{ mt: 2 }}
+          >
+            Đăng nhập
+          </Button>
+        </Box>
+      </Container>
+    );
+  }
+
   return (
     <Container
       maxWidth="xl" // Tăng kích thước container lên xl

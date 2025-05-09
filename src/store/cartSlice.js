@@ -1,6 +1,15 @@
 import { createSlice, createAction } from "@reduxjs/toolkit";
 import { showNotification } from "./notificationSlice";
 
+// Helper function to save cart to localStorage
+const saveCartToLocalStorage = (cart) => {
+  try {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  } catch (error) {
+    console.error("Error saving cart to localStorage:", error);
+  }
+};
+
 const initialState = {
   items: [],
   total: 0,
@@ -23,6 +32,8 @@ const cartSlice = createSlice({
         (total, item) => total + item.price * item.quantity,
         0
       );
+      // Save to localStorage after adding
+      saveCartToLocalStorage({ items: state.items, total: state.total });
       return state;
     },
     removeFromCart: (state, action) => {
@@ -31,6 +42,8 @@ const cartSlice = createSlice({
         (total, item) => total + item.price * item.quantity,
         0
       );
+      // Save to localStorage after removing
+      saveCartToLocalStorage({ items: state.items, total: state.total });
       return state;
     },
     updateQuantity: (state, action) => {
@@ -43,16 +56,22 @@ const cartSlice = createSlice({
         (total, item) => total + item.price * item.quantity,
         0
       );
+      // Save to localStorage after updating
+      saveCartToLocalStorage({ items: state.items, total: state.total });
       return state;
     },
     setCart: (state, action) => {
       state.items = action.payload.items || [];
       state.total = action.payload.total || 0;
+      // Save to localStorage after setting
+      saveCartToLocalStorage({ items: state.items, total: state.total });
       return state;
     },
     clearCart: (state) => {
       state.items = [];
       state.total = 0;
+      // Save to localStorage after clearing
+      saveCartToLocalStorage({ items: [], total: 0 });
       return state;
     },
   },

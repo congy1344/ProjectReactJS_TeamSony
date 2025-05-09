@@ -1,6 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { showNotification } from "./notificationSlice";
 
+// Helper function to save wishlist to localStorage
+const saveWishlistToLocalStorage = (wishlist) => {
+  try {
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  } catch (error) {
+    console.error("Error saving wishlist to localStorage:", error);
+  }
+};
+
 const wishlistSlice = createSlice({
   name: "wishlist",
   initialState: {
@@ -13,17 +22,25 @@ const wishlistSlice = createSlice({
       );
       if (!existingItem) {
         state.items.push(action.payload);
+        // Save to localStorage after adding
+        saveWishlistToLocalStorage({ items: state.items });
       }
     },
     removeFromWishlist: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
+      // Save to localStorage after removing
+      saveWishlistToLocalStorage({ items: state.items });
     },
     setWishlist: (state, action) => {
       // Completely replace the wishlist with the provided data
       state.items = action.payload.items || [];
+      // Save to localStorage after setting
+      saveWishlistToLocalStorage({ items: state.items });
     },
     clearWishlist: (state) => {
       state.items = [];
+      // Save to localStorage after clearing
+      saveWishlistToLocalStorage({ items: [] });
     },
   },
 });
@@ -31,7 +48,7 @@ const wishlistSlice = createSlice({
 export const { addToWishlist, removeFromWishlist, setWishlist, clearWishlist } =
   wishlistSlice.actions;
 
-// Thunk action để thêm vào wishlist và hiển thị thông báo
+// Thunk action to add to wishlist and show notification
 export const addToWishlistWithNotification = (product) => (dispatch) => {
   dispatch(addToWishlist(product));
   dispatch(
@@ -42,7 +59,7 @@ export const addToWishlistWithNotification = (product) => (dispatch) => {
   );
 };
 
-// Thunk action để xóa khỏi wishlist và hiển thị thông báo
+// Thunk action to remove from wishlist and show notification
 export const removeFromWishlistWithNotification = (productId) => (dispatch) => {
   dispatch(removeFromWishlist(productId));
   dispatch(

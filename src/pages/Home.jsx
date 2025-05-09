@@ -198,31 +198,56 @@ const Home = () => {
 
   const handleAddToCart = (e, product) => {
     e.stopPropagation();
-    dispatch(addToCartWithNotification({ ...product, quantity: 1 }));
-    if (user) {
-      updateUserCart({
-        items: [...cartItems, { ...product, quantity: 1 }],
-        total: 0,
-      });
+
+    // Yêu cầu đăng nhập nếu chưa đăng nhập
+    if (!user) {
+      navigate("/login", { state: { from: "/" } });
+      return;
     }
+
+    dispatch(addToCartWithNotification({ ...product, quantity: 1 }));
+
+    // Cập nhật giỏ hàng trong database
+    const updatedItems = [...cartItems, { ...product, quantity: 1 }];
+    const updatedTotal = updatedItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+
+    updateUserCart({
+      items: updatedItems,
+      total: updatedTotal,
+    });
   };
 
   const handleToggleWishlist = (e, product) => {
     e.stopPropagation();
+
+    // Yêu cầu đăng nhập nếu chưa đăng nhập
+    if (!user) {
+      navigate("/login", { state: { from: "/" } });
+      return;
+    }
+
     const isInWishlist =
       wishlistItems && wishlistItems.some((item) => item.id === product.id);
+
     if (isInWishlist) {
+      // Xóa khỏi wishlist
       dispatch(removeFromWishlist(product.id));
-      if (user) {
-        updateUserWishlist({
-          items: wishlistItems.filter((item) => item.id !== product.id),
-        });
-      }
+
+      // Cập nhật wishlist trong user context
+      const updatedItems = wishlistItems.filter(
+        (item) => item.id !== product.id
+      );
+      updateUserWishlist({ items: updatedItems });
     } else {
+      // Thêm vào wishlist
       dispatch(addToWishlistWithNotification(product));
-      if (user) {
-        updateUserWishlist({ items: [...wishlistItems, product] });
-      }
+
+      // Cập nhật wishlist trong user context
+      const updatedItems = [...wishlistItems, product];
+      updateUserWishlist({ items: updatedItems });
     }
   };
 

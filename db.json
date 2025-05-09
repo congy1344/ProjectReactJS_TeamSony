@@ -27,7 +27,11 @@
             "discount": 20,
             "image": "/images/l1.jpg",
             "category": "L-Shaped",
-            "colors": ["Black", "White", "Grey"],
+            "colors": [
+              "Black",
+              "White",
+              "Grey"
+            ],
             "dimensions": [
               {
                 "size": "160x80",
@@ -43,13 +47,146 @@
               "average": 4.2,
               "count": 8
             },
+            "quantity": 3
+          },
+          {
+            "id": "5",
+            "name": "Executive Office Desk",
+            "description": "Premium executive desk with built-in storage solutions. Perfect for professional office environments.",
+            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "price": 6900000,
+            "originalPrice": 8500000,
+            "discount": 15,
+            "image": "/images/desktop1.jpg",
+            "category": "Desktop",
+            "categories": [
+              "Desktop",
+              "Bestsellers"
+            ],
+            "colors": [
+              "Black",
+              "Brown",
+              "Walnut"
+            ],
+            "dimensions": [
+              "160x80",
+              "180x90",
+              "200x100"
+            ],
+            "inStock": true,
+            "ratings": {
+              "average": 4.8,
+              "count": 14
+            },
+            "quantity": 1
+          },
+          {
+            "id": "3",
+            "name": "Standing Desk Frame",
+            "description": "Electric height-adjustable frame for creating your perfect standing desk setup. Compatible with most desktop surfaces.",
+            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "price": 13500000,
+            "originalPrice": 15500000,
+            "discount": 15,
+            "image": "/images/deskframe1.webp",
+            "category": "Deskframe",
+            "categories": [
+              "Deskframe",
+              "Bestsellers"
+            ],
+            "colors": [
+              "Black",
+              "White",
+              "Silver"
+            ],
+            "dimensions": [
+              "120x60",
+              "140x70",
+              "160x80"
+            ],
+            "inStock": true,
+            "ratings": {
+              "average": 4.7,
+              "count": 15
+            },
             "quantity": 1
           }
         ],
-        "total": 0
+        "total": null
       },
       "wishlist": {
-        "items": []
+        "items": [
+          {
+            "id": "3",
+            "name": "Standing Desk Frame",
+            "description": "Electric height-adjustable frame for creating your perfect standing desk setup. Compatible with most desktop surfaces.",
+            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "price": 13500000,
+            "originalPrice": 15500000,
+            "discount": 15,
+            "image": "/images/deskframe1.webp",
+            "category": "Deskframe",
+            "categories": [
+              "Deskframe",
+              "Bestsellers"
+            ],
+            "colors": [
+              "Black",
+              "White",
+              "Silver"
+            ],
+            "dimensions": [
+              "120x60",
+              "140x70",
+              "160x80"
+            ],
+            "inStock": true,
+            "ratings": {
+              "average": 4.7,
+              "count": 15
+            }
+          },
+          {
+            "id": "1",
+            "name": "Modern Office Desk",
+            "description": "Sleek and minimalist design perfect for your home office. Features durable construction and ample workspace.",
+            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "basePrice": 5200000,
+            "price": 5200000,
+            "originalPrice": 6500000,
+            "discount": 20,
+            "image": "/images/ban-ikea-luzo-12.jpg",
+            "category": "Desktop",
+            "categories": [
+              "Desktop",
+              "Bestsellers"
+            ],
+            "colors": [
+              "Black",
+              "White",
+              "Grey"
+            ],
+            "dimensions": [
+              {
+                "size": "140x80",
+                "priceAdjustment": 0
+              },
+              {
+                "size": "160x80",
+                "priceAdjustment": 500000
+              },
+              {
+                "size": "180x80",
+                "priceAdjustment": 1000000
+              }
+            ],
+            "inStock": true,
+            "ratings": {
+              "average": 4.5,
+              "count": 12
+            }
+          }
+        ]
       },
       "role": "admin"
     },
@@ -162,68 +299,39 @@
             "discount": 15,
             "image": "/images/desktop1.jpg",
             "category": "Desktop",
-            "colors": ["Black", "Brown", "Walnut"],
-            "dimensions": ["160x80", "180x90", "200x100"],
+            "colors": [
+              "Black",
+              "Brown",
+              "Walnut"
+            ],
+            "dimensions": [
+              "160x80",
+              "180x90",
+              "200x100"
+            ],
             "inStock": true,
             "ratings": {
               "average": 4.8,
               "count": 14
             },
             "quantity": 1
-          }
-        ],
-        "total": 6900000
-      },
-      "wishlist": {
-        "items": [
-          {
-            "id": "18",
-            "name": "Classic Office Desk",
-            "description": "Timeless design with spacious work surface. Perfect for traditional office settings.",
-            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-            "price": 6100000,
-            "originalPrice": 7600000,
-            "discount": 20,
-            "image": "/images/desktop1.jpg",
-            "category": "Desktop",
-            "colors": ["Black", "White", "Brown"],
-            "dimensions": ["160x80", "180x90", "200x100"],
-            "inStock": true,
-            "ratings": {
-              "average": 4.8,
-              "count": 14
-            }
-          },
-          {
-            "id": "3",
-            "name": "Standing Desk Frame",
-            "description": "Electric height-adjustable frame for creating your perfect standing desk setup. Compatible with most desktop surfaces.",
-            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-            "price": 13500000,
-            "originalPrice": 15500000,
-            "discount": 15,
-            "image": "/images/deskframe1.webp",
-            "category": "Deskframe",
-            "categories": ["Deskframe", "Bestsellers"],
-            "colors": ["Black", "White", "Silver"],
-            "dimensions": ["120x60", "140x70", "160x80"],
-            "inStock": true,
-            "ratings": {
-              "average": 4.7,
-              "count": 15
-            }
           },
           {
             "id": "2",
             "name": "L-Shaped Corner Desk",
             "description": "Maximize your corner space with this L-shaped desk. Perfect for multi-monitor setups and large workspaces.",
             "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "basePrice": 8500000,
             "price": 8500000,
             "originalPrice": 10500000,
             "discount": 20,
             "image": "/images/l1.jpg",
             "category": "L-Shaped",
-            "colors": ["Black", "White", "Grey"],
+            "colors": [
+              "Black",
+              "White",
+              "Grey"
+            ],
             "dimensions": [
               {
                 "size": "160x80",
@@ -238,23 +346,139 @@
             "ratings": {
               "average": 4.2,
               "count": 8
+            },
+            "quantity": 1
+          }
+        ],
+        "total": 15400000
+      },
+      "wishlist": {
+        "items": [
+          {
+            "id": "3",
+            "name": "Standing Desk Frame",
+            "description": "Electric height-adjustable frame for creating your perfect standing desk setup. Compatible with most desktop surfaces.",
+            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "price": 13500000,
+            "originalPrice": 15500000,
+            "discount": 15,
+            "image": "/images/deskframe1.webp",
+            "category": "Deskframe",
+            "categories": [
+              "Deskframe",
+              "Bestsellers"
+            ],
+            "colors": [
+              "Black",
+              "White",
+              "Silver"
+            ],
+            "dimensions": [
+              "120x60",
+              "140x70",
+              "160x80"
+            ],
+            "inStock": true,
+            "ratings": {
+              "average": 4.7,
+              "count": 15
             }
           },
           {
-            "id": "20",
-            "name": "Kids Study Station",
-            "description": "Complete study solution with built-in storage and adjustable height. Perfect for homework.",
+            "id": "1",
+            "name": "Modern Office Desk",
+            "description": "Sleek and minimalist design perfect for your home office. Features durable construction and ample workspace.",
             "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-            "price": 1900000,
-            "originalPrice": 2400000,
-            "discount": 22,
-            "image": "/images/kid1.jpg",
-            "category": "Desk for kids",
-            "colors": ["Blue", "Pink", "Green", "Yellow"],
-            "dimensions": ["90x45", "100x50"],
+            "basePrice": 5200000,
+            "price": 5200000,
+            "originalPrice": 6500000,
+            "discount": 20,
+            "image": "/images/ban-ikea-luzo-12.jpg",
+            "category": "Desktop",
+            "categories": [
+              "Desktop",
+              "Bestsellers"
+            ],
+            "colors": [
+              "Black",
+              "White",
+              "Grey"
+            ],
+            "dimensions": [
+              {
+                "size": "140x80",
+                "priceAdjustment": 0
+              },
+              {
+                "size": "160x80",
+                "priceAdjustment": 500000
+              },
+              {
+                "size": "180x80",
+                "priceAdjustment": 1000000
+              }
+            ],
             "inStock": true,
             "ratings": {
-              "average": 4.4,
+              "average": 4.5,
+              "count": 12
+            }
+          },
+          {
+            "id": "4",
+            "name": "Kids Study Desk",
+            "description": "Ergonomic desk designed specifically for children. Features rounded edges and adjustable height.",
+            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "price": 2500000,
+            "originalPrice": 3200000,
+            "discount": 20,
+            "image": "/images/kid1.jpg",
+            "category": "Desk for kids",
+            "colors": [
+              "Blue",
+              "Pink",
+              "White",
+              "Green"
+            ],
+            "dimensions": [
+              "100x50",
+              "120x60"
+            ],
+            "inStock": true,
+            "ratings": {
+              "average": 4.3,
+              "count": 9
+            }
+          },
+          {
+            "id": "2",
+            "name": "L-Shaped Corner Desk",
+            "description": "Maximize your corner space with this L-shaped desk. Perfect for multi-monitor setups and large workspaces.",
+            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "basePrice": 8500000,
+            "price": 8500000,
+            "originalPrice": 10500000,
+            "discount": 20,
+            "image": "/images/l1.jpg",
+            "category": "L-Shaped",
+            "colors": [
+              "Black",
+              "White",
+              "Grey"
+            ],
+            "dimensions": [
+              {
+                "size": "160x80",
+                "priceAdjustment": 0
+              },
+              {
+                "size": "180x80",
+                "priceAdjustment": 800000
+              }
+            ],
+            "inStock": true,
+            "ratings": {
+              "average": 4.2,
               "count": 8
             }
           }
@@ -276,8 +500,16 @@
               "discount": 15,
               "image": "/images/desktop1.jpg",
               "category": "Desktop",
-              "colors": ["Black", "Brown", "Walnut"],
-              "dimensions": ["160x80", "180x90", "200x100"],
+              "colors": [
+                "Black",
+                "Brown",
+                "Walnut"
+              ],
+              "dimensions": [
+                "160x80",
+                "180x90",
+                "200x100"
+              ],
               "inStock": true,
               "ratings": {
                 "average": 4.8,
@@ -312,8 +544,16 @@
               "discount": 15,
               "image": "/images/desktop1.jpg",
               "category": "Desktop",
-              "colors": ["Black", "Brown", "Walnut"],
-              "dimensions": ["160x80", "180x90", "200x100"],
+              "colors": [
+                "Black",
+                "Brown",
+                "Walnut"
+              ],
+              "dimensions": [
+                "160x80",
+                "180x90",
+                "200x100"
+              ],
               "inStock": true,
               "ratings": {
                 "average": 4.8,
@@ -348,8 +588,15 @@
               "discount": 23,
               "image": "/images/l2.avif",
               "category": "L-Shaped",
-              "colors": ["Black", "White", "Grey"],
-              "dimensions": ["140x140", "160x160"],
+              "colors": [
+                "Black",
+                "White",
+                "Grey"
+              ],
+              "dimensions": [
+                "140x140",
+                "160x160"
+              ],
               "inStock": true,
               "ratings": {
                 "average": 4.5,
@@ -404,8 +651,15 @@
       "discount": 20,
       "image": "/images/ban-ikea-luzo-12.jpg",
       "category": "Desktop",
-      "categories": ["Desktop", "Bestsellers"],
-      "colors": ["Black", "White", "Grey"],
+      "categories": [
+        "Desktop",
+        "Bestsellers"
+      ],
+      "colors": [
+        "Black",
+        "White",
+        "Grey"
+      ],
       "dimensions": [
         {
           "size": "140x80",
@@ -437,7 +691,11 @@
       "discount": 20,
       "image": "/images/l1.jpg",
       "category": "L-Shaped",
-      "colors": ["Black", "White", "Grey"],
+      "colors": [
+        "Black",
+        "White",
+        "Grey"
+      ],
       "dimensions": [
         {
           "size": "160x80",
@@ -464,9 +722,20 @@
       "discount": 15,
       "image": "/images/deskframe1.webp",
       "category": "Deskframe",
-      "categories": ["Deskframe", "Bestsellers"],
-      "colors": ["Black", "White", "Silver"],
-      "dimensions": ["120x60", "140x70", "160x80"],
+      "categories": [
+        "Deskframe",
+        "Bestsellers"
+      ],
+      "colors": [
+        "Black",
+        "White",
+        "Silver"
+      ],
+      "dimensions": [
+        "120x60",
+        "140x70",
+        "160x80"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.7,
@@ -483,8 +752,16 @@
       "discount": 20,
       "image": "/images/kid1.jpg",
       "category": "Desk for kids",
-      "colors": ["Blue", "Pink", "White", "Green"],
-      "dimensions": ["100x50", "120x60"],
+      "colors": [
+        "Blue",
+        "Pink",
+        "White",
+        "Green"
+      ],
+      "dimensions": [
+        "100x50",
+        "120x60"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.3,
@@ -501,9 +778,20 @@
       "discount": 15,
       "image": "/images/desktop1.jpg",
       "category": "Desktop",
-      "categories": ["Desktop", "Bestsellers"],
-      "colors": ["Black", "Brown", "Walnut"],
-      "dimensions": ["160x80", "180x90", "200x100"],
+      "categories": [
+        "Desktop",
+        "Bestsellers"
+      ],
+      "colors": [
+        "Black",
+        "Brown",
+        "Walnut"
+      ],
+      "dimensions": [
+        "160x80",
+        "180x90",
+        "200x100"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.8,
@@ -520,8 +808,15 @@
       "discount": 20,
       "image": "/images/desktop2.webp",
       "category": "Desktop",
-      "colors": ["White", "Black", "Grey"],
-      "dimensions": ["100x50", "120x60"],
+      "colors": [
+        "White",
+        "Black",
+        "Grey"
+      ],
+      "dimensions": [
+        "100x50",
+        "120x60"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.4,
@@ -538,8 +833,15 @@
       "discount": 20,
       "image": "/images/l2.avif",
       "category": "L-Shaped",
-      "colors": ["Black", "White", "Grey"],
-      "dimensions": ["160x140", "180x160"],
+      "colors": [
+        "Black",
+        "White",
+        "Grey"
+      ],
+      "dimensions": [
+        "160x140",
+        "180x160"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.6,
@@ -556,9 +858,19 @@
       "discount": 22,
       "image": "/images/l3.webp",
       "category": "L-Shaped",
-      "categories": ["L-Shaped", "Bestsellers"],
-      "colors": ["Black", "Red", "Blue"],
-      "dimensions": ["180x160", "200x180"],
+      "categories": [
+        "L-Shaped",
+        "Bestsellers"
+      ],
+      "colors": [
+        "Black",
+        "Red",
+        "Blue"
+      ],
+      "dimensions": [
+        "180x160",
+        "200x180"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.9,
@@ -575,8 +887,16 @@
       "discount": 25,
       "image": "/images/kid2.avif",
       "category": "Desk for kids",
-      "colors": ["Pink", "Blue", "Green", "Yellow"],
-      "dimensions": ["100x50", "120x60"],
+      "colors": [
+        "Pink",
+        "Blue",
+        "Green",
+        "Yellow"
+      ],
+      "dimensions": [
+        "100x50",
+        "120x60"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.5,
@@ -593,8 +913,15 @@
       "discount": 20,
       "image": "/images/kid3.jpg",
       "category": "Desk for kids",
-      "colors": ["Rainbow", "Blue", "Pink"],
-      "dimensions": ["90x45", "100x50"],
+      "colors": [
+        "Rainbow",
+        "Blue",
+        "Pink"
+      ],
+      "dimensions": [
+        "90x45",
+        "100x50"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.7,
@@ -611,8 +938,16 @@
       "discount": 23,
       "image": "/images/l1.jpg",
       "category": "L-Shaped",
-      "colors": ["Black", "White", "Brown"],
-      "dimensions": ["160x140", "180x160", "200x180"],
+      "colors": [
+        "Black",
+        "White",
+        "Brown"
+      ],
+      "dimensions": [
+        "160x140",
+        "180x160",
+        "200x180"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.6,
@@ -629,8 +964,16 @@
       "discount": 20,
       "image": "/images/kid2.avif",
       "category": "Desk for kids",
-      "colors": ["White", "Blue", "Pink", "Green"],
-      "dimensions": ["100x50", "120x60"],
+      "colors": [
+        "White",
+        "Blue",
+        "Pink",
+        "Green"
+      ],
+      "dimensions": [
+        "100x50",
+        "120x60"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.3,
@@ -647,8 +990,16 @@
       "discount": 20,
       "image": "/images/deskframe1.webp",
       "category": "Deskframe",
-      "colors": ["Black", "White", "Silver"],
-      "dimensions": ["140x70", "160x80", "180x90"],
+      "colors": [
+        "Black",
+        "White",
+        "Silver"
+      ],
+      "dimensions": [
+        "140x70",
+        "160x80",
+        "180x90"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.8,
@@ -665,8 +1016,16 @@
       "discount": 25,
       "image": "/images/desktop2.webp",
       "category": "Desktop",
-      "colors": ["White", "Black", "Grey", "Natural"],
-      "dimensions": ["120x60", "140x70"],
+      "colors": [
+        "White",
+        "Black",
+        "Grey",
+        "Natural"
+      ],
+      "dimensions": [
+        "120x60",
+        "140x70"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.4,
@@ -683,8 +1042,15 @@
       "discount": 23,
       "image": "/images/l2.avif",
       "category": "L-Shaped",
-      "colors": ["Black", "White", "Grey"],
-      "dimensions": ["140x140", "160x160"],
+      "colors": [
+        "Black",
+        "White",
+        "Grey"
+      ],
+      "dimensions": [
+        "140x140",
+        "160x160"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.5,
@@ -701,8 +1067,16 @@
       "discount": 23,
       "image": "/images/kid3.jpg",
       "category": "Desk for kids",
-      "colors": ["Rainbow", "Blue", "Pink", "Green"],
-      "dimensions": ["90x45", "100x50"],
+      "colors": [
+        "Rainbow",
+        "Blue",
+        "Pink",
+        "Green"
+      ],
+      "dimensions": [
+        "90x45",
+        "100x50"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.6,
@@ -719,8 +1093,16 @@
       "discount": 22,
       "image": "/images/deskframe1.webp",
       "category": "Deskframe",
-      "colors": ["Black", "White", "Silver"],
-      "dimensions": ["140x70", "160x80", "180x90"],
+      "colors": [
+        "Black",
+        "White",
+        "Silver"
+      ],
+      "dimensions": [
+        "140x70",
+        "160x80",
+        "180x90"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.9,
@@ -737,8 +1119,16 @@
       "discount": 20,
       "image": "/images/desktop1.jpg",
       "category": "Desktop",
-      "colors": ["Black", "White", "Brown"],
-      "dimensions": ["160x80", "180x90", "200x100"],
+      "colors": [
+        "Black",
+        "White",
+        "Brown"
+      ],
+      "dimensions": [
+        "160x80",
+        "180x90",
+        "200x100"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.8,
@@ -755,8 +1145,15 @@
       "discount": 25,
       "image": "/images/l3.webp",
       "category": "L-Shaped",
-      "colors": ["Black", "Red", "Blue"],
-      "dimensions": ["180x160", "200x180"],
+      "colors": [
+        "Black",
+        "Red",
+        "Blue"
+      ],
+      "dimensions": [
+        "180x160",
+        "200x180"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.7,
@@ -773,8 +1170,16 @@
       "discount": 22,
       "image": "/images/kid1.jpg",
       "category": "Desk for kids",
-      "colors": ["Blue", "Pink", "Green", "Yellow"],
-      "dimensions": ["90x45", "100x50"],
+      "colors": [
+        "Blue",
+        "Pink",
+        "Green",
+        "Yellow"
+      ],
+      "dimensions": [
+        "90x45",
+        "100x50"
+      ],
       "inStock": true,
       "ratings": {
         "average": 4.4,

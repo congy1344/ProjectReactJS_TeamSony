@@ -91,12 +91,32 @@ const Products = () => {
 
   const handleToggleWishlist = (e, product) => {
     e.stopPropagation();
+
+    // Yêu cầu đăng nhập nếu chưa đăng nhập
+    if (!user) {
+      navigate("/login", { state: { from: "/products" } });
+      return;
+    }
+
     const isInWishlist =
       wishlistItems && wishlistItems.some((item) => item.id === product.id);
+
     if (isInWishlist) {
+      // Xóa khỏi wishlist
       dispatch(removeFromWishlist(product.id));
+
+      // Cập nhật wishlist trong user context
+      const updatedItems = wishlistItems.filter(
+        (item) => item.id !== product.id
+      );
+      updateUserWishlist({ items: updatedItems });
     } else {
+      // Thêm vào wishlist
       dispatch(addToWishlistWithNotification(product));
+
+      // Cập nhật wishlist trong user context
+      const updatedItems = [...wishlistItems, product];
+      updateUserWishlist({ items: updatedItems });
     }
   };
 

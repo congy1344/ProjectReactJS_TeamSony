@@ -59,13 +59,17 @@ const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user } = useAuth();
+  const { user, updateUserWishlist, updateUserCart } = useAuth();
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedDimension, setSelectedDimension] = useState("");
   const [quantity, setQuantity] = useState(1);
+
+  // Lấy danh sách wishlist từ Redux store
+  const wishlistItems = useSelector((state) => state.wishlist.items || []);
+  const cartItems = useSelector((state) => state.cart.items || []);
 
   // Thêm state cho giá
   const [currentPrice, setCurrentPrice] = useState(0);
@@ -146,17 +150,42 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    dispatch(
-      addToCartWithNotification({
-        ...product,
-        quantity,
-        color: selectedColor,
-        dimension: selectedDimension,
-      })
+    // Yêu cầu đăng nhập nếu chưa đăng nhập
+    if (!user) {
+      navigate("/login", { state: { from: `/products/${product.id}` } });
+      return;
+    }
+
+    const productToAdd = {
+      ...product,
+      quantity,
+      color: selectedColor,
+      dimension: selectedDimension,
+      price: currentPrice, // Sử dụng giá hiện tại
+    };
+
+    dispatch(addToCartWithNotification(productToAdd));
+
+    // Cập nhật giỏ hàng trong database
+    const updatedItems = [...cartItems, productToAdd];
+    const updatedTotal = updatedItems.reduce(
+      (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
+      0
     );
+
+    updateUserCart({
+      items: updatedItems,
+      total: updatedTotal,
+    });
   };
 
   const handleBuyNow = () => {
+    // Yêu cầu đăng nhập nếu chưa đăng nhập
+    if (!user) {
+      navigate("/login", { state: { from: `/products/${product.id}` } });
+      return;
+    }
+
     // Đảm bảo sản phẩm có giá trước khi chuyển đến trang checkout
     const productToCheckout = {
       ...product,
@@ -164,7 +193,7 @@ const ProductDetail = () => {
       color: selectedColor,
       dimension: selectedDimension,
       // Đảm bảo sản phẩm có giá
-      price: product.price || product.basePrice || 0,
+      price: currentPrice,
     };
 
     navigate("/checkout", {
@@ -175,17 +204,30 @@ const ProductDetail = () => {
   };
 
   const handleToggleWishlist = () => {
-    if (user) {
-      const isInWishlist = wishlistItems.some((item) => item.id === product.id);
-      if (isInWishlist) {
-        dispatch(removeFromWishlist(product.id));
-        // Cập nhật wishlist trong database nếu cần
-      } else {
-        dispatch(addToWishlistWithNotification(product));
-        // Cập nhật wishlist trong database nếu cần
-      }
+    if (!user) {
+      navigate("/login", { state: { from: `/products/${product.id}` } });
+      return;
+    }
+
+    // Kiểm tra xem sản phẩm đã có trong wishlist chưa
+    const isInWishlist = wishlistItems.some((item) => item.id === product.id);
+
+    if (isInWishlist) {
+      // Nếu đã có trong wishlist, xóa khỏi wishlist
+      dispatch(removeFromWishlist(product.id));
+
+      // Cập nhật wishlist trong user context
+      const updatedItems = wishlistItems.filter(
+        (item) => item.id !== product.id
+      );
+      updateUserWishlist({ items: updatedItems });
     } else {
-      navigate("/login");
+      // Nếu chưa có trong wishlist, thêm vào wishlist
+      dispatch(addToWishlistWithNotification(product));
+
+      // Cập nhật wishlist trong user context
+      const updatedItems = [...wishlistItems, product];
+      updateUserWishlist({ items: updatedItems });
     }
   };
 
@@ -220,6 +262,9 @@ const ProductDetail = () => {
       </Container>
     );
   }
+
+  // Kiểm tra xem sản phẩm có trong wishlist không
+  const isInWishlist = wishlistItems.some((item) => item.id === product.id);
 
   return (
     <Container
@@ -451,11 +496,7 @@ const ProductDetail = () => {
               sx={{
                 border: 1,
                 borderColor: "divider",
-                color: user?.wishlist?.items?.some(
-                  (item) => item.id === product.id
-                )
-                  ? "error"
-                  : "inherit",
+                color: isInWishlist ? "error.main" : "inherit",
               }}
               onClick={handleToggleWishlist}
             >
