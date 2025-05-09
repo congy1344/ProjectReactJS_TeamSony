@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Table,
@@ -21,11 +21,12 @@ import {
   InputLabel,
   Select,
   MenuItem,
-} from '@mui/material';
-import { Visibility, Delete } from '@mui/icons-material';
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+} from "@mui/material";
+import { Visibility, Edit } from "@mui/icons-material"; // Thay Delete bằng Edit
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { api } from "../../api/api";
 
 const OrderManagement = () => {
   const { user, isAdmin } = useAuth();
@@ -36,29 +37,51 @@ const OrderManagement = () => {
   const [statusDialog, setStatusDialog] = useState(false);
 
   useEffect(() => {
-    if (!isAdmin()) {
-      navigate('/');
+    // Thêm console.log để debug
+    console.log("OrderManagement mounted");
+    console.log("User:", user);
+    console.log("Is admin:", isAdmin());
+
+    if (!user) {
+      console.log("No user, redirecting to login");
+      navigate("/login");
       return;
     }
+
+    if (!isAdmin()) {
+      console.log("Not admin, redirecting to home");
+      navigate("/");
+      return;
+    }
+
     fetchOrders();
-  }, []);
+  }, [user, isAdmin, navigate]);
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/users');
+      const BASE_URL = api.getBaseUrl();
+      console.log("Fetching orders from:", BASE_URL);
+      const response = await axios.get(`${BASE_URL}/users`);
+      console.log("Users response:", response.data);
+
       const allOrders = response.data.reduce((acc, user) => {
         if (user.orders) {
-          return [...acc, ...user.orders.map(order => ({
-            ...order,
-            userName: user.name,
-            userEmail: user.email
-          }))];
+          return [
+            ...acc,
+            ...user.orders.map((order) => ({
+              ...order,
+              userName: user.name,
+              userEmail: user.email,
+            })),
+          ];
         }
         return acc;
       }, []);
+
+      console.log("Processed orders:", allOrders);
       setOrders(allOrders);
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      console.error("Error fetching orders:", error);
     }
   };
 
@@ -75,43 +98,46 @@ const OrderManagement = () => {
   const handleStatusChange = async (event) => {
     try {
       const newStatus = event.target.value;
-      const userResponse = await axios.get('http://localhost:3001/users');
+      const BASE_URL = api.getBaseUrl();
+      const userResponse = await axios.get(`${BASE_URL}/users`);
       const users = userResponse.data;
-      
+
       // Find user and update order status
-      const user = users.find(u => u.orders?.some(o => o.id === selectedOrder.id));
+      const user = users.find((u) =>
+        u.orders?.some((o) => o.id === selectedOrder.id)
+      );
       if (user) {
-        const updatedOrders = user.orders.map(order => 
-          order.id === selectedOrder.id 
+        const updatedOrders = user.orders.map((order) =>
+          order.id === selectedOrder.id
             ? { ...order, status: newStatus }
             : order
         );
-        
-        await axios.put(`http://localhost:3001/users/${user.id}`, {
+
+        await axios.put(`${BASE_URL}/users/${user.id}`, {
           ...user,
-          orders: updatedOrders
+          orders: updatedOrders,
         });
-        
+
         fetchOrders();
         setStatusDialog(false);
       }
     } catch (error) {
-      console.error('Error updating order status:', error);
+      console.error("Error updating order status:", error);
     }
   };
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Pending':
-        return 'warning';
-      case 'In Transit':
-        return 'info';
-      case 'Delivered':
-        return 'success';
-      case 'Cancelled':
-        return 'error';
+      case "Pending":
+        return "warning";
+      case "In Transit":
+        return "info";
+      case "Delivered":
+        return "success";
+      case "Cancelled":
+        return "error";
       default:
-        return 'default';
+        return "default";
     }
   };
 
@@ -128,47 +154,59 @@ const OrderManagement = () => {
         overflowY: "auto",
       }}
     >
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          backgroundColor: '#fff',
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: "#fff",
           p: 3,
           borderRadius: 2,
           boxShadow: 1,
-          mb: 3
+          mb: 3,
         }}
       >
-        <Typography 
-          variant="h4" 
-          component="h1" 
-          sx={{ 
-            fontWeight: 'bold',
-            color: 'primary.main',
-            m: 0
+        <Typography
+          variant="h4"
+          component="h1"
+          sx={{
+            fontWeight: "bold",
+            color: "primary.main",
+            m: 0,
           }}
         >
           Order Management
         </Typography>
       </Box>
 
-      <TableContainer 
+      <TableContainer
         component={Paper}
         sx={{
           borderRadius: 2,
-          boxShadow: 1
+          boxShadow: 1,
         }}
       >
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: '#1a1a1a' }}>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Order ID</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Customer</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Date</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Total</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Status</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Actions</TableCell>
+            <TableRow sx={{ backgroundColor: "#1a1a1a" }}>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Order ID
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Customer
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Date
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Total
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Status
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -182,9 +220,9 @@ const OrderManagement = () => {
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  {new Date(order.orderDate).toLocaleDateString('vi-VN')}
+                  {new Date(order.orderDate).toLocaleDateString("vi-VN")}
                 </TableCell>
-                <TableCell>{order.total.toLocaleString('vi-VN')}₫</TableCell>
+                <TableCell>{order.total.toLocaleString("vi-VN")}₫</TableCell>
                 <TableCell>
                   <Chip
                     label={order.status}
@@ -203,7 +241,7 @@ const OrderManagement = () => {
                     onClick={() => handleEditStatus(order)}
                     color="primary"
                   >
-                    <Delete />
+                    <Edit />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -226,14 +264,19 @@ const OrderManagement = () => {
               <Typography variant="h6" gutterBottom>
                 Order #{selectedOrder.id}
               </Typography>
-              
+
               <Typography variant="subtitle1" gutterBottom>
                 Customer Information
               </Typography>
-              <Typography>Name: {selectedOrder.shippingAddress.fullName}</Typography>
-              <Typography>Phone: {selectedOrder.shippingAddress.phone}</Typography>
               <Typography>
-                Address: {selectedOrder.shippingAddress.address}, {selectedOrder.shippingAddress.city}
+                Name: {selectedOrder.shippingAddress.fullName}
+              </Typography>
+              <Typography>
+                Phone: {selectedOrder.shippingAddress.phone}
+              </Typography>
+              <Typography>
+                Address: {selectedOrder.shippingAddress.address},{" "}
+                {selectedOrder.shippingAddress.city}
               </Typography>
 
               <Typography variant="subtitle1" sx={{ mt: 3, mb: 1 }}>
@@ -255,22 +298,30 @@ const OrderManagement = () => {
                         <TableCell>
                           <Typography variant="body2">{item.name}</Typography>
                           {item.color && (
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
                               Color: {item.color}
                             </Typography>
                           )}
                           {item.dimension && (
-                            <Typography variant="caption" color="text.secondary" display="block">
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                              display="block"
+                            >
                               Dimension: {item.dimension}
                             </Typography>
                           )}
                         </TableCell>
                         <TableCell align="right">{item.quantity}</TableCell>
                         <TableCell align="right">
-                          {item.price.toLocaleString('vi-VN')}₫
+                          {item.price.toLocaleString("vi-VN")}₫
                         </TableCell>
                         <TableCell align="right">
-                          {(item.price * item.quantity).toLocaleString('vi-VN')}₫
+                          {(item.price * item.quantity).toLocaleString("vi-VN")}
+                          ₫
                         </TableCell>
                       </TableRow>
                     ))}
@@ -279,7 +330,9 @@ const OrderManagement = () => {
                         <strong>Total:</strong>
                       </TableCell>
                       <TableCell align="right">
-                        <strong>{selectedOrder.total.toLocaleString('vi-VN')}₫</strong>
+                        <strong>
+                          {selectedOrder.total.toLocaleString("vi-VN")}₫
+                        </strong>
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -294,16 +347,13 @@ const OrderManagement = () => {
       </Dialog>
 
       {/* Status Edit Dialog */}
-      <Dialog
-        open={statusDialog}
-        onClose={() => setStatusDialog(false)}
-      >
+      <Dialog open={statusDialog} onClose={() => setStatusDialog(false)}>
         <DialogTitle>Update Order Status</DialogTitle>
         <DialogContent>
           <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel>Status</InputLabel>
             <Select
-              value={selectedOrder?.status || ''}
+              value={selectedOrder?.status || ""}
               onChange={handleStatusChange}
               label="Status"
             >

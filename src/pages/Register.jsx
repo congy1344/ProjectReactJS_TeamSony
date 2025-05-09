@@ -7,10 +7,11 @@ import {
   Button,
   Typography,
   Paper,
+  Alert,
 } from "@mui/material";
 import axios from "axios";
 
-// Import BASE_URL từ api.js
+// Import api từ api.js
 import { api } from "../api/api";
 
 const Register = () => {
@@ -37,7 +38,8 @@ const Register = () => {
 
     try {
       // Sử dụng BASE_URL từ api.js thay vì hardcode localhost:3001
-      const BASE_URL = api.getBaseUrl(); // Thêm phương thức này vào api.js
+      const BASE_URL = api.getBaseUrl();
+      console.log("Using BASE_URL for register:", BASE_URL);
 
       // Kiểm tra email và username đã tồn tại chưa
       const [emailCheck, usernameCheck] = await Promise.all([
@@ -61,7 +63,7 @@ const Register = () => {
         email: formData.email,
         username: formData.username,
         password: formData.password,
-        hasChangedUsername: false
+        hasChangedUsername: false,
       });
 
       navigate("/login", { state: { from } });

@@ -26,6 +26,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { clearCart } from "../store/cartSlice";
 import axios from "axios";
+import { api } from "../api/api";
 
 const Checkout = () => {
   const { items, total } = useSelector((state) => state.cart);
@@ -227,6 +228,7 @@ const Checkout = () => {
     }
 
     try {
+      const BASE_URL = api.getBaseUrl();
       // Tạo đơn hàng mới
       const newOrder = {
         id: `ORD${Date.now()}`,
@@ -246,9 +248,7 @@ const Checkout = () => {
       };
 
       // Lấy thông tin user hiện tại
-      const userResponse = await axios.get(
-        `http://localhost:3001/users/${user.id}`
-      );
+      const userResponse = await axios.get(`${BASE_URL}/users/${user.id}`);
       const currentUser = userResponse.data;
 
       // Cập nhật danh sách đơn hàng
@@ -260,7 +260,7 @@ const Checkout = () => {
         orders: updatedOrders,
       };
 
-      await axios.put(`http://localhost:3001/users/${user.id}`, updatedUser);
+      await axios.put(`${BASE_URL}/users/${user.id}`, updatedUser);
 
       // Cập nhật thông tin user trong context
       login(updatedUser);

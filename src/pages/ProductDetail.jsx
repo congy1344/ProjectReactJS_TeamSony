@@ -83,7 +83,13 @@ const ProductDetail = () => {
         }
 
         if (data.dimensions && data.dimensions.length > 0) {
-          setSelectedDimension(data.dimensions[0]);
+          // Xử lý cả hai loại cấu trúc dimensions
+          const firstDimension = data.dimensions[0];
+          if (typeof firstDimension === "object" && firstDimension.size) {
+            setSelectedDimension(firstDimension.size);
+          } else {
+            setSelectedDimension(firstDimension);
+          }
         }
 
         // Thiết lập giá ban đầu
@@ -110,6 +116,25 @@ const ProductDetail = () => {
   const handleDimensionChange = (event, newDimension) => {
     if (newDimension !== null) {
       setSelectedDimension(newDimension);
+
+      // Cập nhật giá nếu có priceAdjustment
+      if (product.dimensions && Array.isArray(product.dimensions)) {
+        const dimensionObj = product.dimensions.find(
+          (dim) =>
+            (typeof dim === "object" && dim.size === newDimension) ||
+            dim === newDimension
+        );
+
+        if (
+          dimensionObj &&
+          typeof dimensionObj === "object" &&
+          "priceAdjustment" in dimensionObj
+        ) {
+          // Nếu là object có priceAdjustment
+          const basePrice = product.basePrice || product.price || 0;
+          setCurrentPrice(basePrice + dimensionObj.priceAdjustment);
+        }
+      }
     }
   };
 
@@ -275,10 +300,7 @@ const ProductDetail = () => {
               component="div"
               sx={{ fontWeight: 600, mb: 2 }}
             >
-              {(product.price || product.basePrice || 0).toLocaleString(
-                "vi-VN"
-              )}
-              ₫
+              {currentPrice.toLocaleString("vi-VN")}₫
             </Typography>
             {product.originalPrice && (
               <Typography

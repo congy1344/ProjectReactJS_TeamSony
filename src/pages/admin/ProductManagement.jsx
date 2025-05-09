@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -23,11 +23,12 @@ import {
   MenuItem,
   Grid,
   Avatar,
-} from '@mui/material';
-import { Edit, Delete, Add } from '@mui/icons-material';
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+} from "@mui/material";
+import { Edit, Delete, Add } from "@mui/icons-material";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { api } from "../../api/api";
 
 const ProductManagement = () => {
   const { user, isAdmin } = useAuth();
@@ -36,17 +37,17 @@ const ProductManagement = () => {
   const [open, setOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState({
-    name: '',
-    price: '',
-    description: '',
-    category: '',
+    name: "",
+    price: "",
+    description: "",
+    category: "",
     image: null,
-    imageFile: null // Thêm state cho file hình ảnh
+    imageFile: null, // Thêm state cho file hình ảnh
   });
 
   useEffect(() => {
     if (!isAdmin()) {
-      navigate('/');
+      navigate("/");
       return;
     }
     fetchProducts();
@@ -54,10 +55,11 @@ const ProductManagement = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/products');
+      const BASE_URL = api.getBaseUrl();
+      const response = await axios.get(`${BASE_URL}/products`);
       setProducts(response.data);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error("Error fetching products:", error);
     }
   };
 
@@ -68,12 +70,12 @@ const ProductManagement = () => {
     } else {
       setEditingProduct(null);
       setFormData({
-        name: '',
-        price: '',
-        description: '',
-        category: '',
+        name: "",
+        price: "",
+        description: "",
+        category: "",
         image: null,
-        imageFile: null
+        imageFile: null,
       });
     }
     setOpen(true);
@@ -86,9 +88,9 @@ const ProductManagement = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -96,47 +98,52 @@ const ProductManagement = () => {
     const file = e.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         image: imageUrl,
-        imageFile: file
+        imageFile: file,
       }));
     }
   };
 
   const handleSubmit = async () => {
     try {
+      const BASE_URL = api.getBaseUrl();
       const { imageFile, ...data } = formData; // Tách imageFile ra khỏi data
       let response;
       if (editingProduct) {
-        response = await axios.put(`http://localhost:3001/products/${editingProduct.id}`, data);
+        response = await axios.put(
+          `${BASE_URL}/products/${editingProduct.id}`,
+          data
+        );
       } else {
-        response = await axios.post('http://localhost:3001/products', {
+        response = await axios.post(`${BASE_URL}/products`, {
           ...data,
-          id: Date.now().toString()
+          id: Date.now().toString(),
         });
       }
       // Xử lý upload hình ảnh sau khi thêm/sửa sản phẩm
       if (imageFile) {
         const formDataImage = new FormData();
-        formDataImage.append('file', imageFile);
-        formDataImage.append('productId', response.data.id);
-        await axios.post('http://localhost:3001/upload', formDataImage);
+        formDataImage.append("file", imageFile);
+        formDataImage.append("productId", response.data.id);
+        await axios.post(`${BASE_URL}/upload`, formDataImage);
       }
       fetchProducts();
       handleClose();
     } catch (error) {
-      console.error('Error saving product:', error);
+      console.error("Error saving product:", error);
     }
   };
 
   const handleDelete = async (productId) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
+    if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        await axios.delete(`http://localhost:3001/products/${productId}`);
+        const BASE_URL = api.getBaseUrl();
+        await axios.delete(`${BASE_URL}/products/${productId}`);
         fetchProducts();
       } catch (error) {
-        console.error('Error deleting product:', error);
+        console.error("Error deleting product:", error);
       }
     }
   };
@@ -154,25 +161,25 @@ const ProductManagement = () => {
         overflowY: "auto",
       }}
     >
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          backgroundColor: '#fff',
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: "#fff",
           p: 3,
           borderRadius: 2,
           boxShadow: 1,
-          mb: 3
+          mb: 3,
         }}
       >
-        <Typography 
-          variant="h4" 
-          component="h1" 
-          sx={{ 
-            fontWeight: 'bold',
-            color: 'primary.main',
-            m: 0
+        <Typography
+          variant="h4"
+          component="h1"
+          sx={{
+            fontWeight: "bold",
+            color: "primary.main",
+            m: 0,
           }}
         >
           Product Management
@@ -183,29 +190,39 @@ const ProductManagement = () => {
           onClick={() => handleOpen()}
           sx={{
             borderRadius: 2,
-            textTransform: 'none',
-            px: 3
+            textTransform: "none",
+            px: 3,
           }}
         >
           Add Product
         </Button>
       </Box>
 
-      <TableContainer 
+      <TableContainer
         component={Paper}
         sx={{
           borderRadius: 2,
-          boxShadow: 1
+          boxShadow: 1,
         }}
       >
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: '#1a1a1a' }}>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Image</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Name</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Category</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Price</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Actions</TableCell>
+            <TableRow sx={{ backgroundColor: "#1a1a1a" }}>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Image
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Name
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Category
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Price
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -221,12 +238,20 @@ const ProductManagement = () => {
                 </TableCell>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.category}</TableCell>
-                <TableCell>{(product.price || 0).toLocaleString('vi-VN')}₫</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleOpen(product)} color="primary">
+                  {(product.price || 0).toLocaleString("vi-VN")}₫
+                </TableCell>
+                <TableCell>
+                  <IconButton
+                    onClick={() => handleOpen(product)}
+                    color="primary"
+                  >
                     <Edit />
                   </IconButton>
-                  <IconButton onClick={() => handleDelete(product.id)} color="error">
+                  <IconButton
+                    onClick={() => handleDelete(product.id)}
+                    color="error"
+                  >
                     <Delete />
                   </IconButton>
                 </TableCell>
@@ -238,7 +263,7 @@ const ProductManagement = () => {
 
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
         <DialogTitle>
-          {editingProduct ? 'Edit Product' : 'Add New Product'}
+          {editingProduct ? "Edit Product" : "Add New Product"}
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -307,30 +332,30 @@ const ProductManagement = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                 <TextField
                   fullWidth
                   label="Image URL"
                   name="image"
-                  value={formData.image || ''}
+                  value={formData.image || ""}
                   onChange={handleChange}
                 />
                 <input
                   accept="image/*"
-                  style={{ display: 'none' }}
+                  style={{ display: "none" }}
                   id="image-upload"
                   type="file"
                   onChange={handleImageChange}
                 />
                 <label htmlFor="image-upload">
-                  <Button 
-                    variant="contained" 
+                  <Button
+                    variant="contained"
                     component="span"
                     size="small"
-                    sx={{ 
-                      minWidth: 'fit-content',
-                      fontSize: '0.875rem',
-                      whiteSpace: 'nowrap'
+                    sx={{
+                      minWidth: "fit-content",
+                      fontSize: "0.875rem",
+                      whiteSpace: "nowrap",
                     }}
                   >
                     Choose File
@@ -339,10 +364,10 @@ const ProductManagement = () => {
               </Box>
               {formData.image && (
                 <Box sx={{ mt: 2 }}>
-                  <img 
-                    src={formData.image} 
-                    alt="Preview" 
-                    style={{ maxWidth: '200px', maxHeight: '200px' }}
+                  <img
+                    src={formData.image}
+                    alt="Preview"
+                    style={{ maxWidth: "200px", maxHeight: "200px" }}
                   />
                 </Box>
               )}
@@ -352,7 +377,7 @@ const ProductManagement = () => {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleSubmit} variant="contained" color="primary">
-            {editingProduct ? 'Update' : 'Add'}
+            {editingProduct ? "Update" : "Add"}
           </Button>
         </DialogActions>
       </Dialog>

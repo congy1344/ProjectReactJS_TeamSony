@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Table,
@@ -18,11 +18,12 @@ import {
   Button,
   TextField,
   Grid,
-} from '@mui/material';
-import { Delete, Edit, Visibility } from '@mui/icons-material';
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+} from "@mui/material";
+import { Delete, Edit, Visibility } from "@mui/icons-material";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { api } from "../../api/api";
 
 const UserManagement = () => {
   const { user, isAdmin } = useAuth();
@@ -32,15 +33,15 @@ const UserManagement = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [editDialog, setEditDialog] = useState(false);
   const [editForm, setEditForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    role: '',
+    name: "",
+    email: "",
+    phone: "",
+    role: "",
   });
 
   useEffect(() => {
     if (!isAdmin()) {
-      navigate('/');
+      navigate("/");
       return;
     }
     fetchUsers();
@@ -48,10 +49,11 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/users');
+      const BASE_URL = api.getBaseUrl();
+      const response = await axios.get(`${BASE_URL}/users`);
       setUsers(response.data);
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error("Error fetching users:", error);
     }
   };
 
@@ -65,41 +67,43 @@ const UserManagement = () => {
     setEditForm({
       name: user.name,
       email: user.email,
-      phone: user.phone || '',
-      role: user.role || 'user',
+      phone: user.phone || "",
+      role: user.role || "user",
     });
     setEditDialog(true);
   };
 
   const handleDeleteUser = async (userId) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
+    if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        await axios.delete(`http://localhost:3001/users/${userId}`);
+        const BASE_URL = api.getBaseUrl();
+        await axios.delete(`${BASE_URL}/users/${userId}`);
         fetchUsers();
       } catch (error) {
-        console.error('Error deleting user:', error);
+        console.error("Error deleting user:", error);
       }
     }
   };
 
   const handleEditSubmit = async () => {
     try {
-      await axios.put(`http://localhost:3001/users/${selectedUser.id}`, {
+      const BASE_URL = api.getBaseUrl();
+      await axios.put(`${BASE_URL}/users/${selectedUser.id}`, {
         ...selectedUser,
         ...editForm,
       });
       fetchUsers();
       setEditDialog(false);
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error("Error updating user:", error);
     }
   };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setEditForm(prev => ({
+    setEditForm((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -116,52 +120,62 @@ const UserManagement = () => {
         overflowY: "auto",
       }}
     >
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          backgroundColor: '#fff',
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: "#fff",
           p: 3,
           borderRadius: 2,
           boxShadow: 1,
-          mb: 3
+          mb: 3,
         }}
       >
-        <Typography 
-          variant="h4" 
-          component="h1" 
-          sx={{ 
-            fontWeight: 'bold',
-            color: 'primary.main',
-            m: 0
+        <Typography
+          variant="h4"
+          component="h1"
+          sx={{
+            fontWeight: "bold",
+            color: "primary.main",
+            m: 0,
           }}
         >
           User Management
         </Typography>
       </Box>
 
-      <TableContainer 
+      <TableContainer
         component={Paper}
         sx={{
           borderRadius: 2,
           boxShadow: 1,
-          '& .MuiTableHead-root': {
-            backgroundColor: '#f5f5f5',
+          "& .MuiTableHead-root": {
+            backgroundColor: "#f5f5f5",
           },
-          '& .MuiTableCell-head': {
-            fontWeight: 'bold'
-          }
+          "& .MuiTableCell-head": {
+            fontWeight: "bold",
+          },
         }}
       >
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: '#1a1a1a' }}>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ID</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Name</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Email</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Role</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Actions</TableCell>
+            <TableRow sx={{ backgroundColor: "#1a1a1a" }}>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                ID
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Name
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Email
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Role
+              </TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -170,7 +184,7 @@ const UserManagement = () => {
                 <TableCell>{user.id}</TableCell>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role || 'user'}</TableCell>
+                <TableCell>{user.role || "user"}</TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => handleViewDetails(user)}
@@ -187,7 +201,7 @@ const UserManagement = () => {
                   <IconButton
                     onClick={() => handleDeleteUser(user.id)}
                     color="error"
-                    disabled={user.role === 'admin'}
+                    disabled={user.role === "admin"}
                   >
                     <Delete />
                   </IconButton>
@@ -220,16 +234,21 @@ const UserManagement = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Typography variant="subtitle2">Phone</Typography>
-                  <Typography variant="body1">{selectedUser.phone || 'N/A'}</Typography>
+                  <Typography variant="body1">
+                    {selectedUser.phone || "N/A"}
+                  </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Typography variant="subtitle2">Role</Typography>
-                  <Typography variant="body1">{selectedUser.role || 'user'}</Typography>
+                  <Typography variant="body1">
+                    {selectedUser.role || "user"}
+                  </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography variant="subtitle2">Orders</Typography>
                   <Typography variant="body1">
-                    {selectedUser.orders ? selectedUser.orders.length : 0} orders
+                    {selectedUser.orders ? selectedUser.orders.length : 0}{" "}
+                    orders
                   </Typography>
                 </Grid>
               </Grid>
@@ -299,7 +318,11 @@ const UserManagement = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setEditDialog(false)}>Cancel</Button>
-          <Button onClick={handleEditSubmit} variant="contained" color="primary">
+          <Button
+            onClick={handleEditSubmit}
+            variant="contained"
+            color="primary"
+          >
             Save Changes
           </Button>
         </DialogActions>

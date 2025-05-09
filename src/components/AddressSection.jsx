@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -20,10 +20,11 @@ import {
   IconButton,
   Divider,
   Grid,
-} from '@mui/material';
-import { Edit, Delete, Add } from '@mui/icons-material';
-import axios from 'axios';
-import { useAuth } from '../contexts/AuthContext';
+} from "@mui/material";
+import { Edit, Delete, Add } from "@mui/icons-material";
+import axios from "axios";
+import { useAuth } from "../contexts/AuthContext";
+import { api } from "../api/api";
 
 const AddressSection = () => {
   const { user } = useAuth();
@@ -35,35 +36,40 @@ const AddressSection = () => {
   const [selectedProvince, setSelectedProvince] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [formData, setFormData] = useState({
-    fullName: '',
-    phone: '',
-    province: '',
-    district: '',
-    ward: '',
-    detail: '',
-    type: 'home',
-    isDefault: false
+    fullName: "",
+    phone: "",
+    province: "",
+    district: "",
+    ward: "",
+    detail: "",
+    type: "home",
+    isDefault: false,
   });
 
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/users/${user.id}`);
+        const BASE_URL = api.getBaseUrl();
+        const response = await axios.get(`${BASE_URL}/users/${user.id}`);
         setAddresses(response.data.addresses || []);
       } catch (error) {
-        console.error('Error fetching addresses:', error);
+        console.error("Error fetching addresses:", error);
       }
     };
 
     const fetchProvinces = async () => {
       try {
-        const response = await fetch('/data/full_json_generated_data_vn_units.json');
+        const response = await fetch(
+          "/data/full_json_generated_data_vn_units.json"
+        );
         const data = await response.json();
         // Sắp xếp provinces theo tên
-        const sortedProvinces = [...data].sort((a, b) => a.Name.localeCompare(b.Name, 'vi'));
+        const sortedProvinces = [...data].sort((a, b) =>
+          a.Name.localeCompare(b.Name, "vi")
+        );
         setProvinces(sortedProvinces);
       } catch (error) {
-        console.error('Error fetching provinces:', error);
+        console.error("Error fetching provinces:", error);
       }
     };
 
@@ -73,20 +79,20 @@ const AddressSection = () => {
 
   const handleProvinceChange = (event) => {
     const provinceCode = event.target.value;
-    const selectedProv = provinces.find(p => p.Code === provinceCode);
+    const selectedProv = provinces.find((p) => p.Code === provinceCode);
     setSelectedProvince(selectedProv);
     setFormData({
       ...formData,
       province: provinceCode,
       provinceName: selectedProv.Name,
-      district: '',
-      districtName: '',
-      ward: '',
-      wardName: ''
+      district: "",
+      districtName: "",
+      ward: "",
+      wardName: "",
     });
     // Sắp xếp districts theo tên
-    const sortedDistricts = [...(selectedProv?.District || [])].sort((a, b) => 
-      a.Name.localeCompare(b.Name, 'vi')
+    const sortedDistricts = [...(selectedProv?.District || [])].sort((a, b) =>
+      a.Name.localeCompare(b.Name, "vi")
     );
     setDistricts(sortedDistricts);
     setWards([]);
@@ -94,121 +100,129 @@ const AddressSection = () => {
 
   const handleDistrictChange = (event) => {
     const districtCode = event.target.value;
-    const selectedDist = districts.find(d => d.Code === districtCode);
+    const selectedDist = districts.find((d) => d.Code === districtCode);
     setSelectedDistrict(selectedDist);
     setFormData({
       ...formData,
       district: districtCode,
       districtName: selectedDist.Name,
-      ward: '',
-      wardName: ''
+      ward: "",
+      wardName: "",
     });
     // Sắp xếp wards theo tên
-    const sortedWards = [...(selectedDist?.Ward || [])].sort((a, b) => 
-      a.Name.localeCompare(b.Name, 'vi')
+    const sortedWards = [...(selectedDist?.Ward || [])].sort((a, b) =>
+      a.Name.localeCompare(b.Name, "vi")
     );
     setWards(sortedWards);
   };
 
   const handleWardChange = (event) => {
     const wardCode = event.target.value;
-    const selectedWard = wards.find(w => w.Code === wardCode);
+    const selectedWard = wards.find((w) => w.Code === wardCode);
     setFormData({
       ...formData,
       ward: wardCode,
-      wardName: selectedWard.Name
+      wardName: selectedWard.Name,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       // Tạo địa chỉ mới
       const newAddress = {
         id: Date.now().toString(),
         userId: user.id,
-        ...formData
+        ...formData,
       };
 
       // Lấy thông tin user hiện tại
-      const userResponse = await axios.get(`http://localhost:3001/users/${user.id}`);
+      const userResponse = await axios.get(
+        `http://localhost:3001/users/${user.id}`
+      );
       const currentUser = userResponse.data;
 
       // Cập nhật danh sách địa chỉ
       let updatedAddresses = [...(currentUser.addresses || [])];
-      
+
       if (formData.isDefault) {
         // Cập nhật các địa chỉ khác thành không mặc định
-        updatedAddresses = updatedAddresses.map(addr => ({
+        updatedAddresses = updatedAddresses.map((addr) => ({
           ...addr,
-          isDefault: false
+          isDefault: false,
         }));
       }
-      
+
       updatedAddresses.push(newAddress);
 
       // Cập nhật thông tin user với địa chỉ mới
       await axios.patch(`http://localhost:3001/users/${user.id}`, {
-        addresses: updatedAddresses
+        addresses: updatedAddresses,
       });
 
       setAddresses(updatedAddresses);
       setOpen(false);
       setFormData({
-        fullName: '',
-        phone: '',
-        province: '',
-        district: '',
-        ward: '',
-        detail: '',
-        type: 'home',
-        isDefault: false
+        fullName: "",
+        phone: "",
+        province: "",
+        district: "",
+        ward: "",
+        detail: "",
+        type: "home",
+        isDefault: false,
       });
     } catch (error) {
-      console.error('Error saving address:', error);
+      console.error("Error saving address:", error);
     }
   };
 
   const handleSetDefault = async (addressId) => {
     try {
-      const userResponse = await axios.get(`http://localhost:3001/users/${user.id}`);
+      const userResponse = await axios.get(
+        `http://localhost:3001/users/${user.id}`
+      );
       const currentUser = userResponse.data;
-      
-      const updatedAddresses = currentUser.addresses.map(addr => ({
+
+      const updatedAddresses = currentUser.addresses.map((addr) => ({
         ...addr,
-        isDefault: addr.id === addressId
+        isDefault: addr.id === addressId,
       }));
 
       await axios.patch(`http://localhost:3001/users/${user.id}`, {
-        addresses: updatedAddresses
+        addresses: updatedAddresses,
       });
 
       setAddresses(updatedAddresses);
     } catch (error) {
-      console.error('Error setting default address:', error);
+      console.error("Error setting default address:", error);
     }
   };
 
   const handleDelete = async (addressId) => {
     try {
-      const userResponse = await axios.get(`http://localhost:3001/users/${user.id}`);
+      const userResponse = await axios.get(
+        `http://localhost:3001/users/${user.id}`
+      );
       const currentUser = userResponse.data;
-      
-      const updatedAddresses = currentUser.addresses.filter(addr => addr.id !== addressId);
+
+      const updatedAddresses = currentUser.addresses.filter(
+        (addr) => addr.id !== addressId
+      );
 
       await axios.patch(`http://localhost:3001/users/${user.id}`, {
-        addresses: updatedAddresses
+        addresses: updatedAddresses,
       });
 
       setAddresses(updatedAddresses);
     } catch (error) {
-      console.error('Error deleting address:', error);
+      console.error("Error deleting address:", error);
     }
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: "100%" }}>
       <Typography variant="h6" sx={{ mb: 1 }}>
         Địa chỉ của tôi
       </Typography>
@@ -217,44 +231,61 @@ const AddressSection = () => {
       </Typography>
       <Divider sx={{ mb: 3 }} />
 
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3 }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 3 }}>
         <Button
           startIcon={<Add />}
           variant="contained"
           onClick={() => setOpen(true)}
           sx={{
-            bgcolor: 'black',
-            color: 'white',
+            bgcolor: "black",
+            color: "white",
             minWidth: 120,
             height: 36,
-            '&:hover': {
-              bgcolor: 'black',
-            }
+            "&:hover": {
+              bgcolor: "black",
+            },
           }}
         >
           Thêm địa chỉ mới
         </Button>
       </Box>
 
-      <Box sx={{ 
-        display: 'flex', 
-        flexDirection: 'column',
-        gap: 3
-      }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 3,
+        }}
+      >
         {addresses.map((address) => (
-          <Card 
+          <Card
             key={address.id}
-            sx={{ 
-              boxShadow: 'none',
-              border: '1px solid',
-              borderColor: 'divider',
-              width: '100%'
+            sx={{
+              boxShadow: "none",
+              border: "1px solid",
+              borderColor: "divider",
+              width: "100%",
             }}
           >
-            <CardContent sx={{ p: '24px !important' }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 2 }}>
+            <CardContent sx={{ p: "24px !important" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  gap: 2,
+                }}
+              >
                 <Box sx={{ flex: 1, maxWidth: 700 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2, flexWrap: 'wrap' }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      mb: 2,
+                      flexWrap: "wrap",
+                    }}
+                  >
                     <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
                       {address.fullName}
                     </Typography>
@@ -262,47 +293,52 @@ const AddressSection = () => {
                       <Typography
                         variant="caption"
                         sx={{
-                          bgcolor: 'black',
-                          color: 'white',
+                          bgcolor: "black",
+                          color: "white",
                           px: 1.5,
                           py: 0.5,
                           borderRadius: 1,
-                          fontSize: '0.75rem'
+                          fontSize: "0.75rem",
                         }}
                       >
                         Mặc định
                       </Typography>
                     )}
                   </Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mb: 1 }}
+                  >
                     {address.phone}
                   </Typography>
                   <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.6 }}>
-                    {address.detail}, {address.wardName}, {address.districtName}, {address.provinceName}
+                    {address.detail}, {address.wardName}, {address.districtName}
+                    , {address.provinceName}
                   </Typography>
                   <Typography
                     variant="caption"
                     sx={{
-                      display: 'inline-block',
-                      border: '1px solid',
-                      borderColor: 'divider',
+                      display: "inline-block",
+                      border: "1px solid",
+                      borderColor: "divider",
                       px: 1.5,
                       py: 0.5,
                       borderRadius: 1,
                     }}
                   >
-                    {address.type === 'home' ? 'Nhà riêng' : 'Văn phòng'}
+                    {address.type === "home" ? "Nhà riêng" : "Văn phòng"}
                   </Typography>
                 </Box>
                 <Box>
-                  <IconButton 
-                    size="small" 
+                  <IconButton
+                    size="small"
                     onClick={() => handleDelete(address.id)}
                     sx={{
-                      color: 'text.secondary',
-                      '&:hover': {
-                        color: 'error.main'
-                      }
+                      color: "text.secondary",
+                      "&:hover": {
+                        color: "error.main",
+                      },
                     }}
                   >
                     <Delete />
@@ -311,15 +347,15 @@ const AddressSection = () => {
               </Box>
               {!address.isDefault && (
                 <Button
-                  sx={{ 
+                  sx={{
                     mt: 3,
-                    color: 'black',
-                    borderColor: 'black',
+                    color: "black",
+                    borderColor: "black",
                     height: 36,
-                    '&:hover': {
-                      borderColor: 'black',
-                      bgcolor: 'rgba(0, 0, 0, 0.04)'
-                    }
+                    "&:hover": {
+                      borderColor: "black",
+                      bgcolor: "rgba(0, 0, 0, 0.04)",
+                    },
                   }}
                   variant="outlined"
                   size="small"
@@ -332,37 +368,39 @@ const AddressSection = () => {
           </Card>
         ))}
         {addresses.length === 0 && (
-          <Box sx={{ 
-            textAlign: 'center', 
-            py: 4,
-            px: 3,
-            color: 'text.secondary',
-            bgcolor: 'background.paper',
-            border: '1px dashed',
-            borderColor: 'divider',
-            borderRadius: 1
-          }}>
+          <Box
+            sx={{
+              textAlign: "center",
+              py: 4,
+              px: 3,
+              color: "text.secondary",
+              bgcolor: "background.paper",
+              border: "1px dashed",
+              borderColor: "divider",
+              borderRadius: 1,
+            }}
+          >
             <Typography>Bạn chưa có địa chỉ nào</Typography>
           </Box>
         )}
       </Box>
 
-      <Dialog 
-        open={open} 
-        onClose={() => setOpen(false)} 
-        maxWidth="sm" 
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        maxWidth="sm"
         fullWidth
         PaperProps={{
           sx: {
             borderRadius: 2,
-            maxWidth: '500px'
-          }
+            maxWidth: "500px",
+          },
         }}
       >
         <DialogTitle sx={{ px: 3, py: 2 }}>
           <Typography variant="h6">Thêm địa chỉ mới</Typography>
         </DialogTitle>
-        <DialogContent sx={{ p: '24px !important' }}>
+        <DialogContent sx={{ p: "24px !important" }}>
           <Box component="form" onSubmit={handleSubmit}>
             <Grid container spacing={2.5}>
               <Grid item xs={12}>
@@ -370,7 +408,9 @@ const AddressSection = () => {
                   fullWidth
                   label="Họ và tên"
                   value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fullName: e.target.value })
+                  }
                   required
                 />
               </Grid>
@@ -380,7 +420,9 @@ const AddressSection = () => {
                   fullWidth
                   label="Số điện thoại"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
                   required
                 />
               </Grid>
@@ -446,21 +488,35 @@ const AddressSection = () => {
                   fullWidth
                   label="Địa chỉ cụ thể"
                   value={formData.detail}
-                  onChange={(e) => setFormData({ ...formData, detail: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, detail: e.target.value })
+                  }
                   required
                   placeholder="Số nhà, tên đường"
                 />
               </Grid>
 
               <Grid item xs={12}>
-                <Typography variant="subtitle2" sx={{ mb: 1 }}>Loại địa chỉ:</Typography>
+                <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                  Loại địa chỉ:
+                </Typography>
                 <RadioGroup
                   row
                   value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, type: e.target.value })
+                  }
                 >
-                  <FormControlLabel value="home" control={<Radio />} label="Nhà riêng" />
-                  <FormControlLabel value="office" control={<Radio />} label="Văn phòng" />
+                  <FormControlLabel
+                    value="home"
+                    control={<Radio />}
+                    label="Nhà riêng"
+                  />
+                  <FormControlLabel
+                    value="office"
+                    control={<Radio />}
+                    label="Văn phòng"
+                  />
                 </RadioGroup>
               </Grid>
 
@@ -469,7 +525,12 @@ const AddressSection = () => {
                   control={
                     <Radio
                       checked={formData.isDefault}
-                      onChange={(e) => setFormData({ ...formData, isDefault: e.target.checked })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          isDefault: e.target.checked,
+                        })
+                      }
                     />
                   }
                   label="Đặt làm địa chỉ mặc định"
@@ -478,34 +539,36 @@ const AddressSection = () => {
             </Grid>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ px: 3, py: 2, borderTop: '1px solid', borderColor: 'divider' }}>
-          <Button 
+        <DialogActions
+          sx={{ px: 3, py: 2, borderTop: "1px solid", borderColor: "divider" }}
+        >
+          <Button
             onClick={() => setOpen(false)}
             variant="outlined"
             sx={{
               minWidth: 100,
               height: 36,
-              borderColor: 'black',
-              color: 'black',
-              '&:hover': {
-                borderColor: 'black',
-                bgcolor: 'rgba(0, 0, 0, 0.04)'
-              }
+              borderColor: "black",
+              color: "black",
+              "&:hover": {
+                borderColor: "black",
+                bgcolor: "rgba(0, 0, 0, 0.04)",
+              },
             }}
           >
             Hủy
           </Button>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             onClick={handleSubmit}
             sx={{
               minWidth: 100,
               height: 36,
-              bgcolor: 'black',
-              color: 'white',
-              '&:hover': {
-                bgcolor: 'black'
-              }
+              bgcolor: "black",
+              color: "white",
+              "&:hover": {
+                bgcolor: "black",
+              },
             }}
           >
             Hoàn thành
