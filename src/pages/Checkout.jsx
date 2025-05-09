@@ -60,8 +60,28 @@ const Checkout = () => {
   const displayTotal = buyNowProduct ? buyNowProduct.price : total;
 
   const isCodEligible = () => {
-    const eligibleCities = ["Ho Chi Minh City", "Hanoi"];
-    return eligibleCities.includes(formData.city?.trim());
+    // Danh sách các thành phố hỗ trợ COD
+    const eligibleCities = [
+      "Ho Chi Minh City",
+      "Hanoi",
+      "Hồ Chí Minh",
+      "Thành phố Hồ Chí Minh",
+      "TP Hồ Chí Minh",
+      "TP. Hồ Chí Minh",
+      "Hà Nội",
+    ];
+
+    // Kiểm tra xem thành phố có trong danh sách không
+    if (!formData.city) return false;
+
+    // Chuyển đổi thành chữ thường và loại bỏ dấu cách thừa để so sánh
+    const normalizedCity = formData.city.trim().toLowerCase();
+
+    return eligibleCities.some(
+      (city) =>
+        normalizedCity.includes(city.toLowerCase()) ||
+        city.toLowerCase().includes(normalizedCity)
+    );
   };
 
   const isFormValid = () => {
@@ -189,7 +209,7 @@ const Checkout = () => {
     // Validate COD eligibility
     if (formData.paymentMethod === "cod" && !isCodEligible()) {
       newErrors.paymentMethod =
-        "COD is only available for Ho Chi Minh City and Hanoi";
+        "COD chỉ áp dụng cho khách hàng ở Thành phố Hồ Chí Minh và Hà Nội";
     }
 
     setErrors(newErrors);
@@ -539,7 +559,7 @@ const Checkout = () => {
                   sx={{ mb: 1 }}
                 />
                 <FormHelperText sx={{ ml: 4, mt: -1, mb: 2 }}>
-                  * Only available for customers in Ho Chi Minh City and Hanoi
+                  * Chỉ áp dụng cho khách hàng ở Thành phố Hồ Chí Minh và Hà Nội
                 </FormHelperText>
 
                 <FormControlLabel

@@ -1,23 +1,17 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  Grid,
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  IconButton,
-  Box,
-  Button,
-  Container,
-  CircularProgress,
-  Chip,
-} from "@mui/material";
-import { Favorite, ShoppingCart } from "@mui/icons-material";
-import { addToCartWithNotification } from "../store/cartSlice";
-import { removeFromWishlist } from "../store/wishlistSlice";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { removeFromWishlist } from "../store/wishlistSlice";
+import { addToCartWithNotification } from "../store/cartSlice";
+import { Favorite, ShoppingCart, ArrowBack } from "@mui/icons-material";
+import {
+  Button,
+  IconButton,
+  Chip,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 
 const Wishlist = () => {
   const wishlistItems = useSelector((state) => state.wishlist.items || []);
@@ -27,14 +21,16 @@ const Wishlist = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Debug: Log wishlist items
+  useEffect(() => {
+    console.log("Wishlist items:", wishlistItems);
+    console.log("User:", user);
+  }, [wishlistItems, user]);
+
   const handleRemoveFromWishlist = async (id) => {
     try {
-      // Remove from Redux store
       dispatch(removeFromWishlist(id));
-
-      // If user is logged in, update the backend
       if (user && user.id) {
-        // Update user's wishlist in the context
         const updatedWishlist = {
           items: wishlistItems.filter((item) => item.id !== id),
         };
@@ -46,40 +42,58 @@ const Wishlist = () => {
   };
 
   const handleAddToCart = (product) => {
-    // Yêu cầu đăng nhập nếu chưa đăng nhập
     if (!user) {
       navigate("/login", { state: { from: "/wishlist" } });
       return;
     }
 
-    dispatch(addToCartWithNotification({ ...product, quantity: 1 }));
-
-    // Cập nhật giỏ hàng trong user context nếu cần
-    if (user && user.updateUserCart) {
-      const cartItems = user.cart?.items || [];
-      const updatedItems = [...cartItems, { ...product, quantity: 1 }];
-      const updatedTotal = updatedItems.reduce(
-        (sum, item) =>
-          sum + (item.price || item.basePrice || 0) * item.quantity,
-        0
-      );
-
-      user.updateUserCart({
-        items: updatedItems,
-        total: updatedTotal,
-      });
+    if (!product || !product.id) {
+      console.error("Invalid product data:", product);
+      return;
     }
+
+    const productToAdd = {
+      ...product,
+      quantity: 1,
+      price: product.price || product.basePrice || 0,
+    };
+
+    dispatch(addToCartWithNotification(productToAdd));
   };
 
   const handleProductClick = (productId) => {
+    if (!productId) {
+      console.error("Product ID is undefined");
+      return;
+    }
     navigate(`/products/${productId}`);
   };
 
-  // Nếu chưa đăng nhập, hiển thị thông báo
+  // Nếu chưa đăng nhập
   if (!user) {
     return (
-      <Container maxWidth="lg" sx={{ mt: "80px", py: 4, minHeight: "60vh" }}>
-        <Box sx={{ textAlign: "center" }}>
+      <div
+        style={{
+          marginTop: "64px",
+          minHeight: "calc(100vh - 64px)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "16px",
+          boxSizing: "border-box",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "500px",
+            width: "100%",
+            padding: "24px",
+            textAlign: "center",
+            backgroundColor: "white",
+            borderRadius: "8px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          }}
+        >
           <Typography variant="h5" color="text.secondary" gutterBottom>
             Vui lòng đăng nhập để xem danh sách yêu thích của bạn!
           </Typography>
@@ -91,33 +105,53 @@ const Wishlist = () => {
           >
             Đăng nhập
           </Button>
-        </Box>
-      </Container>
+        </div>
+      </div>
     );
   }
 
+  // Đang loading
   if (loading) {
     return (
-      <Container
-        maxWidth="lg"
-        sx={{
-          mt: "80px",
-          py: 4,
-          minHeight: "60vh",
+      <div
+        style={{
+          marginTop: "64px",
+          minHeight: "calc(100vh - 64px)",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
         <CircularProgress />
-      </Container>
+      </div>
     );
   }
 
+  // Có lỗi
   if (error) {
     return (
-      <Container maxWidth="lg" sx={{ mt: "80px", py: 4, minHeight: "60vh" }}>
-        <Box sx={{ textAlign: "center" }}>
+      <div
+        style={{
+          marginTop: "64px",
+          minHeight: "calc(100vh - 64px)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "16px",
+          boxSizing: "border-box",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "500px",
+            width: "100%",
+            padding: "24px",
+            textAlign: "center",
+            backgroundColor: "white",
+            borderRadius: "8px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          }}
+        >
           <Typography variant="h5" color="error" gutterBottom>
             {error}
           </Typography>
@@ -129,117 +163,212 @@ const Wishlist = () => {
           >
             Thử lại
           </Button>
-        </Box>
-      </Container>
+        </div>
+      </div>
     );
   }
 
+  // Wishlist trống
   if (!wishlistItems || wishlistItems.length === 0) {
     return (
-      <Container maxWidth="lg" sx={{ mt: "80px", py: 4, minHeight: "60vh" }}>
-        <Box sx={{ textAlign: "center" }}>
+      <div
+        style={{
+          marginTop: "64px",
+          minHeight: "calc(100vh - 64px)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "16px",
+          boxSizing: "border-box",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "500px",
+            width: "100%",
+            padding: "24px",
+            textAlign: "center",
+            backgroundColor: "white",
+            borderRadius: "8px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          }}
+        >
           <Typography variant="h5" color="text.secondary" gutterBottom>
             Chưa có sản phẩm yêu thích nào!
           </Typography>
           <Button
             variant="contained"
             color="primary"
-            onClick={() => navigate("/products")}
+            onClick={() => navigate("/")}
             sx={{ mt: 2 }}
           >
             Khám phá sản phẩm
           </Button>
-        </Box>
-      </Container>
+        </div>
+      </div>
     );
   }
 
+  // Hiển thị danh sách wishlist
   return (
-    <Container maxWidth="xl" sx={{ mt: "80px", py: 4 }}>
-      <Typography variant="h4" gutterBottom sx={{ fontWeight: 500, mb: 3 }}>
-        Danh sách yêu thích ({wishlistItems.length})
-      </Typography>
-      <Grid container spacing={3}>
+    <div
+      style={{
+        marginTop: "64px",
+        minHeight: "calc(100vh - 64px)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "16px",
+        boxSizing: "border-box",
+        width: "100%",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "800px",
+          width: "100%",
+          backgroundColor: "white",
+          borderRadius: "8px",
+          padding: "24px",
+          marginBottom: "24px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        }}
+      >
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            fontWeight: 500,
+            marginBottom: "24px",
+            textAlign: "center",
+          }}
+        >
+          Danh sách yêu thích ({wishlistItems.length})
+        </Typography>
+        <hr
+          style={{
+            marginBottom: "24px",
+            border: "none",
+            borderTop: "1px solid #eee",
+          }}
+        />
+
         {wishlistItems.map((product) => (
-          <Grid item xs={12} sm={6} md={3} key={product.id}>
-            <Card
-              sx={{
-                position: "relative",
-                height: "100%",
+          <div
+            key={product.id}
+            style={{
+              marginBottom: "16px",
+              padding: "16px",
+              borderRadius: "8px",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+              backgroundColor: "white",
+              transition: "transform 0.2s, box-shadow 0.2s",
+              cursor: "pointer",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = "translateY(-3px)";
+              e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.15)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)";
+            }}
+          >
+            <div
+              style={{
                 display: "flex",
-                flexDirection: "column",
-                transition: "transform 0.2s, box-shadow 0.2s",
-                "&:hover": {
-                  transform: "translateY(-5px)",
-                  boxShadow: 4,
-                },
-                cursor: "pointer",
+                flexDirection: window.innerWidth < 600 ? "column" : "row",
               }}
-              onClick={() => handleProductClick(product.id)}
             >
-              {product.discount && (
-                <Chip
-                  label={`-${product.discount}%`}
-                  color="error"
-                  size="small"
-                  sx={{
-                    position: "absolute",
-                    top: 10,
-                    left: 10,
-                    zIndex: 1,
+              {/* Hình ảnh sản phẩm */}
+              <div
+                style={{
+                  width: window.innerWidth < 600 ? "100%" : "150px",
+                  height: window.innerWidth < 600 ? "200px" : "150px",
+                  position: "relative",
+                  marginBottom: window.innerWidth < 600 ? "16px" : "0",
+                }}
+                onClick={() => handleProductClick(product.id)}
+              >
+                <img
+                  src={product.image || "https://via.placeholder.com/300"}
+                  alt={product.name}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: "4px",
                   }}
                 />
-              )}
-              <CardMedia
-                component="img"
-                height="200"
-                image={product.image || "https://via.placeholder.com/300"}
-                alt={product.name}
-                sx={{
-                  objectFit: "cover",
-                  height: "200px", // Cố định chiều cao
-                  width: "100%", // Cố định chiều rộng
+                {product.discount && (
+                  <Chip
+                    label={`-${product.discount}%`}
+                    color="error"
+                    size="small"
+                    sx={{
+                      position: "absolute",
+                      top: 8,
+                      left: 8,
+                      zIndex: 1,
+                    }}
+                  />
+                )}
+              </div>
+
+              {/* Thông tin sản phẩm */}
+              <div
+                style={{
+                  marginLeft: window.innerWidth < 600 ? "0" : "16px",
+                  flex: "1",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
                 }}
-              />
-              <CardContent sx={{ flexGrow: 1, p: 2 }}>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  gutterBottom
-                  noWrap
-                  sx={{ fontSize: "1rem", fontWeight: 500 }}
-                >
-                  {product.name}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    mb: 2,
-                    height: "40px", // Cố định chiều cao cho phần mô tả
-                  }}
-                >
-                  {product.description}
-                </Typography>
-                <Box
-                  sx={{
+              >
+                <div>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontSize: "1.1rem",
+                      fontWeight: 500,
+                    }}
+                    onClick={() => handleProductClick(product.id)}
+                  >
+                    {product.name}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{
+                      marginTop: "8px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                    }}
+                  >
+                    {product.description}
+                  </Typography>
+                </div>
+
+                <div
+                  style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    alignItems: "center",
-                    mt: "auto",
+                    alignItems:
+                      window.innerWidth < 600 ? "flex-start" : "center",
+                    marginTop: "16px",
+                    flexDirection: window.innerWidth < 600 ? "column" : "row",
+                    gap: window.innerWidth < 600 ? "16px" : "0",
                   }}
                 >
-                  <Box>
+                  <div>
                     <Typography
                       variant="h6"
                       color="primary"
                       component="span"
-                      sx={{ fontWeight: 600, fontSize: "1rem" }}
+                      sx={{ fontWeight: 600, fontSize: "1.1rem" }}
                     >
                       {(product.price || product.basePrice || 0).toLocaleString(
                         "vi-VN"
@@ -251,23 +380,41 @@ const Wishlist = () => {
                         variant="body2"
                         color="text.secondary"
                         component="span"
-                        sx={{ textDecoration: "line-through", ml: 1 }}
+                        sx={{
+                          textDecoration: "line-through",
+                          marginLeft: "8px",
+                        }}
                       >
                         {product.originalPrice.toLocaleString("vi-VN")}₫
                       </Typography>
                     )}
-                  </Box>
-                  <Box sx={{ display: "flex", gap: 1 }}>
-                    <IconButton
-                      color="primary"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAddToCart(product);
-                      }}
-                      size="small"
-                    >
-                      <ShoppingCart />
-                    </IconButton>
+                  </div>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    {window.innerWidth >= 600 ? (
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        size="small"
+                        startIcon={<ShoppingCart />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(product);
+                        }}
+                      >
+                        Thêm vào giỏ
+                      </Button>
+                    ) : (
+                      <IconButton
+                        color="primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(product);
+                        }}
+                        size="small"
+                      >
+                        <ShoppingCart />
+                      </IconButton>
+                    )}
                     <IconButton
                       color="error"
                       onClick={(e) => {
@@ -278,14 +425,24 @@ const Wishlist = () => {
                     >
                       <Favorite />
                     </IconButton>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         ))}
-      </Grid>
-    </Container>
+      </div>
+
+      {/* Nút tiếp tục mua sắm */}
+      <Button
+        variant="outlined"
+        startIcon={<ArrowBack />}
+        onClick={() => navigate("/")}
+        sx={{ marginBottom: "32px" }}
+      >
+        Tiếp tục mua sắm
+      </Button>
+    </div>
   );
 };
 

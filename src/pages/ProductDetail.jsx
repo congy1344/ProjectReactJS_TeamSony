@@ -281,10 +281,10 @@ const ProductDetail = () => {
     >
       <Button
         startIcon={<ArrowBack />}
-        onClick={() => navigate("/products")}
-        sx={{ mb: 3 }}
+        onClick={() => navigate("/")}
+        sx={{ mb: 2 }}
       >
-        Back to Products
+        Quay lại trang chủ
       </Button>
 
       <Grid container spacing={4}>

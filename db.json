@@ -288,10 +288,6 @@
       "birthDate": null,
       "bankCards": [],
       "cart": {
-        "items": [],
-        "total": 0
-      },
-      "wishlist": {
         "items": [
           {
             "id": "3",
@@ -321,47 +317,8 @@
             "ratings": {
               "average": 4.7,
               "count": 15
-            }
-          },
-          {
-            "id": "1",
-            "name": "Modern Office Desk",
-            "description": "Sleek and minimalist design perfect for your home office. Features durable construction and ample workspace.",
-            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-            "basePrice": 5200000,
-            "price": 5200000,
-            "originalPrice": 6500000,
-            "discount": 20,
-            "image": "/images/ban-ikea-luzo-12.jpg",
-            "category": "Desktop",
-            "categories": [
-              "Desktop",
-              "Bestsellers"
-            ],
-            "colors": [
-              "Black",
-              "White",
-              "Grey"
-            ],
-            "dimensions": [
-              {
-                "size": "140x80",
-                "priceAdjustment": 0
-              },
-              {
-                "size": "160x80",
-                "priceAdjustment": 500000
-              },
-              {
-                "size": "180x80",
-                "priceAdjustment": 1000000
-              }
-            ],
-            "inStock": true,
-            "ratings": {
-              "average": 4.5,
-              "count": 12
-            }
+            },
+            "quantity": 1
           },
           {
             "id": "4",
@@ -387,41 +344,14 @@
             "ratings": {
               "average": 4.3,
               "count": 9
-            }
-          },
-          {
-            "id": "2",
-            "name": "L-Shaped Corner Desk",
-            "description": "Maximize your corner space with this L-shaped desk. Perfect for multi-monitor setups and large workspaces.",
-            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-            "basePrice": 8500000,
-            "price": 8500000,
-            "originalPrice": 10500000,
-            "discount": 20,
-            "image": "/images/l1.jpg",
-            "category": "L-Shaped",
-            "colors": [
-              "Black",
-              "White",
-              "Grey"
-            ],
-            "dimensions": [
-              {
-                "size": "160x80",
-                "priceAdjustment": 0
-              },
-              {
-                "size": "180x80",
-                "priceAdjustment": 800000
-              }
-            ],
-            "inStock": true,
-            "ratings": {
-              "average": 4.2,
-              "count": 8
-            }
+            },
+            "quantity": 1
           }
-        ]
+        ],
+        "total": 16000000
+      },
+      "wishlist": {
+        "items": []
       },
       "phone": "0766923478",
       "orders": [
@@ -555,6 +485,98 @@
             "phone": "0766923478",
             "address": "40/7 Nguyễn Văn Đậu phường 6 Bình Thạnh",
             "city": "Thành phố Hồ Chí Minh"
+          },
+          "paymentMethod": "COD"
+        },
+        {
+          "id": "ORD1746792799843",
+          "userId": "063f",
+          "items": [
+            {
+              "id": "13",
+              "name": "Executive Standing Desk",
+              "description": "Electric height-adjustable desk with premium finish. Perfect for ergonomic workspace.",
+              "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+              "price": 15800000,
+              "originalPrice": 18500000,
+              "discount": 20,
+              "image": "/images/deskframe1.webp",
+              "category": "Deskframe",
+              "colors": [
+                "Black",
+                "White",
+                "Silver"
+              ],
+              "dimensions": [
+                "140x70",
+                "160x80",
+                "180x90"
+              ],
+              "inStock": true,
+              "ratings": {
+                "average": 4.8,
+                "count": 16
+              },
+              "quantity": 1,
+              "color": "Silver",
+              "dimension": "140x70"
+            }
+          ],
+          "total": 15800000,
+          "status": "In Transit",
+          "orderDate": "2025-05-09T12:13:19.843Z",
+          "deliveryDate": null,
+          "shippingAddress": {
+            "fullName": "Huynh CongY",
+            "phone": "0766923478",
+            "address": "40/7 Nguyễn Văn Đậu phường 6 Bình Thạnh",
+            "city": "Ho Chi Minh"
+          },
+          "paymentMethod": "Credit Card"
+        },
+        {
+          "id": "ORD1746792960496",
+          "userId": "063f",
+          "items": [
+            {
+              "id": "4",
+              "name": "Kids Study Desk",
+              "description": "Ergonomic desk designed specifically for children. Features rounded edges and adjustable height.",
+              "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+              "price": 2500000,
+              "originalPrice": 3200000,
+              "discount": 20,
+              "image": "/images/kid1.jpg",
+              "category": "Desk for kids",
+              "colors": [
+                "Blue",
+                "Pink",
+                "White",
+                "Green"
+              ],
+              "dimensions": [
+                "100x50",
+                "120x60"
+              ],
+              "inStock": true,
+              "ratings": {
+                "average": 4.3,
+                "count": 9
+              },
+              "quantity": 1,
+              "color": "Blue",
+              "dimension": "100x50"
+            }
+          ],
+          "total": 2500000,
+          "status": "In Transit",
+          "orderDate": "2025-05-09T12:16:00.496Z",
+          "deliveryDate": null,
+          "shippingAddress": {
+            "fullName": "Huynh CongY",
+            "phone": "0766923478",
+            "address": "40/7 Nguyễn Văn Đậu phường 6 Bình Thạnh",
+            "city": "Ho Chi Minh"
           },
           "paymentMethod": "COD"
         }

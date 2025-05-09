@@ -21,7 +21,15 @@ const wishlistSlice = createSlice({
         (item) => item.id === action.payload.id
       );
       if (!existingItem) {
-        state.items.push(action.payload);
+        // Đảm bảo sản phẩm có đầy đủ thông tin trước khi thêm vào wishlist
+        const productToAdd = {
+          ...action.payload,
+          // Đảm bảo các trường quan trọng luôn tồn tại
+          price: action.payload.price || action.payload.basePrice || 0,
+          image: action.payload.image || "https://via.placeholder.com/300",
+          description: action.payload.description || "",
+        };
+        state.items.push(productToAdd);
         // Save to localStorage after adding
         saveWishlistToLocalStorage({ items: state.items });
       }

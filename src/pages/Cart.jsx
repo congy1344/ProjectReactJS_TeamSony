@@ -6,40 +6,25 @@ import {
   IconButton,
   Card,
   CardMedia,
-  CircularProgress,
+  Paper,
 } from "@mui/material";
-import { Add, Remove, Close } from "@mui/icons-material";
+import {
+  Add,
+  Remove,
+  Close,
+  ShoppingCart,
+  ArrowBack,
+} from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
-import { removeFromCart, updateQuantity, clearCart } from "../store/cartSlice";
+import { removeFromCart, updateQuantity } from "../store/cartSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { useEffect } from "react";
 
 const Cart = () => {
-  const { items = [], total = 0 } = useSelector((state) => state.cart || {});
+  const { items, total } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { user, updateUserCart } = useAuth();
-
-  // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
-  useEffect(() => {
-    if (!user) {
-      navigate("/login", { state: { from: "/cart" } });
-    }
-  }, [user, navigate]);
-
-  // Thêm kiểm tra dữ liệu
-  useEffect(() => {
-    console.log("Cart items:", items);
-    // Kiểm tra xem items có đúng cấu trúc không
-    if (items && items.length > 0) {
-      items.forEach((item, index) => {
-        if (!item.price && item.price !== 0) {
-          console.warn(`Item at index ${index} has no price:`, item);
-        }
-      });
-    }
-  }, [items]);
+  const navigate = useNavigate();
 
   const handleRemoveFromCart = (id) => {
     dispatch(removeFromCart(id));
@@ -81,70 +66,6 @@ const Cart = () => {
     }
   };
 
-  const handleClearCart = () => {
-    dispatch(clearCart());
-
-    // Cập nhật giỏ hàng trong database nếu user đã đăng nhập
-    if (user) {
-      updateUserCart({
-        items: [],
-        total: 0,
-      });
-    }
-  };
-
-  // Nếu chưa đăng nhập, hiển thị thông báo
-  if (!user) {
-    return (
-      <Container maxWidth="lg" sx={{ mt: "80px", py: 4, minHeight: "60vh" }}>
-        <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h5" color="text.secondary" gutterBottom>
-            Vui lòng đăng nhập để xem giỏ hàng của bạn!
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigate("/login", { state: { from: "/cart" } })}
-            sx={{ mt: 2 }}
-          >
-            Đăng nhập
-          </Button>
-        </Box>
-      </Container>
-    );
-  }
-
-  if (items.length === 0) {
-    return (
-      <Box
-        sx={{
-          mt: "64px",
-          minHeight: "calc(100vh - 64px)",
-          bgcolor: "#f5f5f5",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100vw",
-          maxWidth: "100vw",
-          px: 4,
-        }}
-      >
-        <Typography variant="h5" sx={{ mb: 3 }}>
-          Giỏ hàng của bạn đang trống
-        </Typography>
-        <Button
-          variant="contained"
-          component={Link}
-          to="/products"
-          sx={{ mt: 2 }}
-        >
-          Tiếp tục mua sắm
-        </Button>
-      </Box>
-    );
-  }
-
   return (
     <Box
       sx={{
@@ -153,183 +74,259 @@ const Cart = () => {
         bgcolor: "#f5f5f5",
         display: "flex",
         flexDirection: "column",
-        width: "100vw",
-        maxWidth: "100vw",
-        px: 4,
+        width: "100%",
+        maxWidth: "100%",
+        px: { xs: 2, md: 4 },
+        py: 3,
       }}
     >
-      <Typography variant="h5" sx={{ mb: 3, fontWeight: 500, mt: 3 }}>
+      <Typography variant="h5" sx={{ mb: 3, fontWeight: 500 }}>
         Order Summary :
       </Typography>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          width: "100%",
-        }}
-      >
-        {items.map((item) => (
-          <Card
-            key={item.id}
+      {items.length === 0 ? (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            py: 6,
+            px: 3,
+            bgcolor: "white",
+            borderRadius: 2,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            maxWidth: 600,
+            mx: "auto",
+            textAlign: "center",
+          }}
+        >
+          <ShoppingCart sx={{ fontSize: 60, color: "text.secondary", mb: 2 }} />
+          <Typography variant="h5" gutterBottom>
+            Giỏ hàng của bạn đang trống
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+            Hãy thêm sản phẩm vào giỏ hàng để tiến hành đặt hàng
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<ArrowBack />}
+            onClick={() => navigate("/")}
+            sx={{
+              bgcolor: "black",
+              color: "white",
+              px: 3,
+              py: 1,
+              "&:hover": {
+                bgcolor: "#333",
+              },
+            }}
+          >
+            Tiếp tục mua sắm
+          </Button>
+        </Box>
+      ) : (
+        <>
+          <Box
             sx={{
               display: "flex",
-              p: 2,
-              position: "relative",
-              bgcolor: "#e6e6e6",
-              boxShadow: "none",
-              borderRadius: 1,
+              flexDirection: "column",
+              gap: 2,
               width: "100%",
             }}
           >
-            <Box sx={{ display: "flex", width: "100%", gap: 2 }}>
-              <CardMedia
-                component="img"
-                sx={{
-                  width: 180,
-                  height: 120,
-                  objectFit: "cover",
-                  borderRadius: 1,
-                }}
-                image={item.image}
-                alt={item.name}
-              />
-              <Box
+            {items.map((item) => (
+              <Card
+                key={item.id}
                 sx={{
                   display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
+                  p: 2,
+                  position: "relative",
+                  bgcolor: "#e6e6e6",
+                  boxShadow: "none",
+                  borderRadius: 1,
                   width: "100%",
                 }}
               >
-                <Box>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 500, fontSize: "1.1rem" }}
-                  >
-                    {item.name}
-                  </Typography>
-                  {item.color && (
+                <Box sx={{ display: "flex", width: "100%", gap: 2 }}>
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      width: 120,
+                      height: 120,
+                      objectFit: "cover",
+                      borderRadius: 1,
+                    }}
+                    image={item.image}
+                    alt={item.name}
+                  />
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="h6" sx={{ mb: 1 }}>
+                      {item.name}
+                    </Typography>
                     <Typography
                       variant="body2"
-                      sx={{ color: "text.secondary", mt: 0.5 }}
+                      color="text.secondary"
+                      sx={{ mb: 0.5 }}
                     >
-                      Color: {item.color}
+                      Color : {item.color || "Black"}
                     </Typography>
-                  )}
-                  {item.dimension && (
+                    <Typography variant="body2" color="text.secondary">
+                      Dimension : {item.dimension || "160x80"}
+                    </Typography>
+                    <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleQuantityChange(item.id, item.quantity - 1);
+                        }}
+                        sx={{
+                          bgcolor: "black",
+                          color: "white",
+                          "&:hover": { bgcolor: "black" },
+                        }}
+                      >
+                        <Remove />
+                      </IconButton>
+                      <Typography sx={{ mx: 2 }}>{item.quantity}</Typography>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleQuantityChange(item.id, item.quantity + 1);
+                        }}
+                        sx={{
+                          bgcolor: "black",
+                          color: "white",
+                          "&:hover": { bgcolor: "black" },
+                        }}
+                      >
+                        <Add />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      minWidth: 100,
+                      position: "relative",
+                    }}
+                  >
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveFromCart(item.id);
+                      }}
+                      sx={{ position: "absolute", top: -8, right: -8 }}
+                    >
+                      <Close />
+                    </IconButton>
                     <Typography
-                      variant="body2"
-                      sx={{ color: "text.secondary", mt: 0.5 }}
+                      variant="h6"
+                      sx={{
+                        mt: "auto",
+                        fontWeight: 500,
+                      }}
                     >
-                      Size: {item.dimension}
+                      {item.price.toLocaleString("vi-VN")}₫
                     </Typography>
-                  )}
+                  </Box>
                 </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <IconButton
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleQuantityChange(item.id, item.quantity - 1);
-                    }}
-                    sx={{
-                      bgcolor: "black",
-                      color: "white",
-                      "&:hover": { bgcolor: "black" },
-                    }}
-                  >
-                    <Remove />
-                  </IconButton>
-                  <Typography sx={{ mx: 2 }}>{item.quantity}</Typography>
-                  <IconButton
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleQuantityChange(item.id, item.quantity + 1);
-                    }}
-                    sx={{
-                      bgcolor: "black",
-                      color: "white",
-                      "&:hover": { bgcolor: "black" },
-                    }}
-                  >
-                    <Add />
-                  </IconButton>
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                  minWidth: 100,
-                  position: "relative",
-                }}
-              >
-                <IconButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRemoveFromCart(item.id);
-                  }}
-                  sx={{ position: "absolute", top: -8, right: -8 }}
-                >
-                  <Close />
-                </IconButton>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    mt: "auto",
-                    fontWeight: 500,
-                  }}
-                >
-                  {(item.price || 0).toFixed(2)}VND
-                </Typography>
-              </Box>
+              </Card>
+            ))}
+          </Box>
+
+          {/* Tổng tiền */}
+          <Paper
+            elevation={0}
+            sx={{
+              mt: 3,
+              p: 3,
+              borderRadius: 1,
+              bgcolor: "white",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                mb: 1,
+              }}
+            >
+              <Typography variant="body1">Tạm tính:</Typography>
+              <Typography variant="body1">
+                {total.toLocaleString("vi-VN")}₫
+              </Typography>
             </Box>
-          </Card>
-        ))}
-      </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                mb: 2,
+              }}
+            >
+              <Typography variant="body1">Phí vận chuyển:</Typography>
+              <Typography variant="body1">Miễn phí</Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                borderTop: "1px solid #eee",
+                pt: 2,
+              }}
+            >
+              <Typography variant="h6">Tổng cộng:</Typography>
+              <Typography variant="h6" color="primary" fontWeight="bold">
+                {total.toLocaleString("vi-VN")}₫
+              </Typography>
+            </Box>
+          </Paper>
 
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mt: 3,
-          mb: 2,
-        }}
-      >
-        <Button variant="outlined" color="error" onClick={handleClearCart}>
-          Clear Cart
-        </Button>
-        <Typography variant="h5" sx={{ fontWeight: 500 }}>
-          Total: {total.toFixed(2)}VND
-        </Typography>
-      </Box>
-
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 4 }}>
-        <Button
-          variant="contained"
-          component={Link}
-          to="/checkout"
-          sx={{
-            bgcolor: "black",
-            color: "white",
-            "&:hover": { bgcolor: "black" },
-            py: 1.5,
-            px: 4,
-          }}
-        >
-          Checkout
-        </Button>
-      </Box>
+          <Box
+            sx={{
+              mt: 4,
+              mb: 4,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <Button
+              startIcon={<ArrowBack />}
+              onClick={() => navigate("/")}
+              sx={{
+                color: "text.secondary",
+                "&:hover": {
+                  backgroundColor: "transparent",
+                  color: "text.primary",
+                },
+              }}
+            >
+              Tiếp tục mua sắm
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: "black",
+                color: "white",
+                px: 4,
+                py: 1.5,
+                "&:hover": {
+                  bgcolor: "black",
+                },
+              }}
+              onClick={() => navigate("/checkout")}
+            >
+              Thanh toán
+            </Button>
+          </Box>
+        </>
+      )}
     </Box>
   );
 };
