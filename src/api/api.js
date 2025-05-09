@@ -14,11 +14,20 @@ export const api = {
   // Đảm bảo API getAllProducts hoạt động đúng
   getAllProducts: async () => {
     try {
+      console.log("Fetching all products from:", `${BASE_URL}/products`);
       const response = await fetch(`${BASE_URL}/products`);
+
       if (!response.ok) {
+        console.error(
+          "API response not OK:",
+          response.status,
+          response.statusText
+        );
         throw new Error("Network response was not ok");
       }
+
       const data = await response.json();
+      console.log("API returned products:", data.length);
 
       // Đảm bảo mỗi sản phẩm có giá
       const safeData = data.map((product) => ({

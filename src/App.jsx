@@ -1,12 +1,12 @@
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
-import { useEffect } from 'react';
 import {
-  ThemeProvider,
-  createTheme,
-  CssBaseline,
-  Box,
-  Container,
-} from "@mui/material";
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
+import { ThemeProvider, createTheme, CssBaseline, Box } from "@mui/material";
+import { useEffect } from "react";
+
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import Navbar from "./components/Navbar";
@@ -27,6 +27,7 @@ import Wishlist from "./pages/Wishlist"; // Import trang Wishlist
 import ProductManagement from "./pages/admin/ProductManagement";
 import OrderManagement from "./pages/admin/OrderManagement";
 import UserManagement from "./pages/admin/UserManagement";
+
 import "./index.css";
 
 const customTheme = createTheme({
@@ -71,18 +72,18 @@ const ProtectedAdminRoute = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const localUser = JSON.parse(localStorage.getItem('user'));
+    const localUser = JSON.parse(localStorage.getItem("user"));
     if (!localUser) {
       navigate("/login");
       return;
     }
-    if (localUser.role !== 'admin') {
+    if (localUser.role !== "admin") {
       navigate("/");
       return;
     }
   }, [navigate]);
 
-  return user?.role === 'admin' ? children : null;
+  return user?.role === "admin" ? children : null;
 };
 
 function App() {
@@ -102,8 +103,9 @@ function App() {
                 display: "flex",
                 flexDirection: "column",
                 minHeight: "100vh",
-                maxWidth: "100vw",
-                overflowX: "hidden",
+                width: "100%",
+                overflow: "hidden",
+                position: "relative",
               }}
             >
               <Navbar />
@@ -111,10 +113,10 @@ function App() {
               <Box
                 component="main"
                 sx={{
+                  display: "flex",
+                  flexDirection: "column",
                   flexGrow: 1,
                   width: "100%",
-                  maxWidth: "100%",
-                  overflowX: "hidden",
                   position: "relative",
                 }}
               >
@@ -129,9 +131,8 @@ function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/account-setting" element={<AccountSetting />} />
                   <Route path="/orders" element={<OrderPage />} />
-                  <Route path="/wishlist" element={<Wishlist />} />{" "}
-                  {/* Thêm route cho trang Wishlist */}
-                  
+                  <Route path="/wishlist" element={<Wishlist />} />
+
                   {/* Admin Routes */}
                   <Route
                     path="/admin/products"

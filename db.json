@@ -215,29 +215,90 @@
             }
           },
           {
-            "id": "5",
-            "name": "Executive Office Desk",
-            "description": "Premium executive desk with built-in storage solutions. Perfect for professional office environments.",
+            "id": "3",
+            "name": "Standing Desk Frame",
+            "description": "Electric height-adjustable frame for creating your perfect standing desk setup. Compatible with most desktop surfaces.",
             "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-            "price": 6900000,
-            "originalPrice": 8500000,
+            "price": 13500000,
+            "originalPrice": 15500000,
             "discount": 15,
-            "image": "/images/desktop1.jpg",
-            "category": "Desktop",
+            "image": "/images/deskframe1.webp",
+            "category": "Deskframe",
+            "categories": [
+              "Deskframe",
+              "Bestsellers"
+            ],
             "colors": [
               "Black",
-              "Brown",
-              "Walnut"
+              "White",
+              "Silver"
             ],
             "dimensions": [
-              "160x80",
-              "180x90",
-              "200x100"
+              "120x60",
+              "140x70",
+              "160x80"
             ],
             "inStock": true,
             "ratings": {
-              "average": 4.8,
-              "count": 14
+              "average": 4.7,
+              "count": 15
+            }
+          },
+          {
+            "id": "2",
+            "name": "L-Shaped Corner Desk",
+            "description": "Maximize your corner space with this L-shaped desk. Perfect for multi-monitor setups and large workspaces.",
+            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "basePrice": 8500000,
+            "originalPrice": 10500000,
+            "discount": 20,
+            "image": "/images/l1.jpg",
+            "category": "L-Shaped",
+            "colors": [
+              "Black",
+              "White",
+              "Grey"
+            ],
+            "dimensions": [
+              {
+                "size": "160x80",
+                "priceAdjustment": 0
+              },
+              {
+                "size": "180x80",
+                "priceAdjustment": 800000
+              }
+            ],
+            "inStock": true,
+            "ratings": {
+              "average": 4.2,
+              "count": 8
+            }
+          },
+          {
+            "id": "20",
+            "name": "Kids Study Station",
+            "description": "Complete study solution with built-in storage and adjustable height. Perfect for homework.",
+            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "price": 1900000,
+            "originalPrice": 2400000,
+            "discount": 22,
+            "image": "/images/kid1.jpg",
+            "category": "Desk for kids",
+            "colors": [
+              "Blue",
+              "Pink",
+              "Green",
+              "Yellow"
+            ],
+            "dimensions": [
+              "90x45",
+              "100x50"
+            ],
+            "inStock": true,
+            "ratings": {
+              "average": 4.4,
+              "count": 8
             }
           }
         ]
