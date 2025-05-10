@@ -60,7 +60,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    if (user) {
+      try {
+        const BASE_URL = api.getBaseUrl();
+        await axios.patch(`${BASE_URL}/users/${user.id}`, {
+          cart: { items: [], total: 0 },
+        });
+      } catch (error) {
+        console.error("Error clearing user cart in database on logout:", error);
+      }
+    }
     setUser(null);
     localStorage.removeItem("user");
 

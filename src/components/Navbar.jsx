@@ -114,7 +114,18 @@ const Navbar = () => {
   };
 
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+    const value = e.target.value;
+    setSearchQuery(value);
+    if (value.trim()) {
+      navigate(`/products?search=${encodeURIComponent(value.trim())}`);
+    } else {
+      navigate("/");
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    navigate("/");
   };
 
   const handleSearchSubmit = (e) => {
@@ -218,7 +229,7 @@ const Navbar = () => {
               <IconButton
                 size="small"
                 sx={{ mr: 1 }}
-                onClick={() => setSearchQuery("")}
+                onClick={handleClearSearch}
               >
                 <Clear fontSize="small" />
               </IconButton>

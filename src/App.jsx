@@ -27,6 +27,7 @@ import Wishlist from "./pages/Wishlist"; // Import trang Wishlist
 import ProductManagement from "./pages/admin/ProductManagement";
 import OrderManagement from "./pages/admin/OrderManagement";
 import UserManagement from "./pages/admin/UserManagement";
+import Footer from "./components/Footer";
 
 import "./index.css";
 
@@ -204,6 +205,7 @@ function AppContent() {
             </Routes>
             <AdminFAB />
           </Box>
+          <Footer />
         </Box>
       </Router>
     </ThemeProvider>

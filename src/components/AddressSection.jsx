@@ -45,6 +45,8 @@ const AddressSection = () => {
     type: "home",
     isDefault: false,
   });
+  const [formErrors, setFormErrors] = useState({});
+  const [saveError, setSaveError] = useState("");
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -126,41 +128,52 @@ const AddressSection = () => {
     });
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.fullName.trim()) errors.fullName = "Vui lòng nhập họ và tên";
+    if (!formData.phone.trim()) {
+      errors.phone = "Vui lòng nhập số điện thoại";
+    } else if (!/^0\d{9,10}$/.test(formData.phone.trim())) {
+      errors.phone = "Số điện thoại không hợp lệ (10-11 số, bắt đầu bằng 0)";
+    }
+    if (!formData.province) errors.province = "Chọn tỉnh/thành phố";
+    if (!formData.district) errors.district = "Chọn quận/huyện";
+    if (!formData.ward) errors.ward = "Chọn phường/xã";
+    if (!formData.detail.trim()) errors.detail = "Vui lòng nhập địa chỉ cụ thể";
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setSaveError("");
+    if (!validateForm()) return;
     try {
+      const BASE_URL = api.getBaseUrl();
       // Tạo địa chỉ mới
       const newAddress = {
         id: Date.now().toString(),
         userId: user.id,
         ...formData,
       };
-
       // Lấy thông tin user hiện tại
       const userResponse = await axios.get(
-        `http://localhost:3001/users/${user.id}`
+        `${BASE_URL}/users/${user.id}`
       );
       const currentUser = userResponse.data;
-
       // Cập nhật danh sách địa chỉ
       let updatedAddresses = [...(currentUser.addresses || [])];
-
       if (formData.isDefault) {
-        // Cập nhật các địa chỉ khác thành không mặc định
         updatedAddresses = updatedAddresses.map((addr) => ({
           ...addr,
           isDefault: false,
         }));
       }
-
       updatedAddresses.push(newAddress);
-
       // Cập nhật thông tin user với địa chỉ mới
-      await axios.patch(`http://localhost:3001/users/${user.id}`, {
+      await axios.patch(`${BASE_URL}/users/${user.id}`, {
         addresses: updatedAddresses,
       });
-
       setAddresses(updatedAddresses);
       setOpen(false);
       setFormData({
@@ -173,7 +186,9 @@ const AddressSection = () => {
         type: "home",
         isDefault: false,
       });
+      setFormErrors({});
     } catch (error) {
+      setSaveError("Không thể lưu địa chỉ. Vui lòng kiểm tra kết nối hoặc thử lại sau.");
       console.error("Error saving address:", error);
     }
   };
@@ -412,6 +427,8 @@ const AddressSection = () => {
                     setFormData({ ...formData, fullName: e.target.value })
                   }
                   required
+                  error={!!formErrors.fullName}
+                  helperText={formErrors.fullName}
                 />
               </Grid>
 
@@ -424,6 +441,8 @@ const AddressSection = () => {
                     setFormData({ ...formData, phone: e.target.value })
                   }
                   required
+                  error={!!formErrors.phone}
+                  helperText={formErrors.phone}
                 />
               </Grid>
 
@@ -493,6 +512,8 @@ const AddressSection = () => {
                   }
                   required
                   placeholder="Số nhà, tên đường"
+                  error={!!formErrors.detail}
+                  helperText={formErrors.detail}
                 />
               </Grid>
 
@@ -537,6 +558,9 @@ const AddressSection = () => {
                 />
               </Grid>
             </Grid>
+            {saveError && (
+              <Box sx={{ color: 'red', mt: 2, textAlign: 'center' }}>{saveError}</Box>
+            )}
           </Box>
         </DialogContent>
         <DialogActions

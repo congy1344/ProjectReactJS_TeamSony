@@ -29,11 +29,12 @@ const Footer = () => {
         color: "white",
         py: 4,
         mt: "auto",
-        width: "100%", // Sửa lại width
+        width: "100vw",
         position: "relative",
+        left: 0,
         zIndex: 1,
         boxSizing: "border-box",
-        marginLeft: 0, // Xóa marginLeft
+        marginLeft: 0,
       }}
     >
       <Container

@@ -26,18 +26,96 @@ const Register = () => {
     confirmPassword: "",
     username: "",
   });
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
+
+  // Validation functions
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    const errors = [];
+    if (password.length < minLength) {
+      errors.push("Mật khẩu phải có ít nhất 8 ký tự");
+    }
+    if (!hasUpperCase) {
+      errors.push("Mật khẩu phải chứa ít nhất 1 chữ hoa");
+    }
+    if (!hasLowerCase) {
+      errors.push("Mật khẩu phải chứa ít nhất 1 chữ thường");
+    }
+    if (!hasNumbers) {
+      errors.push("Mật khẩu phải chứa ít nhất 1 số");
+    }
+    if (!hasSpecialChar) {
+      errors.push("Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt");
+    }
+
+    return errors;
+  };
+
+  const validateUsername = (username) => {
+    const errors = [];
+    if (username.length < 3) {
+      errors.push("Username phải có ít nhất 3 ký tự");
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+      errors.push("Username chỉ được chứa chữ cái, số và dấu gạch dưới");
+    }
+    return errors;
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Validate name
+    if (!formData.name.trim()) {
+      newErrors.name = "Vui lòng nhập họ tên";
+    }
+
+    // Validate email
+    if (!formData.email.trim()) {
+      newErrors.email = "Vui lòng nhập email";
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = "Email không hợp lệ";
+    }
+
+    // Validate username
+    const usernameErrors = validateUsername(formData.username);
+    if (usernameErrors.length > 0) {
+      newErrors.username = usernameErrors[0];
+    }
+
+    // Validate password
+    const passwordErrors = validatePassword(formData.password);
+    if (passwordErrors.length > 0) {
+      newErrors.password = passwordErrors[0];
+    }
+
+    // Validate confirm password
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match");
+    if (!validateForm()) {
       return;
     }
 
     try {
-      // Sử dụng BASE_URL từ api.js thay vì hardcode localhost:3001
       const BASE_URL = api.getBaseUrl();
       console.log("Using BASE_URL for register:", BASE_URL);
 
@@ -48,12 +126,12 @@ const Register = () => {
       ]);
 
       if (emailCheck.data.length > 0) {
-        setError("Email đã được sử dụng");
+        setErrors({ email: "Email đã được sử dụng" });
         return;
       }
 
       if (usernameCheck.data.length > 0) {
-        setError("Username đã được sử dụng");
+        setErrors({ username: "Username đã được sử dụng" });
         return;
       }
 
@@ -68,7 +146,7 @@ const Register = () => {
 
       navigate("/login", { state: { from } });
     } catch (error) {
-      setError("Đăng ký thất bại, vui lòng thử lại");
+      setErrors({ submit: "Đăng ký thất bại, vui lòng thử lại" });
       console.error("Registration error:", error);
     }
   };
@@ -111,10 +189,10 @@ const Register = () => {
             Sign up
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%" }}>
-            {error && (
-              <Typography color="error" sx={{ mb: 2, textAlign: "center" }}>
-                {error}
-              </Typography>
+            {errors.submit && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {errors.submit}
+              </Alert>
             )}
             <TextField
               margin="normal"
@@ -126,6 +204,8 @@ const Register = () => {
               onChange={(e) =>
                 setFormData({ ...formData, username: e.target.value })
               }
+              error={!!errors.username}
+              helperText={errors.username}
             />
             <TextField
               margin="normal"
@@ -138,6 +218,8 @@ const Register = () => {
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
+              error={!!errors.name}
+              helperText={errors.name}
             />
             <TextField
               margin="normal"
@@ -150,6 +232,8 @@ const Register = () => {
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
+              error={!!errors.email}
+              helperText={errors.email}
             />
             <TextField
               margin="normal"
@@ -163,6 +247,8 @@ const Register = () => {
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
+              error={!!errors.password}
+              helperText={errors.password}
             />
             <TextField
               margin="normal"
@@ -176,6 +262,8 @@ const Register = () => {
               onChange={(e) =>
                 setFormData({ ...formData, confirmPassword: e.target.value })
               }
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword}
             />
             <Button
               type="submit"

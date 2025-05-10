@@ -6,49 +6,42 @@
       "password": "admin123",
       "name": "Admin User",
       "username": "admin",
-      "hasChangedUsername": false,
+      "hasChangedUsername": true,
       "gender": "Nam",
       "birthDate": {
         "day": "1",
         "month": "1",
         "year": "1990"
       },
-      "bankCards": [],
-      "addresses": [],
+      "bankCards": [
+        {
+          "cardNumber": "0000000000",
+          "cardHolder": "NGUYEN VAN A",
+          "expiryDate": "10/29",
+          "bankName": "Vietcombank",
+          "isDefault": true,
+          "id": "1746851619520"
+        }
+      ],
+      "addresses": [
+        {
+          "id": "1746849351148",
+          "userId": "1",
+          "fullName": "NguyenVanA",
+          "phone": "0000000000",
+          "province": "89",
+          "district": "886",
+          "ward": "30337",
+          "detail": "A",
+          "type": "home",
+          "isDefault": false,
+          "provinceName": "An Giang",
+          "districtName": "An Phú",
+          "wardName": "An Phú"
+        }
+      ],
       "cart": {
         "items": [
-          {
-            "id": "2",
-            "name": "L-Shaped Corner Desk",
-            "description": "Maximize your corner space with this L-shaped desk. Perfect for multi-monitor setups and large workspaces.",
-            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-            "basePrice": 8500000,
-            "originalPrice": 10500000,
-            "discount": 20,
-            "image": "/images/l1.jpg",
-            "category": "L-Shaped",
-            "colors": [
-              "Black",
-              "White",
-              "Grey"
-            ],
-            "dimensions": [
-              {
-                "size": "160x80",
-                "priceAdjustment": 0
-              },
-              {
-                "size": "180x80",
-                "priceAdjustment": 800000
-              }
-            ],
-            "inStock": true,
-            "ratings": {
-              "average": 4.2,
-              "count": 8
-            },
-            "quantity": 3
-          },
           {
             "id": "5",
             "name": "Executive Office Desk",
@@ -112,13 +105,14 @@
             "quantity": 1
           }
         ],
-        "total": null
+        "total": 20400000
       },
       "wishlist": {
         "items": [],
         "total": 0
       },
-      "role": "admin"
+      "role": "admin",
+      "phone": ""
     },
     {
       "id": "21cb",
@@ -202,6 +196,116 @@
             "phone": "0385412905",
             "address": "616/61/11D Lê Đức thọ",
             "city": "Gò Vấp, Hồ Chí Minh"
+          },
+          "paymentMethod": "COD"
+        },
+        {
+          "id": "ORD1746851874579",
+          "userId": "21cb",
+          "items": [
+            {
+              "id": "1",
+              "name": "Modern Office Desk",
+              "description": "Sleek and minimalist design perfect for your home office. Features durable construction and ample workspace.",
+              "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+              "basePrice": 5200000,
+              "price": 5200000,
+              "originalPrice": 6500000,
+              "discount": 20,
+              "image": "/images/ban-ikea-luzo-12.jpg",
+              "category": "Desktop",
+              "categories": [
+                "Desktop",
+                "Bestsellers"
+              ],
+              "colors": [
+                "Black",
+                "White",
+                "Grey"
+              ],
+              "dimensions": [
+                {
+                  "size": "140x80",
+                  "priceAdjustment": 0
+                },
+                {
+                  "size": "160x80",
+                  "priceAdjustment": 500000
+                },
+                {
+                  "size": "180x80",
+                  "priceAdjustment": 1000000
+                }
+              ],
+              "inStock": true,
+              "ratings": {
+                "average": 4.5,
+                "count": 12
+              },
+              "quantity": 1,
+              "color": "Black",
+              "dimension": "140x80"
+            }
+          ],
+          "total": 5200000,
+          "status": "In Transit",
+          "orderDate": "2025-05-10T04:37:54.579Z",
+          "deliveryDate": null,
+          "shippingAddress": {
+            "fullName": "Nguyễn Hoàng Sơn",
+            "phone": "0385412905",
+            "address": "616/61/11D Lê Đức thọ, 15, Gò Vấp",
+            "city": "Hồ Chí Minh"
+          },
+          "paymentMethod": "COD"
+        },
+        {
+          "id": "ORD1746852031566",
+          "userId": "21cb",
+          "items": [
+            {
+              "id": "2",
+              "name": "L-Shaped Corner Desk",
+              "description": "Maximize your corner space with this L-shaped desk. Perfect for multi-monitor setups and large workspaces.",
+              "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+              "basePrice": 8500000,
+              "price": 8500000,
+              "originalPrice": 10500000,
+              "discount": 20,
+              "image": "/images/l1.jpg",
+              "category": "L-Shaped",
+              "colors": [
+                "Black",
+                "White",
+                "Grey"
+              ],
+              "dimensions": [
+                {
+                  "size": "160x80",
+                  "priceAdjustment": 0
+                },
+                {
+                  "size": "180x80",
+                  "priceAdjustment": 800000
+                }
+              ],
+              "inStock": true,
+              "ratings": {
+                "average": 4.2,
+                "count": 8
+              },
+              "quantity": 1
+            }
+          ],
+          "total": 8500000,
+          "status": "In Transit",
+          "orderDate": "2025-05-10T04:40:31.566Z",
+          "deliveryDate": null,
+          "shippingAddress": {
+            "fullName": "Nguyễn  Văn A",
+            "phone": "0385412905",
+            "address": "616/61/11D Lê Đức thọ, 15, Gò Vấp",
+            "city": "Hồ Chí Minh"
           },
           "paymentMethod": "COD"
         }
@@ -528,6 +632,60 @@
       "orders": [],
       "active": true,
       "email": "admin@example.com"
+    },
+    {
+      "id": "29e4",
+      "name": "Nguyễn Văn A",
+      "email": "nva123@gmail.com",
+      "username": "nva123",
+      "password": "Password@123",
+      "hasChangedUsername": false,
+      "cart": {
+        "items": [
+          {
+            "id": "1",
+            "name": "Modern Office Desk",
+            "description": "Sleek and minimalist design perfect for your home office. Features durable construction and ample workspace.",
+            "detailedDescription": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+            "basePrice": 5200000,
+            "price": 5200000,
+            "originalPrice": 6500000,
+            "discount": 20,
+            "image": "/images/ban-ikea-luzo-12.jpg",
+            "category": "Desktop",
+            "categories": [
+              "Desktop",
+              "Bestsellers"
+            ],
+            "colors": [
+              "Black",
+              "White",
+              "Grey"
+            ],
+            "dimensions": [
+              {
+                "size": "140x80",
+                "priceAdjustment": 0
+              },
+              {
+                "size": "160x80",
+                "priceAdjustment": 500000
+              },
+              {
+                "size": "180x80",
+                "priceAdjustment": 1000000
+              }
+            ],
+            "inStock": true,
+            "ratings": {
+              "average": 4.5,
+              "count": 12
+            },
+            "quantity": 1
+          }
+        ],
+        "total": 5200000
+      }
     }
   ],
   "products": [

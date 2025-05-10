@@ -21,7 +21,6 @@ import {
 } from "../store/wishlistSlice";
 import { useAuth } from "../contexts/AuthContext";
 import { api } from "../api/api"; // Thay đổi từ import * as api thành import { api }
-import Footer from "../components/Footer";
 
 const categories = ["Deskframe", "Desktop", "L-Shaped", "Desk for kids"];
 const colors = ["Black", "White", "Grey"];
@@ -790,7 +789,6 @@ const Home = () => {
             </Grid>
           </Box>
         )}
-        <Footer />
       </Box>
     </Box>
   );

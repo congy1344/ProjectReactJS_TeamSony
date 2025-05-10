@@ -149,12 +149,47 @@ const AccountSetting = () => {
     }
   };
 
+  const validatePassword = (password) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    if (password.length < minLength)
+      return "Mật khẩu phải có ít nhất 8 ký tự";
+    if (!hasUpperCase)
+      return "Mật khẩu phải chứa ít nhất 1 chữ hoa";
+    if (!hasLowerCase)
+      return "Mật khẩu phải chứa ít nhất 1 chữ thường";
+    if (!hasNumbers)
+      return "Mật khẩu phải chứa ít nhất 1 số";
+    if (!hasSpecialChar)
+      return "Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt";
+    return "";
+  };
+
   const handlePasswordChange = async (e) => {
     e.preventDefault();
+    const BASE_URL = api.getBaseUrl();
+
+    // Kiểm tra trường rỗng
+    if (
+      !passwordForm.currentPassword ||
+      !passwordForm.newPassword ||
+      !passwordForm.confirmNewPassword
+    ) {
+      setSnackbar({
+        open: true,
+        message: "Vui lòng nhập đầy đủ tất cả các trường",
+        severity: "error",
+      });
+      return;
+    }
+
+    // Kiểm tra mật khẩu hiện tại
     try {
-      const userResponse = await axios.get(
-        `http://localhost:3001/users/${user.id}`
-      );
+      const userResponse = await axios.get(`${BASE_URL}/users/${user.id}`);
       const currentUser = userResponse.data;
 
       if (currentUser.password !== passwordForm.currentPassword) {
@@ -166,24 +201,17 @@ const AccountSetting = () => {
         return;
       }
 
+      // Kiểm tra xác nhận mật khẩu
       if (passwordForm.newPassword !== passwordForm.confirmNewPassword) {
         setSnackbar({
           open: true,
-          message: "Mật khẩu mới không khớp",
+          message: "Mật khẩu xác nhận không khớp",
           severity: "error",
         });
         return;
       }
 
-      if (passwordForm.newPassword.length < 6) {
-        setSnackbar({
-          open: true,
-          message: "Mật khẩu mới phải có ít nhất 6 ký tự",
-          severity: "error",
-        });
-        return;
-      }
-
+      // Kiểm tra trùng mật khẩu cũ
       if (passwordForm.newPassword === passwordForm.currentPassword) {
         setSnackbar({
           open: true,
@@ -193,7 +221,19 @@ const AccountSetting = () => {
         return;
       }
 
-      await axios.patch(`http://localhost:3001/users/${user.id}`, {
+      // Regex độ mạnh mật khẩu
+      const passwordError = validatePassword(passwordForm.newPassword);
+      if (passwordError) {
+        setSnackbar({
+          open: true,
+          message: passwordError,
+          severity: "error",
+        });
+        return;
+      }
+
+      // Đổi mật khẩu
+      await axios.patch(`${BASE_URL}/users/${user.id}`, {
         password: passwordForm.newPassword,
       });
 
@@ -220,6 +260,7 @@ const AccountSetting = () => {
 
   const handleAddBankCard = async () => {
     try {
+      const BASE_URL = api.getBaseUrl();
       const updatedUser = {
         ...user,
         bankCards: [
@@ -232,7 +273,7 @@ const AccountSetting = () => {
         ],
       };
 
-      await axios.put(`http://localhost:3001/users/${user.id}`, updatedUser);
+      await axios.put(`${BASE_URL}/users/${user.id}`, updatedUser);
       login(updatedUser);
       setOpenBankDialog(false);
       setNewBankCard({
@@ -258,13 +299,14 @@ const AccountSetting = () => {
 
   const handleDeleteBankCard = async (cardId) => {
     try {
+      const BASE_URL = api.getBaseUrl();
       const updatedCards = bankCards.filter((card) => card.id !== cardId);
       const updatedUser = {
         ...user,
         bankCards: updatedCards,
       };
 
-      await axios.put(`http://localhost:3001/users/${user.id}`, updatedUser);
+      await axios.put(`${BASE_URL}/users/${user.id}`, updatedUser);
       login(updatedUser);
       setSnackbar({
         open: true,
@@ -282,6 +324,7 @@ const AccountSetting = () => {
 
   const handleSetDefaultCard = async (cardId) => {
     try {
+      const BASE_URL = api.getBaseUrl();
       const updatedCards = bankCards.map((card) => ({
         ...card,
         isDefault: card.id === cardId,
@@ -291,7 +334,7 @@ const AccountSetting = () => {
         bankCards: updatedCards,
       };
 
-      await axios.put(`http://localhost:3001/users/${user.id}`, updatedUser);
+      await axios.put(`${BASE_URL}/users/${user.id}`, updatedUser);
       login(updatedUser);
       setSnackbar({
         open: true,

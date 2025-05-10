@@ -175,14 +175,14 @@ const Checkout = () => {
     ];
 
     requiredFields.forEach((field) => {
-      if (!formData[field].trim()) {
-        newErrors[field] = "This field is required";
+      if (!formData[field] || !formData[field].trim()) {
+        newErrors[field] = "Vui lòng nhập trường này";
       }
     });
 
     // Validate email format
     if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
+      newErrors.email = "Email không hợp lệ";
     }
 
     // Validate phone number (simple validation)
@@ -190,7 +190,7 @@ const Checkout = () => {
       formData.phone &&
       !/^\d{10,11}$/.test(formData.phone.replace(/\s/g, ""))
     ) {
-      newErrors.phone = "Invalid phone number";
+      newErrors.phone = "Số điện thoại không hợp lệ";
     }
 
     // Validate payment method fields
@@ -217,11 +217,10 @@ const Checkout = () => {
   };
 
   const handlePlaceOrder = async () => {
-    // Validate form
     if (!validateForm()) {
       setSnackbar({
         open: true,
-        message: "Please fill in all required fields correctly",
+        message: "Vui lòng nhập đầy đủ và đúng thông tin trước khi đặt hàng!",
         severity: "error",
       });
       return;
@@ -278,6 +277,8 @@ const Checkout = () => {
       const updatedUser = {
         ...currentUser,
         orders: updatedOrders,
+        // Xóa giỏ hàng sau khi đặt hàng thành công
+        cart: { items: [], total: 0 },
       };
 
       await axios.put(`${BASE_URL}/users/${user.id}`, updatedUser);
@@ -288,6 +289,7 @@ const Checkout = () => {
       // Xóa giỏ hàng sau khi đặt hàng thành công
       if (!buyNowProduct) {
         dispatch(clearCart());
+        localStorage.removeItem("cart");
       }
 
       // Hiển thị thông báo thành công
@@ -410,7 +412,7 @@ const Checkout = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="First Name"
+                  label="First Name *"
                   name="firstName"
                   variant="outlined"
                   value={formData.firstName}
@@ -430,7 +432,7 @@ const Checkout = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Last Name"
+                  label="Last Name *"
                   name="lastName"
                   variant="outlined"
                   value={formData.lastName}
@@ -450,7 +452,7 @@ const Checkout = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Email"
+                  label="Email *"
                   name="email"
                   variant="outlined"
                   value={formData.email}
@@ -470,7 +472,7 @@ const Checkout = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Phone Number"
+                  label="Phone Number *"
                   name="phone"
                   variant="outlined"
                   value={formData.phone}
@@ -490,7 +492,7 @@ const Checkout = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Address"
+                  label="Address *"
                   name="address"
                   variant="outlined"
                   value={formData.address}
@@ -510,7 +512,7 @@ const Checkout = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="City"
+                  label="City *"
                   name="city"
                   variant="outlined"
                   value={formData.city}
@@ -584,7 +586,7 @@ const Checkout = () => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Card Number"
+                    label="Card Number *"
                     name="cardNumber"
                     variant="outlined"
                     value={formData.cardNumber}
@@ -604,7 +606,7 @@ const Checkout = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Expiry Date"
+                    label="Expiry Date *"
                     name="expiryDate"
                     variant="outlined"
                     value={formData.expiryDate}
@@ -625,7 +627,7 @@ const Checkout = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="CVV"
+                    label="CVV *"
                     name="cvv"
                     variant="outlined"
                     value={formData.cvv}

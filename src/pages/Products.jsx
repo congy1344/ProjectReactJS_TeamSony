@@ -149,10 +149,13 @@ const Products = () => {
         let data;
 
         if (searchQuery && searchQuery.trim() !== "") {
-          console.log("Executing search for:", searchQuery);
-          // Sử dụng API tìm kiếm khi có searchQuery
-          data = await api.searchProducts(searchQuery);
-          console.log("Search results received:", data.length, "items");
+          // Lấy tất cả sản phẩm và lọc ở FE theo từng từ
+          data = await api.getAllProducts();
+          const words = searchQuery.trim().toLowerCase().split(/\s+/);
+          data = data.filter(product => {
+            const text = (product.name + ' ' + product.description).toLowerCase();
+            return words.some(word => text.includes(word));
+          });
         } else if (selectedCategory) {
           console.log("Fetching by category:", selectedCategory);
           data = await api.getProductsByCategory(selectedCategory);
@@ -272,7 +275,7 @@ const Products = () => {
           top: 64,
           left: 0,
           height: "calc(100vh - 64px)",
-          overflowY: "auto",
+          overflowY: "visible",
           zIndex: 1,
           boxShadow: "1px 0 5px rgba(0,0,0,0.05)",
         }}
@@ -480,9 +483,8 @@ const Products = () => {
               size="small"
               sx={{ ml: 2 }}
               onClick={() => {
-                // Xóa tham số tìm kiếm khỏi URL và quay lại trang products
-                navigate("/products");
                 setSearchQuery("");
+                navigate("/");
               }}
             >
               Clear Search
